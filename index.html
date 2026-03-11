@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SOUNDFORGE — AI Music Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06060e;--s1:#0b0b18;--s2:#10101f;--s3:#181828;
+  --b1:rgba(255,255,255,0.05);--b2:rgba(255,255,255,0.09);--b3:rgba(255,255,255,0.15);
+  --neon:#00f5c8;--neon2:#00c9a7;--rose:#ff3b7a;--amber:#ffb547;--blue:#4d9fff;
+  --txt:#f0f0fa;--mid:#8888aa;--dim:#30304a;--r:12px;
+  --fd:'Barlow Condensed',sans-serif;--fb:'Syne',sans-serif;--fm:'JetBrains Mono',monospace;
+}
+html,body{height:100%}
+body{font-family:var(--fb);color:var(--txt);background:var(--bg);overflow-x:hidden}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 10%,rgba(0,245,200,0.07) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 60% at 10% 80%,rgba(77,159,255,0.06) 0%,transparent 60%);
+}
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.018;
+}
+
+/* DESKTOP LAYOUT */
+@media(min-width:768px){
+  body{display:grid;grid-template-columns:60px 260px 1fr;grid-template-rows:1fr 72px;height:100vh;overflow:hidden}
+  .m-hd,.m-nav{display:none!important}
+  .icon-nav,.left-panel{display:flex}
+  .bottom-bar{display:grid}
+  .main-col{overflow-y:auto;padding:36px 44px}
+}
+
+/* MOBILE LAYOUT */
+@media(max-width:767px){
+  body{display:block;height:100%;overflow:hidden;position:fixed;width:100%}
+  .icon-nav,.left-panel,.bottom-bar{display:none!important}
+  .m-hd{display:flex!important;position:sticky;top:0;z-index:50}
+  .m-nav{display:flex!important;position:fixed;bottom:0;left:0;right:0;z-index:50}
+  .main-col{padding:14px 14px 80px;height:calc(100vh - 52px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .studio-title{font-size:38px!important;letter-spacing:3px!important}
+  .ctrl-row{grid-template-columns:1fr 1fr!important}
+  .forge{grid-column:1/-1!important;height:52px!important;font-size:22px!important}
+  .vars-grid{grid-template-columns:1fr!important}
+  .rc-actions{width:100%}
+}
+
+/* ICON NAV */
+.icon-nav{
+  grid-row:1/3;background:var(--s1);border-right:1px solid var(--b1);
+  flex-direction:column;align-items:center;padding:18px 0;gap:4px;z-index:10;
+}
+.logo-mark{
+  font-family:var(--fd);font-size:13px;font-weight:900;letter-spacing:3px;color:var(--neon);
+  writing-mode:vertical-rl;transform:rotate(180deg);
+  text-shadow:0 0 20px rgba(0,245,200,0.5);margin-bottom:16px;
+}
+.inav{
+  width:40px;height:40px;border-radius:10px;border:none;
+  background:transparent;color:var(--dim);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all 0.2s;position:relative;
+}
+.inav:hover{background:var(--s2);color:var(--mid)}
+.inav.on{background:rgba(0,245,200,0.1);color:var(--neon)}
+.inav.on::before{content:'';position:absolute;left:-1px;top:20%;bottom:20%;width:2px;background:var(--neon);border-radius:0 2px 2px 0;box-shadow:0 0 8px var(--neon)}
+.nav-gap{flex:1}
+.nav-key{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--neon),var(--blue));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#000;font-family:var(--fd);font-size:13px;font-weight:900;transition:transform 0.2s}
+.nav-key:hover{transform:scale(1.1)}
+
+/* LEFT PANEL */
+.left-panel{
+  grid-row:1/3;background:var(--s1);border-right:1px solid var(--b1);
+  flex-direction:column;overflow:hidden;
+}
+.panel-hd{padding:20px 16px 14px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.panel-ttl{font-family:var(--fd);font-size:17px;font-weight:700;letter-spacing:2px}
+.panel-badge{font-family:var(--fm);font-size:10px;background:var(--s2);border:1px solid var(--b2);border-radius:100px;padding:3px 9px;color:var(--mid)}
+.track-list{flex:1;overflow-y:auto;padding:6px 0}
+.track-list::-webkit-scrollbar{width:0}
+.track-item{padding:10px 16px;display:flex;gap:10px;align-items:center;cursor:pointer;transition:background 0.15s;position:relative}
+.track-item:hover{background:var(--s2)}
+.track-item.active{background:rgba(0,245,200,0.04)}
+.track-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--neon);box-shadow:0 0 6px var(--neon)}
+.track-art{width:40px;height:40px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px}
+.track-info{min-width:0;flex:1}
+.track-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track-item.active .track-name{color:var(--neon)}
+.track-meta{font-size:10px;color:var(--mid);font-family:var(--fm);margin-top:2px}
+.track-dur{font-family:var(--fm);font-size:10px;color:var(--mid)}
+.empty-lib{padding:40px 16px;text-align:center;color:var(--dim);font-size:12px}
+.empty-lib div{font-size:30px;margin-bottom:8px;opacity:0.4}
+
+/* MAIN COL */
+.main-col{position:relative;z-index:2;display:flex;flex-direction:column;gap:22px}
+.main-col::-webkit-scrollbar{width:4px}
+.main-col::-webkit-scrollbar-thumb{background:var(--dim);border-radius:4px}
+
+/* STUDIO HEADER */
+.studio-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.studio-title{font-family:var(--fd);font-size:60px;font-weight:900;letter-spacing:5px;line-height:0.85;background:linear-gradient(130deg,var(--txt) 0%,var(--neon) 50%,var(--blue) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.studio-sub{font-size:13px;color:var(--mid);margin-top:10px;font-weight:400}
+.status-pill{display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:10px;letter-spacing:0.08em;padding:5px 12px;border-radius:100px;border:1px solid var(--b2);color:var(--mid)}
+.status-pill.live{border-color:rgba(0,245,200,0.25);color:var(--neon)}
+.sdot{width:5px;height:5px;border-radius:50%;background:var(--dim)}
+.status-pill.live .sdot{background:var(--neon);box-shadow:0 0 6px var(--neon);animation:sdpulse 2s ease-in-out infinite}
+@keyframes sdpulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* MODE TABS */
+.mode-tabs{display:flex;gap:2px;background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:3px;width:fit-content}
+.mtab{padding:8px 18px;border-radius:7px;border:none;background:none;color:var(--mid);font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.mtab.on{background:var(--s2);color:var(--txt);box-shadow:0 1px 6px rgba(0,0,0,0.5)}
+@media(max-width:767px){.mode-tabs{width:100%}.mtab{flex:1;text-align:center;padding:8px 4px;font-size:12px}}
+
+/* PROMPT */
+.prompt-wrap{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:18px;transition:border-color 0.3s,box-shadow 0.3s}
+.prompt-wrap:focus-within{border-color:rgba(0,245,200,0.25);box-shadow:0 0 50px rgba(0,245,200,0.04)}
+.plbl{font-family:var(--fm);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mid);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.plbl::after{content:'';flex:1;height:1px;background:var(--b1)}
+.pta{width:100%;background:none;border:none;outline:none;color:var(--txt);font-family:var(--fb);font-size:15px;line-height:1.65;resize:none;min-height:68px}
+.pta::placeholder{color:var(--dim)}
+.prompt-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--b1);gap:10px;flex-wrap:wrap}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{font-family:var(--fm);font-size:10px;padding:4px 10px;border-radius:100px;border:1px solid var(--b2);color:var(--mid);cursor:pointer;transition:all 0.18s;-webkit-tap-highlight-color:transparent}
+.chip:hover,.chip.on{border-color:var(--neon);color:var(--neon);background:rgba(0,245,200,0.07)}
+.clen{font-family:var(--fm);font-size:10px;color:var(--dim)}
+
+/* LYRICS AREA */
+.lyrics-area{display:none}
+
+/* CONTROLS */
+.ctrl-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end}
+.cg{display:flex;flex-direction:column;gap:6px}
+.clbl{font-family:var(--fm);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid)}
+.csel{background:var(--s1);border:1px solid var(--b2);border-radius:10px;color:var(--txt);font-family:var(--fb);font-size:13px;padding:11px 12px;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2366667a' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color 0.2s}
+.csel:focus{border-color:rgba(0,245,200,0.3)}
+.csel option{background:var(--s2)}
+.bpmv{color:var(--neon)}
+.cslider{-webkit-appearance:none;width:100%;height:4px;background:var(--dim);border-radius:100px;outline:none;cursor:pointer;margin-top:4px}
+.cslider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--neon);box-shadow:0 0 10px rgba(0,245,200,0.5);cursor:pointer}
+
+/* FORGE BUTTON */
+.forge{height:48px;padding:0 28px;border-radius:10px;border:none;background:var(--neon);color:#000;font-family:var(--fd);font-size:22px;font-weight:700;letter-spacing:3px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;box-shadow:0 0 30px rgba(0,245,200,0.2);-webkit-tap-highlight-color:transparent}
+.forge::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent);transform:translateX(-100%);transition:transform 0.5s}
+.forge:hover{box-shadow:0 0 50px rgba(0,245,200,0.4);transform:translateY(-1px)}
+.forge:hover::after{transform:translateX(100%)}
+.forge:active{transform:scale(0.97)}
+.forge:disabled{background:var(--dim);color:var(--mid);cursor:not-allowed;transform:none;box-shadow:none}
+
+/* DURATION */
+.dur-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+
+/* GENERATION STATUS */
+.gen-status{display:none;background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:20px;align-items:center;gap:18px;flex-wrap:wrap}
+.gen-status.show{display:flex}
+.swave{display:flex;align-items:center;gap:2px;height:32px;flex-shrink:0}
+.sb{width:3px;border-radius:2px;background:var(--neon);animation:sbw 0.7s ease-in-out infinite alternate}
+.sb:nth-child(1){height:14px;animation-delay:0s}.sb:nth-child(2){height:28px;animation-delay:0.08s}.sb:nth-child(3){height:20px;animation-delay:0.16s}.sb:nth-child(4){height:32px;animation-delay:0.24s}.sb:nth-child(5){height:18px;animation-delay:0.32s}.sb:nth-child(6){height:26px;animation-delay:0.40s}
+@keyframes sbw{from{transform:scaleY(0.2);opacity:0.3}to{transform:scaleY(1);opacity:1}}
+.sinfo{flex:1;min-width:0}
+.stxt{font-size:14px;font-weight:600;margin-bottom:6px}
+.sbar-bg{height:3px;background:var(--dim);border-radius:100px;overflow:hidden}
+.sbar{height:100%;width:0%;background:linear-gradient(90deg,var(--neon),var(--blue));border-radius:100px;transition:width 0.5s ease;box-shadow:0 0 8px var(--neon)}
+.ssteps{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
+.ss{font-family:var(--fm);font-size:9px;letter-spacing:0.1em;color:var(--dim);display:flex;align-items:center;gap:3px;transition:color 0.3s}
+.ss.active{color:var(--txt)}.ss.done{color:var(--neon)}
+.ss-dot{width:4px;height:4px;border-radius:50%;background:currentColor}
+.cancel-btn{background:none;border:1px solid var(--b2);border-radius:8px;padding:8px 14px;color:var(--mid);font-family:var(--fb);font-size:12px;cursor:pointer;transition:all 0.2s;flex-shrink:0}
+.cancel-btn:hover{border-color:var(--rose);color:var(--rose)}
+
+/* ERROR */
+.err-banner{background:rgba(255,59,122,0.08);border:1px solid rgba(255,59,122,0.28);border-radius:10px;padding:14px 16px;display:flex;gap:10px;align-items:flex-start}
+.err-body{flex:1}
+.err-title{font-size:13px;font-weight:700;color:#ff6b98;margin-bottom:3px}
+.err-msg{font-size:12px;color:var(--mid);line-height:1.55}
+.err-tip{font-size:11px;color:var(--dim);margin-top:6px;line-height:1.5}
+.err-x{background:none;border:none;color:var(--mid);cursor:pointer;font-size:18px;line-height:1;flex-shrink:0}
+
+/* RESULT */
+.result-sec{display:none;flex-direction:column;gap:12px}
+.result-sec.show{display:flex}
+.result-card{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);overflow:hidden}
+.rc-header{padding:16px 18px;background:linear-gradient(135deg,rgba(0,245,200,0.04),rgba(77,159,255,0.03));border-bottom:1px solid var(--b1);display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.rc-art{width:58px;height:58px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:26px;position:relative}
+.rc-art::after{content:'';position:absolute;inset:-2px;border-radius:12px;background:conic-gradient(var(--neon),var(--blue),var(--rose),var(--neon));z-index:-1;animation:spinn 5s linear infinite;opacity:0.5}
+@keyframes spinn{to{transform:rotate(360deg)}}
+.rc-meta{flex:1;min-width:0}
+.rc-title{font-family:var(--fd);font-size:22px;font-weight:700;letter-spacing:2px}
+.rc-tagline{font-size:11px;color:var(--mid);margin-top:2px}
+.rc-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px}
+.rtag{font-family:var(--fm);font-size:9px;padding:3px 7px;border-radius:4px;background:rgba(255,255,255,0.04);color:var(--mid)}
+.rtag.real{color:var(--neon);border:1px solid rgba(0,245,200,0.2)}.rtag.demo{color:var(--amber);border:1px solid rgba(255,181,71,0.2)}
+.rc-actions{display:flex;gap:7px;flex-shrink:0;flex-wrap:wrap}
+.abtn{display:flex;align-items:center;gap:5px;padding:9px 14px;border-radius:8px;border:1px solid var(--b2);background:none;color:var(--txt);font-family:var(--fb);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;text-decoration:none;-webkit-tap-highlight-color:transparent}
+.abtn:hover,.abtn:active{background:var(--s2);border-color:var(--neon);color:var(--neon)}
+.abtn.primary{background:var(--neon);color:#000;border-color:var(--neon)}
+.abtn.primary:hover{background:var(--neon2);color:#000}
+
+/* WAVEFORM */
+.wave-player{padding:16px 18px}
+.wave-bars{height:56px;display:flex;align-items:center;gap:1.5px;cursor:pointer;margin-bottom:12px}
+.wb{flex:1;border-radius:1px;background:var(--dim);transition:background 0.15s;min-width:1px}
+.wb.played{background:rgba(0,245,200,0.6)}.wb.playing{background:var(--neon);box-shadow:0 0 5px var(--neon)}
+.wave-ctrls{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.wplay{width:40px;height:40px;border-radius:50%;background:var(--neon);color:#000;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(0,245,200,0.3);flex-shrink:0;transition:transform 0.15s}
+.wplay:active{transform:scale(0.92)}
+.wtime{font-family:var(--fm);font-size:11px;color:var(--mid);white-space:nowrap}
+.vol-row{display:flex;align-items:center;gap:7px;margin-left:auto}
+.vsl{-webkit-appearance:none;width:72px;height:3px;background:var(--dim);border-radius:100px;outline:none;cursor:pointer}
+.vsl::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--mid);cursor:pointer}
+
+/* LYRICS */
+.lyr-sec{padding:0 18px 16px}
+.lyr-hd{font-family:var(--fm);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mid);margin:14px 0 8px;padding-top:14px;border-top:1px solid var(--b1)}
+.lyr-body{font-size:13px;line-height:2.1;color:rgba(240,240,250,0.55);white-space:pre-line;font-style:italic}
+
+/* VARIATIONS */
+.vars-lbl{font-family:var(--fm);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mid)}
+.vars-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.vcard{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:12px;display:flex;gap:10px;align-items:center;cursor:pointer;transition:all 0.2s;-webkit-tap-highlight-color:transparent}
+.vcard:hover,.vcard:active{border-color:rgba(77,159,255,0.3);background:rgba(77,159,255,0.04)}
+.vart{width:36px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.vlbl{font-family:var(--fm);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:2px}
+.vname{font-size:11px;font-weight:700}
+
+/* BOTTOM BAR */
+.bottom-bar{grid-column:2/4;background:rgba(11,11,24,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--b1);grid-template-columns:1fr auto 1fr;align-items:center;padding:0 32px;gap:24px}
+.np-wrap{display:flex;gap:12px;align-items:center;min-width:0}
+.np-art{width:42px;height:42px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px}
+.np-title{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np-artist{font-size:10px;color:var(--mid);font-family:var(--fm);margin-top:1px}
+.player-ctrl{display:flex;align-items:center;gap:16px}
+.pctrl{background:none;border:none;color:var(--dim);cursor:pointer;transition:color 0.2s;display:flex;align-items:center;justify-content:center}
+.pctrl:hover{color:var(--mid)}
+.pbig{width:38px;height:38px;border-radius:50%;background:var(--neon);color:#000;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(0,245,200,0.25);transition:transform 0.15s}
+.pbig:active{transform:scale(0.93)}
+.br-right{display:flex;align-items:center;gap:10px;justify-content:flex-end}
+
+/* MOBILE HEADER */
+.m-hd{display:none;background:rgba(11,11,24,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--b1);padding:12px 14px;align-items:center;justify-content:space-between}
+.m-brand{font-family:var(--fd);font-size:22px;font-weight:900;letter-spacing:3px;color:var(--neon);text-shadow:0 0 16px rgba(0,245,200,0.4)}
+.m-key-btn{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--b2);border-radius:8px;padding:7px 12px;color:var(--mid);font-family:var(--fm);font-size:10px;letter-spacing:0.08em;cursor:pointer;-webkit-tap-highlight-color:transparent}
+
+/* MOBILE NAV */
+.m-nav{display:none;height:64px;background:rgba(11,11,24,0.98);backdrop-filter:blur(20px);border-top:1px solid var(--b1);align-items:center;justify-content:space-around;padding:0 4px}
+.mnbtn{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:var(--dim);cursor:pointer;padding:6px 10px;border-radius:10px;min-width:48px;-webkit-tap-highlight-color:transparent;transition:color 0.2s}
+.mnbtn.on{color:var(--neon)}
+.mnbtn span{font-family:var(--fm);font-size:8px;text-transform:uppercase;letter-spacing:0.06em}
+.mn-brand{font-family:var(--fd);font-size:16px;font-weight:900;letter-spacing:2px;color:var(--neon);text-shadow:0 0 12px rgba(0,245,200,0.4)}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--s2);border:1px solid var(--b2);border-radius:100px;padding:9px 18px;font-size:12px;font-family:var(--fb);font-weight:500;opacity:0;transition:all 0.3s;pointer-events:none;z-index:9999;white-space:nowrap;box-shadow:0 8px 28px rgba(0,0,0,0.5)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* MODAL */
+#apiModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);z-index:10000;align-items:flex-end;justify-content:center}
+@media(min-width:768px){#apiModal{align-items:center}.modal-box{border-radius:18px!important;max-width:440px!important}}
+.modal-box{background:var(--s1);border:1px solid var(--b2);border-radius:18px 18px 0 0;padding:24px 22px 28px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 -24px 80px rgba(0,0,0,0.6)}
+.mhandle{width:32px;height:3px;background:var(--dim);border-radius:2px;margin:0 auto 18px}
+.mttl{font-family:var(--fd);font-size:24px;font-weight:800;letter-spacing:3px;margin-bottom:5px}
+.msub{font-size:12px;color:var(--mid);margin-bottom:18px;line-height:1.6}
+.msteps{background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:14px;margin-bottom:18px}
+.msteps-ttl{font-family:var(--fm);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:10px}
+.mstep{display:flex;gap:9px;align-items:flex-start;font-size:12px;margin-bottom:8px;line-height:1.5}
+.mstep:last-child{margin:0}
+.msnum{width:18px;height:18px;border-radius:50%;flex-shrink:0;margin-top:1px;background:rgba(0,245,200,0.12);color:var(--neon);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:9px}
+.minp-wrap{margin-bottom:16px}
+.minp-lbl{font-family:var(--fm);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.minp-dot{width:5px;height:5px;border-radius:50%;background:var(--neon);box-shadow:0 0 6px var(--neon)}
+.minp{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:9px;color:var(--txt);font-family:var(--fm);font-size:12px;padding:12px 13px;outline:none;transition:border-color 0.2s}
+.minp:focus{border-color:rgba(0,245,200,0.35)}
+.minp-hint{margin-top:5px;font-size:10px;color:var(--dim)}
+.mbtns{display:flex;gap:8px;align-items:center}
+.mprimary{flex:1;padding:13px;border-radius:9px;border:none;background:var(--neon);color:#000;font-family:var(--fd);font-size:18px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:opacity 0.2s}
+.mprimary:hover{opacity:0.88}
+.mskip{padding:13px 14px;border-radius:9px;border:1px solid var(--b2);background:none;color:var(--mid);font-family:var(--fb);font-size:12px;cursor:pointer;transition:color 0.2s;white-space:nowrap}
+.mskip:hover{color:var(--txt)}
+.mnote{margin-top:10px;font-size:10px;color:var(--dim);text-align:center}
+</style>
+</head>
+<body>
+
+<!-- MOBILE HEADER -->
+<header class="m-hd">
+  <div class="m-brand">SOUNDFORGE</div>
+  <button class="m-key-btn" onclick="openModal()">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+    API KEY
+  </button>
+</header>
+
+<!-- ICON NAV -->
+<nav class="icon-nav">
+  <div class="logo-mark">SF</div>
+  <button class="inav on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4"/></svg></button>
+  <button class="inav"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></button>
+  <button class="inav"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+  <div class="nav-gap"></div>
+  <button class="nav-key" onclick="openModal()">K</button>
+</nav>
+
+<!-- LEFT PANEL -->
+<aside class="left-panel">
+  <div class="panel-hd">
+    <div class="panel-ttl">LIBRARY</div>
+    <div class="panel-badge" id="trackBadge">0 tracks</div>
+  </div>
+  <div class="track-list" id="trackList">
+    <div class="empty-lib"><div>🎵</div>Tracks appear here</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main-col" id="studioView">
+
+  <div class="studio-hd">
+    <div>
+      <div class="studio-title">AI MUSIC<br>STUDIO</div>
+      <div class="studio-sub">Describe your sound — AI composes the rest</div>
+    </div>
+    <div class="status-pill live" id="statusPill"><div class="sdot"></div>REPLICATE</div>
+  </div>
+
+  <div class="mode-tabs">
+    <button class="mtab on" onclick="setMode('simple',this)">Simple</button>
+    <button class="mtab" onclick="setMode('lyrics',this)">Custom Lyrics</button>
+    <button class="mtab" onclick="setMode('instrumental',this)">Instrumental</button>
+  </div>
+
+  <div class="prompt-wrap">
+    <div class="plbl">Describe your track</div>
+    <textarea class="pta" id="promptInput" rows="3" oninput="onPI()"
+      placeholder="A melancholic lo-fi beat with soft piano, rain ambience, and jazzy guitar. Late night city vibes, slow and dreamy…"></textarea>
+    <div class="prompt-foot">
+      <div class="chips">
+        <div class="chip" onclick="chipTog(this,'lo-fi')">lo-fi</div>
+        <div class="chip" onclick="chipTog(this,'epic')">epic</div>
+        <div class="chip" onclick="chipTog(this,'chill')">chill</div>
+        <div class="chip" onclick="chipTog(this,'dark')">dark</div>
+        <div class="chip" onclick="chipTog(this,'upbeat')">upbeat</div>
+        <div class="chip" onclick="chipTog(this,'cinematic')">cinematic</div>
+        <div class="chip" onclick="chipTog(this,'ambient')">ambient</div>
+      </div>
+      <div class="clen" id="charLen">0/500</div>
+    </div>
+  </div>
+
+  <div class="lyrics-area" id="lyricsArea">
+    <div class="prompt-wrap">
+      <div class="plbl">Custom Lyrics <span style="color:var(--blue);font-size:9px;margin-left:4px">AI ASSISTED</span></div>
+      <textarea class="pta" id="lyricsInput" rows="5" placeholder="Write lyrics or tap Generate Lyrics…"></textarea>
+      <div class="prompt-foot">
+        <button class="abtn" onclick="doGenLyrics()" style="font-size:11px;padding:6px 12px">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Generate Lyrics
+        </button>
+        <div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ctrl-row">
+    <div class="cg">
+      <div class="clbl">Genre</div>
+      <select class="csel" id="genreSelect">
+        <option>Electronic</option><option>Lo-fi Hip-Hop</option><option>Cinematic</option>
+        <option>Pop</option><option>Jazz</option><option>Ambient</option>
+        <option>Metal</option><option>R&amp;B</option><option>Classical</option><option>Indie Rock</option>
+      </select>
+    </div>
+    <div class="cg">
+      <div class="clbl">Mood</div>
+      <select class="csel" id="moodSelect">
+        <option>Melancholic</option><option>Energetic</option><option>Peaceful</option>
+        <option>Dark &amp; Intense</option><option>Uplifting</option><option>Mysterious</option>
+        <option>Romantic</option><option>Aggressive</option>
+      </select>
+    </div>
+    <div class="cg">
+      <div class="clbl">BPM — <span class="bpmv" id="bpmVal">88</span></div>
+      <input type="range" class="cslider" min="60" max="180" value="88" oninput="document.getElementById('bpmVal').textContent=this.value">
+    </div>
+    <button class="forge" id="forgeBtn" onclick="startGen()">FORGE</button>
+  </div>
+
+  <div class="dur-row">
+    <div class="clbl">Duration</div>
+    <div class="chip on" onclick="setDur(this,'0:30')">0:30</div>
+    <div class="chip" onclick="setDur(this,'1:00')">1:00</div>
+    <div class="chip" onclick="setDur(this,'2:00')">2:00</div>
+    <div class="chip" onclick="setDur(this,'3:00')">3:00</div>
+    <div class="chip" onclick="setDur(this,'4:00')">4:00</div>
+  </div>
+
+  <div class="gen-status" id="genStatus">
+    <div class="swave"><div class="sb"></div><div class="sb"></div><div class="sb"></div><div class="sb"></div><div class="sb"></div><div class="sb"></div></div>
+    <div class="sinfo">
+      <div class="stxt" id="sTxt">Starting…</div>
+      <div class="sbar-bg"><div class="sbar" id="sBar"></div></div>
+      <div class="ssteps">
+        <div class="ss" id="ss1"><div class="ss-dot"></div>ANALYZE</div>
+        <div class="ss" id="ss2"><div class="ss-dot"></div>COMPOSE</div>
+        <div class="ss" id="ss3"><div class="ss-dot"></div>GENERATE</div>
+        <div class="ss" id="ss4"><div class="ss-dot"></div>MASTER</div>
+      </div>
+    </div>
+    <button class="cancel-btn" onclick="doCancel()">Cancel</button>
+  </div>
+
+  <div class="result-sec" id="resultSec">
+    <div class="result-card" id="resultCard"></div>
+    <div class="vars-lbl">Variations</div>
+    <div class="vars-grid" id="varsGrid"></div>
+  </div>
+
+</main>
+
+<!-- BOTTOM BAR -->
+<div class="bottom-bar">
+  <div class="np-wrap">
+    <div class="np-art" id="npArt" style="background:var(--s2)">🎵</div>
+    <div>
+      <div class="np-title" id="npTitle">Nothing playing</div>
+      <div class="np-artist" id="npArtist">SOUNDFORGE AI</div>
+    </div>
+  </div>
+  <div class="player-ctrl">
+    <button class="pctrl"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg></button>
+    <button class="pctrl"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2"/></svg></button>
+    <button class="pbig" onclick="globalTogglePlay()">
+      <svg id="gPlayI" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <svg id="gPauseI" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    </button>
+    <button class="pctrl"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2"/></svg></button>
+    <button class="pctrl"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg></button>
+  </div>
+  <div class="br-right">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+    <input type="range" class="vsl" min="0" max="100" value="80" oninput="setVol(this.value)" style="width:80px">
+  </div>
+</div>
+
+<!-- MOBILE NAV -->
+<nav class="m-nav">
+  <button class="mnbtn on" id="mnStudio" onclick="mTab('studio',this)">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4"/></svg>
+    <span>Studio</span>
+  </button>
+  <button class="mnbtn" id="mnSongs" onclick="mTab('songs',this)">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+    <span>Songs</span>
+  </button>
+  <div class="mn-brand">SF</div>
+  <button class="mnbtn" onclick="openModal()">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+    <span>Key</span>
+  </button>
+  <button class="mnbtn" onclick="globalTogglePlay()">
+    <svg id="mnPlayI" width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    <svg id="mnPauseI" width="19" height="19" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    <span>Play</span>
+  </button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<!-- API MODAL -->
+<div id="apiModal" onclick="if(event.target===this&&REP_KEY)this.style.display='none'">
+  <div class="modal-box">
+    <div class="mhandle"></div>
+    <div class="mttl">FREE SETUP</div>
+    <div class="msub">SOUNDFORGE uses <strong style="color:var(--txt)">Replicate's free AI music API</strong>. Works on every browser and device — no CORS issues, no Cloudflare Worker needed.</div>
+    <div class="msteps">
+      <div class="msteps-ttl">Get your free key (2 min)</div>
+      <div class="mstep"><div class="msnum">1</div><span>Go to <a href="https://replicate.com" target="_blank" style="color:var(--neon);text-decoration:none">replicate.com</a> → Sign in with GitHub or Google (free)</span></div>
+      <div class="mstep"><div class="msnum">2</div><span>Click your <strong>profile picture</strong> top-right → <strong>API tokens</strong></span></div>
+      <div class="mstep"><div class="msnum">3</div><span>Click <strong>Create token</strong> → any name → copy the key</span></div>
+      <div class="mstep"><div class="msnum">4</div><span>Paste below → tap <strong style="color:var(--neon)">Launch Studio</strong></span></div>
+    </div>
+    <div class="minp-wrap">
+      <div class="minp-lbl"><div class="minp-dot"></div>Replicate API Key</div>
+      <input class="minp" id="repKeyInput" type="password"
+        placeholder="r8_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        onkeydown="if(event.key==='Enter')saveKey()">
+      <div class="minp-hint">Starts with <code style="color:var(--neon);background:rgba(0,245,200,0.08);padding:1px 5px;border-radius:3px">r8_</code> · ~$0.003 per track</div>
+    </div>
+    <div class="minp-wrap">
+      <div class="minp-lbl"><div class="minp-dot" style="background:var(--amber)"></div>Vercel Proxy URL <span style="color:var(--amber);font-size:9px">REQUIRED</span></div>
+      <input class="minp" id="proxyInput" type="url"
+        placeholder="https://soundforge-proxy.vercel.app"
+        onkeydown="if(event.key==='Enter')saveKey()">
+      <div class="minp-hint">Deploy the proxy on <a href="https://vercel.com" target="_blank" style="color:var(--neon);text-decoration:none">vercel.com</a> (free) to bypass browser CORS restrictions. See the included <strong>README</strong> for 3-step instructions.</div>
+    </div>
+    <div class="mbtns">
+      <button class="mprimary" onclick="saveKey()">LAUNCH STUDIO</button>
+      <button class="mskip" onclick="enterDemo()">Demo mode</button>
+    </div>
+    <div class="mnote">No key? Demo mode lets you explore the full UI with simulated audio.</div>
+  </div>
+</div>
+
+<script>
+'use strict';
+let REP_KEY='',IS_DEMO=false,cancelFlag=false,songs=[],curIdx=-1,curMode='simple',curDur='0:30',isPlaying=false;
+const DS={'0:30':15,'1:00':30,'2:00':60,'3:00':90,'4:00':120};
+const EM=['🌊','⚡','🌙','🔥','🎸','🌌','🎹','💫','🌿','🎷'];
+const GR=['linear-gradient(135deg,#0d1b2a,#1b4332)','linear-gradient(135deg,#1a0533,#4a0e8f)','linear-gradient(135deg,#2d0a0a,#8b1a1a)','linear-gradient(135deg,#0a1628,#1e3a5f)','linear-gradient(135deg,#1a2a0a,#3d6b1a)','linear-gradient(135deg,#2a1a0a,#8b4513)','linear-gradient(135deg,#0a0a2a,#1a1a6b)','linear-gradient(135deg,#2a0a1a,#6b1a3d)'];
+
+// Session restore
+try{const k=sessionStorage.getItem('sf_rk');if(k)REP_KEY=k;const px=sessionStorage.getItem('sf_proxy');if(px)PROXY_URL=px}catch(e){}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  try{
+    const k=sessionStorage.getItem('sf_rk');
+    if(k){
+      const el=document.getElementById('repKeyInput');
+      if(el)el.value=k;
+      const px=sessionStorage.getItem('sf_proxy');
+      const pxEl=document.getElementById('proxyInput');
+      if(px&&pxEl)pxEl.value=px;
+      document.getElementById('apiModal').style.display='none';
+      toast('Welcome back — ready to forge! 🎛️','✓');
+    }else{
+      document.getElementById('apiModal').style.display='flex';
+    }
+  }catch(e){document.getElementById('apiModal').style.display='flex'}
+  renderLib();
+});
+
+function openModal(){document.getElementById('apiModal').style.display='flex'}
+function saveKey(){
+  const k=(document.getElementById('repKeyInput').value||'').trim();
+  const px=(document.getElementById('proxyInput').value||'').trim().replace(/\/$/,'');
+  if(!k){toast('Paste your Replicate key first','⚠️');return}
+  if(!k.startsWith('r8_')){toast('Key must start with r8_','⚠️');return}
+  REP_KEY=k;IS_DEMO=false;
+  if(px){PROXY_URL=px;try{sessionStorage.setItem('sf_proxy',px)}catch(e){}}
+  try{sessionStorage.setItem('sf_rk',k)}catch(e){}
+  document.getElementById('apiModal').style.display='none';
+  document.getElementById('statusPill').innerHTML='<div class="sdot"></div>'+(px?'PROXY READY':'REPLICATE');
+  document.getElementById('statusPill').className='status-pill live';
+  toast(px?'Proxy + Key saved — tap FORGE! 🚀':'Key saved — tap FORGE! 🎛️','✓');
+}
+function enterDemo(){
+  IS_DEMO=true;
+  document.getElementById('apiModal').style.display='none';
+  document.getElementById('statusPill').innerHTML='<div class="sdot" style="background:var(--amber)"></div>DEMO';
+  document.getElementById('statusPill').className='status-pill';
+  toast('Demo mode active 🎭','🎭');
+}
+
+function toast(msg,icon='✓'){
+  const el=document.getElementById('toast');
+  el.innerHTML=`<span style="color:var(--neon)">${icon}</span> ${msg}`;
+  el.classList.add('show');clearTimeout(window._tt);
+  window._tt=setTimeout(()=>el.classList.remove('show'),3200);
+}
+function setStep(id,st){const el=document.getElementById(id);if(!el)return;el.classList.remove('active','done');if(st)el.classList.add(st)}
+function setProg(txt,pct){const t=document.getElementById('sTxt'),b=document.getElementById('sBar');if(t)t.textContent=txt;if(b)b.style.width=pct+'%'}
+function clrProg(){document.getElementById('genStatus').classList.remove('show');document.getElementById('forgeBtn').disabled=false;['ss1','ss2','ss3','ss4'].forEach(id=>setStep(id,null));setProg('',0)}
+function showErr(msg){
+  // Friendlier message for network errors
+  if(msg==='Failed to fetch')msg='Could not reach Replicate servers. Make sure you are connected to the internet and your key starts with r8_. Also check replicate.com/account/billing — new accounts need prepaid credit added.';
+  const old=document.getElementById('errB');if(old)old.remove();
+  const d=document.createElement('div');d.id='errB';d.className='err-banner';
+  d.innerHTML=`<div style="font-size:18px;flex-shrink:0">⚠️</div><div class="err-body"><div class="err-title">Generation failed</div><div class="err-msg">${msg}</div><div class="err-tip">💡 Check your key at <strong>replicate.com/account/api-tokens</strong>. Must start with <strong>r8_</strong>. Add billing at replicate.com/account/billing — free credits available on sign-up.</div></div><button class="err-x" onclick="this.parentElement.remove()">×</button>`;
+  const gs=document.getElementById('genStatus');if(gs)gs.after(d);
+  d.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function onPI(){document.getElementById('charLen').textContent=document.getElementById('promptInput').value.length+'/500'}
+function setMode(m,btn){curMode=m;document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.getElementById('lyricsArea').style.display=m==='lyrics'?'block':'none'}
+function setDur(btn,d){curDur=d;document.querySelectorAll('.dur-row .chip').forEach(c=>c.classList.remove('on'));btn.classList.add('on')}
+function chipTog(el,w){el.classList.toggle('on');const ta=document.getElementById('promptInput');if(el.classList.contains('on')){ta.value=(ta.value+' '+w).trim()}else{ta.value=ta.value.replace(new RegExp('\\b'+w+'\\b','gi'),'').replace(/\s+/g,' ').trim()}onPI()}
+
+const TW={Electronic:['Neon','Circuit','Pulse','Voltage','Static'],'Lo-fi Hip-Hop':['Dusk','Haze','Rain','Amber','Drift'],Cinematic:['Horizon','Zenith','Requiem','Ascent','Elegy'],Pop:['Glow','Rush','Spark','Echo','Shine'],Jazz:['Velvet','Smoke','Indigo','Ember','Dusk'],Ambient:['Mist','Ether','Bloom','Halo','Drift'],Metal:['Iron','Rage','Storm','Fury','Wraith'],'R&B':['Silk','Honey','Velvet','Night','Pulse'],Classical:['Nocturne','Étude','Aria','Sonata','Prelude'],'Indie Rock':['Rust','Hollow','Dust','Flicker','Salt']};
+const TS=['Protocol','Cascade','Phase','Resonance','Frequency','Depth','Sequence','Current'];
+const TG={Melancholic:['Late night thoughts in sound','Echoes of something lost'],Energetic:['Full throttle from the first bar','Pure kinetic energy'],Peaceful:['A breath of still air','Gentle as the morning'],'Dark & Intense':['Tension without release','Where light fears to go'],Uplifting:['Rise above the noise','A sonic sunrise'],Mysterious:['Something stirs beneath','Questions without answers'],Romantic:["Soft and close and warm","The feeling you can't name"],Aggressive:['No mercy, just rhythm','Pure sonic force']};
+
+function buildMeta(p,g,m,b){
+  const w=TW[g]||TW.Electronic;
+  const title=w[Math.random()*w.length|0]+' '+TS[Math.random()*TS.length|0];
+  const tg=TG[m]||TG.Melancholic;
+  return{title,tagline:tg[Math.random()*tg.length|0],tags:[g,m,b+' BPM'],lyrics:makeLyrics(g,m)};
+}
+function makeLyrics(g,m){return`[Verse 1]\nIn the ${m.toLowerCase()} hours before the dawn\nSomething in the melody carries on\nEvery note a colour, every beat a breath\nWe were made for this, born into the rest\n\n[Chorus]\nLet it carry you somewhere far away\nLet the ${g.toLowerCase()} wash the night to day\nFeel it in your chest, feel it in your bones\nYou were never, ever really all alone\n\n[Verse 2]\nTime moves different when the music plays\nLost inside these ${m.toLowerCase()} endless days\nFingers on the keys, the whole world goes still\nSomething in this sound, something in the thrill\n\n[Chorus]\nLet it carry you somewhere far away\nLet the ${g.toLowerCase()} wash the night to day\nFeel it in your chest, feel it in your bones\nYou were never, ever really all alone`}
+function doGenLyrics(){const g=document.getElementById('genreSelect').value,m=document.getElementById('moodSelect').value;document.getElementById('lyricsInput').value=makeLyrics(g,m);toast('Lyrics generated!','✍️')}
+
+// Set this to your Vercel proxy URL after deploying
+// e.g. 'https://soundforge-proxy.vercel.app'
+let PROXY_URL = '';
+
+async function callReplicate(prompt,secs){
+  // If no proxy set, try direct (works on some networks)
+  const base = PROXY_URL || 'https://api.replicate.com';
+  const genUrl = PROXY_URL ? PROXY_URL+'/api/generate' : 'https://api.replicate.com/v1/models/meta/musicgen/predictions';
+  const pollBase = PROXY_URL ? PROXY_URL+'/api/poll' : null;
+
+  setProg('Sending to Replicate…',52);
+
+  let r;
+  try {
+    if(PROXY_URL){
+      r=await fetch(genUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({repKey:REP_KEY,prompt,duration:secs})});
+    } else {
+      r=await fetch(genUrl,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${REP_KEY}`,'Prefer':'wait=20'},body:JSON.stringify({input:{prompt,model_version:'stereo-large',duration:secs,output_format:'mp3',normalization_strategy:'loudness'}})});
+    }
+  } catch(e) {
+    if(!PROXY_URL) throw new Error('CORS blocked — you need to deploy the Vercel proxy. See instructions below.');
+    throw new Error('Could not reach proxy at '+PROXY_URL+'. Check the URL is correct.');
+  }
+
+  if(!r.ok){
+    const e=await r.json().catch(()=>({}));
+    if(r.status===401)throw new Error('Invalid API key — get a fresh one at replicate.com/account/api-tokens');
+    if(r.status===402)throw new Error('Prepaid credit needed — add credit at replicate.com/account/billing');
+    throw new Error(`Error ${r.status}: ${e.detail||e.error||JSON.stringify(e)}`);
+  }
+
+  const pred=await r.json();
+  if(pred.status==='succeeded'&&pred.url)return pred.url;
+  if(pred.status==='succeeded'){const u=Array.isArray(pred.output)?pred.output[0]:pred.output;if(u)return u}
+  if(!pred.id)throw new Error('No prediction ID — try again');
+
+  // Poll
+  let tries=0;
+  while(tries<180){
+    if(cancelFlag)throw new Error('cancelled');
+    await new Promise(r=>setTimeout(r,2000));tries++;
+    document.getElementById('sBar').style.width=Math.min(55+(tries/90)*36,92)+'%';
+    let poll;
+    if(pollBase){
+      const pr=await fetch(pollBase,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({repKey:REP_KEY,id:pred.id})});
+      poll=await pr.json();
+    } else {
+      poll=await(await fetch(`https://api.replicate.com/v1/predictions/${pred.id}`,{headers:{'Authorization':`Bearer ${REP_KEY}`}})).json();
+    }
+    if(poll.status==='succeeded'){const u=poll.url||(Array.isArray(poll.output)?poll.output[0]:poll.output);if(!u)throw new Error('No audio URL');return u}
+    if(poll.status==='failed')throw new Error('Generation failed: '+(poll.error||'unknown'));
+  }
+  throw new Error('Timed out — try a shorter duration');
+}
+
+async function startGen(){
+  const prompt=document.getElementById('promptInput').value.trim();
+  if(!prompt){toast('Add a description first','⚠️');return}
+  if(!REP_KEY&&!IS_DEMO){openModal();return}
+  const old=document.getElementById('errB');if(old)old.remove();
+  cancelFlag=false;
+  document.getElementById('forgeBtn').disabled=true;
+  document.getElementById('genStatus').classList.add('show');
+  document.getElementById('resultSec').classList.remove('show');
+  const genre=document.getElementById('genreSelect').value,mood=document.getElementById('moodSelect').value,bpm=document.getElementById('bpmVal').textContent;
+  const secs=DS[curDur]||15,noVox=curMode==='instrumental',custom=curMode==='lyrics'?document.getElementById('lyricsInput').value.trim():'';
+  const meta=buildMeta(prompt,genre,mood,bpm);
+  let audioUrl=null;
+  try{
+    setStep('ss1','active');setProg('Analyzing description…',12);await new Promise(r=>setTimeout(r,400));if(cancelFlag)throw new Error('cancelled');
+    setStep('ss1','done');setStep('ss2','active');setProg('Building composition…',28);await new Promise(r=>setTimeout(r,500));if(cancelFlag)throw new Error('cancelled');
+    setStep('ss2','done');setStep('ss3','active');setProg('Generating with MusicGen AI…',50);
+    const mp=[genre,mood,`${bpm} BPM`,prompt,noVox?'instrumental no vocals':''].filter(Boolean).join(', ');
+    if(!IS_DEMO){audioUrl=await callReplicate(mp,secs)}
+    else{for(let p=52;p<=92;p+=4){if(cancelFlag)throw new Error('cancelled');await new Promise(r=>setTimeout(r,250));document.getElementById('sBar').style.width=p+'%'}}
+    if(cancelFlag)throw new Error('cancelled');
+    setStep('ss3','done');setStep('ss4','active');setProg('Mastering…',96);await new Promise(r=>setTimeout(r,350));
+    setStep('ss4','done');setProg('Complete!',100);await new Promise(r=>setTimeout(r,200));
+  }catch(err){clrProg();if(err.message!=='cancelled')showErr(err.message);return}
+  clrProg();
+  const emoji=EM[Math.random()*EM.length|0],grad=GR[Math.random()*GR.length|0];
+  const song={...meta,emoji,grad,dur:curDur,genre,mood,bpm,lyrics:custom||meta.lyrics,audioUrl,demo:!audioUrl};
+  songs.unshift(song);curIdx=0;
+  renderResult(song);renderLib();updateNP(song);
+  toast(`"${meta.title}" created!`,'🎵');
+  if(window.innerWidth<768)setTimeout(()=>document.getElementById('resultSec').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+function doCancel(){cancelFlag=true;clrProg();toast('Cancelled','✕')}
+
+function renderResult(song){
+  document.getElementById('resultSec').classList.add('show');
+  const bars=Array.from({length:72},()=>(Math.random()*0.65+0.35));
+  const wHtml=bars.map(h=>`<div class="wb" style="height:${(h*52)|0}px"></div>`).join('');
+  const dlBtn=song.audioUrl?`<a class="abtn" href="${song.audioUrl}" download="${song.title}.mp3"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</a>`:`<button class="abtn" onclick="openModal()">Add Key</button>`;
+  document.getElementById('resultCard').innerHTML=`
+    <div class="rc-header">
+      <div class="rc-art" style="background:${song.grad}">${song.emoji}</div>
+      <div class="rc-meta">
+        <div class="rc-title">${song.title}</div>
+        <div class="rc-tagline">${song.tagline}</div>
+        <div class="rc-tags">${song.tags.map(t=>`<div class="rtag">${t}</div>`).join('')}<div class="rtag ${song.audioUrl?'real':'demo'}">${song.audioUrl?'🎵 REAL AUDIO':'🎭 DEMO'}</div></div>
+      </div>
+      <div class="rc-actions">${dlBtn}<button class="abtn primary" id="rcPBtn" onclick="togAudio()"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>${song.audioUrl?'Play':'Preview'}</button></div>
+    </div>
+    <div class="wave-player">
+      <audio id="rAudio" ${song.audioUrl?`src="${song.audioUrl}"`:''}  style="display:none" onended="onEnd()" ontimeupdate="syncW()" onloadedmetadata="onMeta()"></audio>
+      <div class="wave-bars" id="wBars" onclick="seekA(event)">${wHtml}</div>
+      <div class="wave-ctrls">
+        <button class="wplay" id="wPBtn" onclick="togAudio()"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+        <span class="wtime" id="wTime">0:00 / ${song.dur}</span>
+        <div class="vol-row"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg><input type="range" class="vsl" min="0" max="100" value="80" oninput="setVol(this.value)"></div>
+      </div>
+    </div>
+    <div class="lyr-sec"><div class="lyr-hd">Lyrics</div><div class="lyr-body">${song.lyrics}</div></div>
+  `;
+  const vd=[['🌊','Acoustic'],['🔥','Remix'],['❄️','Ambient'],['💫','Bass Boost']];
+  document.getElementById('varsGrid').innerHTML=vd.map(([e,l],i)=>`<div class="vcard" onclick="toast('Tweak prompt and forge again for variations 🎛️','💡')"><div class="vart" style="background:${GR[(i+3)%GR.length]}">${e}</div><div><div class="vlbl">Variation ${i+1}</div><div class="vname">${song.title} — ${l}</div></div><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2" style="margin-left:auto"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>`).join('');
+}
+
+function togAudio(){
+  const a=document.getElementById('rAudio');if(!a)return;
+  if(!a.src||a.src===location.href){toast('Add a Replicate key for real audio','⚠️');return}
+  if(a.paused){a.play().then(()=>setPlay(true)).catch(e=>toast('Playback error: '+e.message,'❌'))}
+  else{a.pause();setPlay(false)}
+}
+function globalTogglePlay(){
+  const a=document.getElementById('rAudio');
+  if(a&&a.src&&a.src!==location.href)togAudio();
+  else toast(songs.length?'Tap Play on your track above':'Generate a track first','⚠️');
+}
+function setPlay(st){
+  isPlaying=st;
+  const pi='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+  const pa='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  const rcb=document.getElementById('rcPBtn'),wpb=document.getElementById('wPBtn');
+  if(rcb)rcb.innerHTML=(st?pa:pi)+(st?' Pause':' Play');
+  if(wpb)wpb.innerHTML=st?pa:pi;
+  ['gPlayI','gPauseI','mnPlayI','mnPauseI'].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.style.display=id.includes('Pause')?(st?'':'none'):(st?'none':'')});
+}
+function onEnd(){setPlay(false)}
+function onMeta(){const a=document.getElementById('rAudio');if(!a)return;const m=Math.floor(a.duration/60),s=Math.floor(a.duration%60),el=document.getElementById('wTime');if(el)el.textContent=`0:00 / ${m}:${s.toString().padStart(2,'0')}`}
+function syncW(){
+  const a=document.getElementById('rAudio');if(!a||!a.duration)return;
+  const r=a.currentTime/a.duration,bs=document.querySelectorAll('.wb'),sp=Math.floor(r*bs.length);
+  bs.forEach((b,i)=>{b.classList.toggle('played',i<sp);b.classList.toggle('playing',i===sp)});
+  const fmt=t=>`${Math.floor(t/60)}:${Math.floor(t%60).toString().padStart(2,'0')}`;
+  const el=document.getElementById('wTime');if(el)el.textContent=`${fmt(a.currentTime)} / ${fmt(a.duration)}`;
+}
+function seekA(e){const a=document.getElementById('rAudio');if(!a||!a.duration)return;const rc=e.currentTarget.getBoundingClientRect();a.currentTime=((e.clientX-rc.left)/rc.width)*a.duration}
+function setVol(v){const a=document.getElementById('rAudio');if(a)a.volume=v/100}
+
+function renderLib(){
+  const cnt=songs.length;
+  document.getElementById('trackBadge').textContent=cnt+' track'+(cnt!==1?'s':'');
+  document.getElementById('trackList').innerHTML=cnt?songs.map((s,i)=>`<div class="track-item ${i===curIdx?'active':''}" onclick="selTrack(${i})"><div class="track-art" style="background:${s.grad}">${s.emoji}</div><div class="track-info"><div class="track-name">${s.title}</div><div class="track-meta">${s.genre} · ${s.audioUrl?'🎵':'🎭'}</div></div><div class="track-dur">${s.dur}</div></div>`).join(''):'<div class="empty-lib"><div>🎵</div>Tracks appear here</div>';
+}
+function selTrack(i){curIdx=i;renderLib();updateNP(songs[i]);renderResult(songs[i]);toast(songs[i].title,'▶')}
+function updateNP(s){
+  const na=document.getElementById('npArt');if(na){na.textContent=s.emoji;na.style.background=s.grad}
+  const nt=document.getElementById('npTitle');if(nt)nt.textContent=s.title;
+  const naa=document.getElementById('npArtist');if(naa)naa.textContent=s.genre.toUpperCase()+' · '+s.mood;
+}
+
+function mTab(tab,btn){
+  document.querySelectorAll('.mnbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+  const sv=document.getElementById('studioView');
+  let msv=document.getElementById('mSongsView');
+  if(tab==='studio'){sv.style.display='';if(msv)msv.style.display='none'}
+  else{
+    sv.style.display='none';
+    if(!msv){msv=document.createElement('div');msv.id='mSongsView';msv.style.cssText='padding:14px 14px 80px;height:calc(100vh - 52px);overflow-y:auto;-webkit-overflow-scrolling:touch';sv.parentNode.insertBefore(msv,sv)}
+    msv.style.display='block';
+    msv.innerHTML=songs.length?`<div style="font-family:var(--fd);font-size:20px;font-weight:800;letter-spacing:2px;margin-bottom:14px">MY SONGS</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${songs.map((s,i)=>`<div onclick="mSelTrack(${i})" style="background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:12px;cursor:pointer;-webkit-tap-highlight-color:transparent"><div style="aspect-ratio:1;border-radius:8px;background:${s.grad};display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:8px">${s.emoji}</div><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.title}</div><div style="font-size:10px;color:var(--mid);font-family:var(--fm);margin-top:2px">${s.genre} · ${s.dur}</div></div>`).join('')}</div>`:'<div style="text-align:center;padding:60px 0;color:var(--dim);font-size:13px"><div style="font-size:36px;margin-bottom:10px;opacity:0.3">🎵</div>Generate a track first</div>';
+  }
+}
+function mSelTrack(i){curIdx=i;updateNP(songs[i]);mTab('studio',document.getElementById('mnStudio'));renderResult(songs[i]);toast(songs[i].title,'▶')}
+</script>
+</body>
+</html>
