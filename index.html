@@ -143,20 +143,22 @@ body::after{
 
 /* DESKTOP LAYOUT */
 @media(min-width:768px){
-  body{display:grid;grid-template-columns:60px 260px 1fr;grid-template-rows:1fr 72px;height:100vh;overflow:hidden}
-  .m-hd,.m-nav{display:none!important}
-  .icon-nav,.left-panel{display:flex}
-  .bottom-bar{display:grid}
-  .main-col{overflow-y:auto;padding:36px 44px}
+  #studioPage{display:grid!important;grid-template-columns:60px 260px 1fr;grid-template-rows:1fr 72px;height:100vh;overflow:hidden;position:fixed;top:0;left:0;width:100%}
+  #studioPage .m-hd{display:none!important}
+  #studioPage .m-nav{display:none!important}
+  #studioPage .icon-nav{display:flex}
+  #studioPage .left-panel{display:flex}
+  #studioPage .bottom-bar{display:grid}
+  #studioPage .main-col{overflow-y:auto;padding:36px 44px}
 }
 
 /* MOBILE LAYOUT */
 @media(max-width:767px){
-  body{display:block;height:100%;overflow:hidden;position:fixed;width:100%}
-  .icon-nav,.left-panel,.bottom-bar{display:none!important}
-  .m-hd{display:flex!important;position:sticky;top:0;z-index:50}
-  .m-nav{display:flex!important;position:fixed;bottom:0;left:0;right:0;z-index:50}
-  .main-col{padding:14px 14px 80px;height:calc(100vh - 52px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #studioPage{display:block;height:100vh;overflow:hidden;position:fixed;top:0;left:0;right:0;bottom:0;width:100%}
+  #studioPage .icon-nav,#studioPage .left-panel,#studioPage .bottom-bar{display:none!important}
+  #studioPage .m-hd{display:flex!important;position:sticky;top:0;z-index:50}
+  #studioPage .m-nav{display:flex!important;position:fixed;bottom:0;left:0;right:0;z-index:50}
+  #studioPage .main-col{padding:14px 14px 80px;height:calc(100vh - 52px);overflow-y:auto;-webkit-overflow-scrolling:touch}
   .studio-title{font-size:38px!important;letter-spacing:3px!important}
   .ctrl-row{grid-template-columns:1fr 1fr!important}
   .forge{grid-column:1/-1!important;height:52px!important;font-size:22px!important}
@@ -216,7 +218,7 @@ body::after{
 
 /* STUDIO HEADER */
 .studio-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-.studio-title{font-family:var(--fd);font-size:60px;font-weight:900;letter-spacing:5px;line-height:0.85;background:linear-gradient(130deg,var(--txt) 0%,var(--neon) 50%,var(--blue) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.studio-title{font-family:var(--fd);font-size:52px;font-weight:900;letter-spacing:5px;line-height:0.85;background:linear-gradient(130deg,var(--txt) 0%,var(--neon) 50%,var(--blue) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .studio-sub{font-size:13px;color:var(--mid);margin-top:10px;font-weight:400}
 .status-pill{display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:10px;letter-spacing:0.08em;padding:5px 12px;border-radius:100px;border:1px solid var(--b2);color:var(--mid)}
 .status-pill.live{border-color:rgba(0,245,200,0.25);color:var(--neon)}
@@ -247,7 +249,7 @@ body::after{
 .lyrics-area{display:none}
 
 /* CONTROLS */
-.ctrl-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:12px;align-items:end}
+.ctrl-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
 .cg{display:flex;flex-direction:column;gap:6px}
 .clbl{font-family:var(--fm);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid)}
 .csel{background:var(--s1);border:1px solid var(--b2);border-radius:10px;color:var(--txt);font-family:var(--fb);font-size:13px;padding:11px 12px;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2366667a' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color 0.2s}
@@ -396,11 +398,36 @@ body::after{
 .mnote{margin-top:10px;font-size:10px;color:var(--dim);text-align:center}
 
 /* pages */
-#landingPage{display:block}
-#studioPage{display:none}
+#landingPage{display:block;overflow-x:hidden}
+#studioPage{display:none}#studioPage.active{display:block}
 /* studio back btn in mobile header */
 .m-back{display:none;background:none;border:none;color:var(--mid);font-family:var(--fm);font-size:10px;letter-spacing:0.08em;cursor:pointer;align-items:center;gap:5px}
 @media(max-width:767px){.m-back{display:flex}}
+
+/* ── LAYOUT FIXES ── */
+/* Controls grid responsive */
+@media(max-width:1100px){
+  .ctrl-row{grid-template-columns:1fr 1fr 1fr!important}
+  .ctrl-row .forge{grid-column:1/-1;height:48px!important}
+}
+@media(max-width:767px){
+  .ctrl-row{grid-template-columns:1fr 1fr!important}
+  .ctrl-row .forge{grid-column:1/-1!important;height:52px!important;font-size:22px!important}
+}
+/* Ensure landing page never gets body overflow:hidden */
+#landingPage *{max-width:100%}
+/* Studio title fits */
+@media(max-width:900px){.studio-title{font-size:40px!important}}
+/* Mode tabs fit on all screens */
+@media(max-width:500px){.mode-tabs{width:100%!important}.mtab{flex:1;padding:8px 2px!important;font-size:11px!important}}
+/* Duration row wraps */
+.dur-row{flex-wrap:wrap}
+/* Result actions stack on small mobile */
+@media(max-width:400px){.rc-actions{flex-direction:column}.abtn{justify-content:center}}
+/* Metatag builder scrolls on mobile */
+@media(max-width:767px){.mtag-builder{overflow-x:auto}}
+.mtag-row{flex-wrap:wrap}
+
 </style>
 </head>
 <body>
@@ -724,7 +751,7 @@ Through the fire and the rain</span><br><br>
     </div>
     <div class="cg">
       <div class="clbl">Voice</div>
-      <select class="csel" id="voiceSelect">
+      <select class="csel" id="voiceSelect" style="min-width:0">
         <option value="female">👩 Female</option>
         <option value="male">👨 Male</option>
         <option value="duet">🎤 Duet (M+F)</option>
@@ -813,42 +840,8 @@ Through the fire and the rain</span><br><br>
   </button>
 </nav>
 
-<div class="toast" id="toast"></div>
+<div class="toast" </div><!-- /studioPage -->
 
-<!-- API MODAL -->
-<div id="apiModal" onclick="if(event.target===this&&REP_KEY)this.style.display='none'">
-  <div class="modal-box">
-    <div class="mhandle"></div>
-    <div class="mttl">FREE SETUP</div>
-    <div class="msub">SOUNDFORGE uses <strong style="color:var(--txt)">Replicate's free AI music API</strong>. Works on every browser and device — no CORS issues, no Cloudflare Worker needed.</div>
-    <div class="msteps">
-      <div class="msteps-ttl">Get your free key (2 min)</div>
-      <div class="mstep"><div class="msnum">1</div><span>Go to <a href="https://replicate.com" target="_blank" style="color:var(--neon);text-decoration:none">replicate.com</a> → Sign in with GitHub or Google (free)</span></div>
-      <div class="mstep"><div class="msnum">2</div><span>Click your <strong>profile picture</strong> top-right → <strong>API tokens</strong></span></div>
-      <div class="mstep"><div class="msnum">3</div><span>Click <strong>Create token</strong> → any name → copy the key</span></div>
-      <div class="mstep"><div class="msnum">4</div><span>Paste below → tap <strong style="color:var(--neon)">Launch Studio</strong></span></div>
-    </div>
-    <div class="minp-wrap">
-      <div class="minp-lbl"><div class="minp-dot"></div>Replicate API Key</div>
-      <input class="minp" id="repKeyInput" type="password"
-        placeholder="r8_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-        onkeydown="if(event.key==='Enter')saveKey()">
-      <div class="minp-hint">Starts with <code style="color:var(--neon);background:rgba(0,245,200,0.08);padding:1px 5px;border-radius:3px">r8_</code> · ~$0.003 per track</div>
-    </div>
-    <div class="minp-wrap">
-      <div class="minp-lbl"><div class="minp-dot" style="background:var(--amber)"></div>Vercel Proxy URL <span style="color:var(--amber);font-size:9px">REQUIRED</span></div>
-      <input class="minp" id="proxyInput" type="url"
-        placeholder="https://soundforge-proxy.vercel.app"
-        onkeydown="if(event.key==='Enter')saveKey()">
-      <div class="minp-hint">Deploy the proxy on <a href="https://vercel.com" target="_blank" style="color:var(--neon);text-decoration:none">vercel.com</a> (free) to bypass browser CORS restrictions. See the included <strong>README</strong> for 3-step instructions.</div>
-    </div>
-    <div class="mbtns">
-      <button class="mprimary" onclick="saveKey()">LAUNCH STUDIO</button>
-      <button class="mskip" onclick="enterDemo()">Demo mode</button>
-    </div>
-    <div class="mnote">No key? Demo mode lets you explore the full UI with simulated audio.</div>
-  </div>
-</div>
 
 
 </div><!-- /studioPage -->
@@ -892,8 +885,18 @@ const ALL_GENRES=['Hip-Hop', 'Trap', 'Drill', 'Boom Bap', 'Lo-fi', 'R&B', 'Soul'
 
 function goToStudio(){
   document.getElementById('landingPage').style.display='none';
-  document.getElementById('studioPage').style.display='block';
+  const sp=document.getElementById('studioPage');
+  sp.style.display='block';
+  // Reset body for studio layout
+  document.body.style.overflow='';
+  document.body.style.position='';
+  document.body.style.height='';
+  document.body.style.width='';
   window.scrollTo(0,0);
+  // Show modal if no key
+  if(!REP_KEY&&!IS_DEMO){
+    setTimeout(()=>{ document.getElementById('apiModal').style.display='flex'; },300);
+  }
 }
 function goToLanding(){
   document.getElementById('studioPage').style.display='none';
@@ -901,68 +904,20 @@ function goToLanding(){
   window.scrollTo(0,0);
 }
 
-// Populate genre cloud on landing
 window.addEventListener('DOMContentLoaded',()=>{
+  // Populate genre cloud
   const gc=document.getElementById('genreCloud');
-  if(gc){
-    ALL_GENRES.forEach(g=>{
-      const p=document.createElement('div');
-      p.className='gpill';p.textContent=g;
-      gc.appendChild(p);
-    });
-  }
+  if(gc){ALL_GENRES.forEach(g=>{const p=document.createElement('div');p.className='gpill';p.textContent=g;gc.appendChild(p);});}
   // Session restore
   try{
     const k=sessionStorage.getItem('sf_rk');
     if(k){REP_KEY=k;const el=document.getElementById('repKeyInput');if(el)el.value=k;}
     const px=sessionStorage.getItem('sf_proxy');
     if(px){PROXY_URL=px;const el=document.getElementById('proxyInput');if(el)el.value=px;}
-    if(k){
-      document.getElementById('apiModal').style.display='none';
-    }else{
-      // Don't show modal on landing page
-    }
+    if(k){document.getElementById('apiModal').style.display='none';}
   }catch(e){}
-});
-
-// Insert metatag into lyrics textarea
-function insertTag(tag){
-  const ta=document.getElementById('lyricsInput');
-  if(!ta)return;
-  const pos=ta.selectionStart;
-  const val=ta.value;
-  ta.value=val.slice(0,pos)+tag+'
-'+val.slice(pos);
-  ta.selectionStart=ta.selectionEnd=pos+tag.length+1;
-  ta.focus();
-}
-
-
-let REP_KEY='',IS_DEMO=false,cancelFlag=false,songs=[],curIdx=-1,curMode='simple',curDur='0:30',isPlaying=false;
-const DS={'0:30':15,'1:00':30,'2:00':60,'3:00':90,'4:00':120};
-const EM=['🌊','⚡','🌙','🔥','🎸','🌌','🎹','💫','🌿','🎷'];
-const GR=['linear-gradient(135deg,#0d1b2a,#1b4332)','linear-gradient(135deg,#1a0533,#4a0e8f)','linear-gradient(135deg,#2d0a0a,#8b1a1a)','linear-gradient(135deg,#0a1628,#1e3a5f)','linear-gradient(135deg,#1a2a0a,#3d6b1a)','linear-gradient(135deg,#2a1a0a,#8b4513)','linear-gradient(135deg,#0a0a2a,#1a1a6b)','linear-gradient(135deg,#2a0a1a,#6b1a3d)'];
-
-// Session restore
-try{const k=sessionStorage.getItem('sf_rk');if(k)REP_KEY=k;const px=sessionStorage.getItem('sf_proxy');if(px)PROXY_URL=px}catch(e){}
-
-window.addEventListener('DOMContentLoaded',()=>{
-  try{
-    const k=sessionStorage.getItem('sf_rk');
-    if(k){
-      const el=document.getElementById('repKeyInput');
-      if(el)el.value=k;
-      const px=sessionStorage.getItem('sf_proxy');
-      const pxEl=document.getElementById('proxyInput');
-      if(px&&pxEl)pxEl.value=px;
-      document.getElementById('apiModal').style.display='none';
-      toast('Welcome back — ready to forge! 🎛️','✓');
-    }else{
-      document.getElementById('apiModal').style.display='flex';
-    }
-  }catch(e){document.getElementById('apiModal').style.display='flex'}
   renderLib();
-});
+}););
 
 function openModal(){document.getElementById('apiModal').style.display='flex'}
 function saveKey(){
