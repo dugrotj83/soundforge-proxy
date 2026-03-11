@@ -2,10 +2,123 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>SOUNDFORGE — AI Music Studio</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+/* ── BASE ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#050510;--s1:#09091a;--s2:#0e0e22;--s3:#14142e;--s4:#1c1c3a;
+  --b1:rgba(255,255,255,0.05);--b2:rgba(255,255,255,0.09);--b3:rgba(255,255,255,0.15);
+  --neon:#00f5c8;--neon2:#00c49f;--rose:#ff2d6b;--amber:#ffb520;--blue:#3d8eff;--purple:#9b5de5;
+  --txt:#eeeef8;--mid:#7777a0;--dim:#2a2a4a;--r:12px;
+  --fd:'Bebas Neue',sans-serif;--fb:'Outfit',sans-serif;--fm:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);color:var(--txt);background:var(--bg);overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% -10%,rgba(0,245,200,0.09) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 50% at -10% 60%,rgba(61,142,255,0.07) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 40% at 110% 80%,rgba(155,93,229,0.06) 0%,transparent 60%)}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.016}
+
+/* ── LANDING PAGE STYLES ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,5,16,0.7);backdrop-filter:blur(20px);border-bottom:1px solid var(--b1);transition:all 0.3s}
+.nav-logo{font-family:var(--fd);font-size:28px;letter-spacing:4px;color:var(--neon);text-shadow:0 0 30px rgba(0,245,200,0.4);cursor:pointer}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-link{font-size:13px;font-weight:500;color:var(--mid);cursor:pointer;transition:color 0.2s;letter-spacing:0.04em;text-decoration:none}
+.nav-link:hover{color:var(--txt)}
+.nav-cta{background:var(--neon);color:#000;font-family:var(--fb);font-size:13px;font-weight:700;padding:10px 22px;border-radius:8px;border:none;cursor:pointer;transition:all 0.2s}
+.nav-cta:hover{background:var(--neon2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,245,200,0.3)}
+@media(max-width:767px){.nav{padding:14px 16px}.nav-link{display:none}}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative;z-index:2}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,245,200,0.08);border:1px solid rgba(0,245,200,0.2);border-radius:100px;padding:7px 16px;margin-bottom:28px;font-family:var(--fm);font-size:11px;letter-spacing:0.12em;color:var(--neon);animation:fadeup 0.8s ease both}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--neon);box-shadow:0 0 8px var(--neon);animation:bdpulse 2s ease-in-out infinite}
+@keyframes bdpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
+.hero-title{font-family:var(--fd);font-size:clamp(72px,12vw,160px);line-height:0.85;letter-spacing:6px;margin-bottom:12px;background:linear-gradient(135deg,#fff 0%,var(--neon) 40%,var(--blue) 75%,var(--purple) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:fadeup 0.8s 0.1s ease both}
+.hero-sub{font-family:var(--fd);font-size:clamp(18px,3vw,36px);letter-spacing:8px;color:var(--mid);margin-bottom:20px;animation:fadeup 0.8s 0.2s ease both}
+.hero-desc{font-size:clamp(14px,2vw,17px);color:var(--mid);max-width:580px;line-height:1.75;font-weight:300;margin-bottom:40px;animation:fadeup 0.8s 0.3s ease both}
+.hero-desc strong{color:var(--txt);font-weight:600}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;animation:fadeup 0.8s 0.4s ease both}
+.btn-primary{background:var(--neon);color:#000;font-family:var(--fb);font-size:15px;font-weight:700;padding:15px 34px;border-radius:10px;border:none;cursor:pointer;transition:all 0.2s;letter-spacing:0.04em;position:relative;overflow:hidden}
+.btn-primary::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transform:translateX(-100%);transition:transform 0.5s}
+.btn-primary:hover{box-shadow:0 0 50px rgba(0,245,200,0.4);transform:translateY(-2px)}
+.btn-primary:hover::after{transform:translateX(100%)}
+.btn-secondary{background:none;color:var(--txt);font-family:var(--fb);font-size:15px;font-weight:600;padding:15px 34px;border-radius:10px;border:1px solid var(--b3);cursor:pointer;transition:all 0.2s}
+.btn-secondary:hover{background:var(--s2);border-color:var(--neon);color:var(--neon)}
+.hero-wave{display:flex;align-items:center;gap:3px;height:48px;margin:44px auto 0;animation:fadeup 0.8s 0.5s ease both}
+.hw{width:4px;border-radius:2px;background:linear-gradient(to top,var(--neon),var(--blue));animation:hwani 1.2s ease-in-out infinite alternate}
+.hw:nth-child(1){height:16px;animation-delay:0s}.hw:nth-child(2){height:32px;animation-delay:0.07s}.hw:nth-child(3){height:24px;animation-delay:0.14s}.hw:nth-child(4){height:44px;animation-delay:0.21s}.hw:nth-child(5){height:36px;animation-delay:0.28s}.hw:nth-child(6){height:48px;animation-delay:0.35s}.hw:nth-child(7){height:28px;animation-delay:0.42s}.hw:nth-child(8){height:44px;animation-delay:0.49s}.hw:nth-child(9){height:20px;animation-delay:0.56s}.hw:nth-child(10){height:36px;animation-delay:0.63s}.hw:nth-child(11){height:48px;animation-delay:0.70s}.hw:nth-child(12){height:30px;animation-delay:0.77s}.hw:nth-child(13){height:40px;animation-delay:0.84s}.hw:nth-child(14){height:20px;animation-delay:0.91s}.hw:nth-child(15){height:32px;animation-delay:0.98s}.hw:nth-child(16){height:48px;animation-delay:1.05s}.hw:nth-child(17){height:24px;animation-delay:1.12s}.hw:nth-child(18){height:38px;animation-delay:1.19s}.hw:nth-child(19){height:16px;animation-delay:1.26s}.hw:nth-child(20){height:28px;animation-delay:1.33s}
+@keyframes hwani{from{transform:scaleY(0.15);opacity:0.3}to{transform:scaleY(1);opacity:1}}
+@keyframes fadeup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.lsection{position:relative;z-index:2;padding:90px 48px}
+@media(max-width:600px){.lsection{padding:60px 16px}}
+.lsec-badge{font-family:var(--fm);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--neon);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.lsec-badge::before{content:'';width:24px;height:1px;background:var(--neon)}
+.lsec-title{font-family:var(--fd);font-size:clamp(36px,6vw,80px);letter-spacing:4px;line-height:0.9;margin-bottom:18px}
+.lsec-sub{font-size:15px;color:var(--mid);max-width:540px;line-height:1.7;font-weight:300;margin-bottom:50px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:900px){.features-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.features-grid{grid-template-columns:1fr}}
+.feat-card{background:var(--s1);border:1px solid var(--b1);border-radius:16px;padding:26px;transition:all 0.3s;position:relative;overflow:hidden}
+.feat-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity 0.3s;background:linear-gradient(135deg,rgba(0,245,200,0.04),rgba(61,142,255,0.03))}
+.feat-card:hover{border-color:var(--b2);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+.feat-card:hover::before{opacity:1}
+.feat-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px}
+.feat-title{font-family:var(--fd);font-size:19px;letter-spacing:2px;margin-bottom:7px}
+.feat-desc{font-size:12px;color:var(--mid);line-height:1.7;font-weight:300}
+.feat-tag{display:inline-block;font-family:var(--fm);font-size:9px;letter-spacing:0.1em;padding:3px 8px;border-radius:4px;margin-top:10px;background:rgba(0,245,200,0.08);border:1px solid rgba(0,245,200,0.15);color:var(--neon)}
+.meta-demo{background:var(--s1);border:1px solid var(--b2);border-radius:14px;padding:28px;margin-top:50px;position:relative;overflow:hidden}
+.meta-demo::before{content:'EXAMPLE';position:absolute;top:14px;right:14px;font-family:var(--fm);font-size:9px;letter-spacing:0.15em;color:var(--neon);background:rgba(0,245,200,0.08);border:1px solid rgba(0,245,200,0.2);padding:3px 9px;border-radius:100px}
+.meta-lbl{font-family:var(--fm);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mid);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.meta-lbl::after{content:'';flex:1;height:1px;background:var(--b1)}
+.mcode{font-family:var(--fm);font-size:12px;line-height:2;color:rgba(238,238,248,0.65)}
+.mt{color:var(--neon);font-weight:500}.mv{color:var(--amber)}.mc{color:var(--mid)}
+.steps-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;position:relative}
+.steps-row::before{content:'';position:absolute;top:30px;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,var(--b3),var(--b3),transparent);z-index:0}
+@media(max-width:800px){.steps-row{grid-template-columns:1fr 1fr}.steps-row::before{display:none}}
+@media(max-width:480px){.steps-row{grid-template-columns:1fr}}
+.step-card{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:22px;text-align:center;position:relative;z-index:1}
+.step-num{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--neon),var(--blue));color:#000;font-family:var(--fd);font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.step-ttl{font-family:var(--fd);font-size:16px;letter-spacing:2px;margin-bottom:7px}
+.step-desc{font-size:11px;color:var(--mid);line-height:1.6;font-weight:300}
+.genre-cloud{display:flex;gap:7px;flex-wrap:wrap;margin-top:28px}
+.gpill{font-family:var(--fm);font-size:10px;letter-spacing:0.07em;padding:5px 12px;border-radius:100px;border:1px solid var(--b1);color:var(--mid);transition:all 0.2s;cursor:default;white-space:nowrap}
+.gpill:hover{border-color:var(--neon);color:var(--neon);background:rgba(0,245,200,0.06)}
+.cta-section{position:relative;z-index:2;padding:80px 48px;text-align:center}
+@media(max-width:600px){.cta-section{padding:50px 16px}}
+.cta-box{background:linear-gradient(135deg,rgba(0,245,200,0.06),rgba(61,142,255,0.04),rgba(155,93,229,0.05));border:1px solid rgba(0,245,200,0.15);border-radius:22px;padding:70px 44px;position:relative;overflow:hidden}
+.cta-box::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(transparent 0deg,rgba(0,245,200,0.025) 60deg,transparent 120deg);animation:ctarot 20s linear infinite;pointer-events:none}
+@keyframes ctarot{to{transform:rotate(360deg)}}
+.cta-title{font-family:var(--fd);font-size:clamp(44px,8vw,100px);letter-spacing:5px;line-height:0.9;margin-bottom:18px;position:relative;z-index:1}
+.cta-sub{font-size:15px;color:var(--mid);margin-bottom:36px;font-weight:300;position:relative;z-index:1}
+.sfooter{position:relative;z-index:2;padding:32px 48px;border-top:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.sfooter-logo{font-family:var(--fd);font-size:18px;letter-spacing:3px;color:var(--neon)}
+.sfooter-txt{font-family:var(--fm);font-size:10px;color:var(--dim);letter-spacing:0.1em}
+@media(max-width:600px){.sfooter{padding:20px 16px;flex-direction:column;text-align:center}}
+
+/* back button */
+.back-btn{display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--b2);border-radius:8px;padding:8px 14px;color:var(--mid);font-family:var(--fb);font-size:12px;cursor:pointer;transition:all 0.2s;margin-bottom:0}
+.back-btn:hover{border-color:var(--neon);color:var(--neon)}
+
+/* enhanced metatag builder */
+.mtag-builder{background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:14px;margin-top:10px}
+.mtag-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.mtag-row:last-child{margin:0}
+.mtag-lbl{font-family:var(--fm);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);width:100%;margin-bottom:4px}
+.mtag-btn{font-family:var(--fm);font-size:10px;padding:4px 10px;border-radius:5px;border:1px solid var(--b2);background:none;color:var(--mid);cursor:pointer;transition:all 0.18s;-webkit-tap-highlight-color:transparent}
+.mtag-btn:hover,.mtag-btn:active{border-color:var(--neon);color:var(--neon);background:rgba(0,245,200,0.07)}
+
+/* style input */
+.style-input{width:100%;background:var(--s1);border:1px solid var(--b2);border-radius:10px;color:var(--txt);font-family:var(--fb);font-size:14px;padding:12px 14px;outline:none;transition:border-color 0.2s;margin-top:6px}
+.style-input:focus{border-color:rgba(0,245,200,0.3)}
+.style-input::placeholder{color:var(--dim)}
+
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#06060e;--s1:#0b0b18;--s2:#10101f;--s3:#181828;
@@ -134,7 +247,7 @@ body::after{
 .lyrics-area{display:none}
 
 /* CONTROLS */
-.ctrl-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end}
+.ctrl-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:12px;align-items:end}
 .cg{display:flex;flex-direction:column;gap:6px}
 .clbl{font-family:var(--fm);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid)}
 .csel{background:var(--s1);border:1px solid var(--b2);border-radius:10px;color:var(--txt);font-family:var(--fb);font-size:13px;padding:11px 12px;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2366667a' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color 0.2s}
@@ -281,13 +394,187 @@ body::after{
 .mskip{padding:13px 14px;border-radius:9px;border:1px solid var(--b2);background:none;color:var(--mid);font-family:var(--fb);font-size:12px;cursor:pointer;transition:color 0.2s;white-space:nowrap}
 .mskip:hover{color:var(--txt)}
 .mnote{margin-top:10px;font-size:10px;color:var(--dim);text-align:center}
+
+/* pages */
+#landingPage{display:block}
+#studioPage{display:none}
+/* studio back btn in mobile header */
+.m-back{display:none;background:none;border:none;color:var(--mid);font-family:var(--fm);font-size:10px;letter-spacing:0.08em;cursor:pointer;align-items:center;gap:5px}
+@media(max-width:767px){.m-back{display:flex}}
 </style>
 </head>
 <body>
 
+
+<!-- ═══════════════════════════════ LANDING PAGE ═══════════════════════════════ -->
+<div id="landingPage">
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo" onclick="goToStudio()">SOUNDFORGE</div>
+  <div class="nav-links">
+    <a class="nav-link" href="#features">Features</a>
+    <a class="nav-link" href="#how">How It Works</a>
+    <a class="nav-link" href="#genres">Genres</a>
+    <button class="nav-cta" onclick="goToStudio()">Launch Studio →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><div class="badge-dot"></div>AI-POWERED TEXT TO MUSIC</div>
+  <div class="hero-title">SOUND<br>FORGE</div>
+  <div class="hero-sub">CREATE. COMPOSE. CONQUER.</div>
+  <div class="hero-desc">
+    The most powerful <strong>text-to-music AI engine</strong> on the web.
+    Describe any sound, in any language, any genre, any mood —
+    and watch SOUNDFORGE bring it to life in seconds.
+  </div>
+  <div class="hero-btns">
+    <button class="btn-primary" onclick="goToStudio()">Start Creating Free →</button>
+    <button class="btn-secondary" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">See Features</button>
+  </div>
+  <div class="hero-wave">
+    <div class="hw"></div><div class="hw"></div><div class="hw"></div><div class="hw"></div>
+    <div class="hw"></div><div class="hw"></div><div class="hw"></div><div class="hw"></div>
+    <div class="hw"></div><div class="hw"></div><div class="hw"></div><div class="hw"></div>
+    <div class="hw"></div><div class="hw"></div><div class="hw"></div><div class="hw"></div>
+    <div class="hw"></div><div class="hw"></div><div class="hw"></div><div class="hw"></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-badge">Core Features</div>
+  <div class="section-title">EVERYTHING YOU<br>NEED TO CREATE</div>
+  <div class="section-sub">From a single sentence to a fully structured song with vocals, instrumentation, and professional-grade output.</div>
+
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon" style="background:linear-gradient(135deg,rgba(0,245,200,0.15),rgba(0,245,200,0.05))">🎵</div>
+      <div class="feat-title">TEXT TO MUSIC</div>
+      <div class="feat-desc">Type a description in plain language and get a full track. Works in any language, dialect, or slang. "90s boom bap about coding" or "trap beat con letra en español" — it understands.</div>
+      <div class="feat-tag">SIMPLE MODE</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:linear-gradient(135deg,rgba(155,93,229,0.15),rgba(155,93,229,0.05))">🎛️</div>
+      <div class="feat-title">CUSTOM MODE</div>
+      <div class="feat-desc">Separate lyrics from style. Use metatags like [Verse], [Chorus], [Bridge] to structure your song exactly how you want. Control every section, every instrument, every vocal type.</div>
+      <div class="feat-tag">ADVANCED</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:linear-gradient(135deg,rgba(61,142,255,0.15),rgba(61,142,255,0.05))">🎤</div>
+      <div class="feat-title">VOCAL CONTROL</div>
+      <div class="feat-desc">Specify vocal styles with tags: [Male singer], [Female singer], [Whispers], [Harmonized chorus], [Rap], [Opera]. Mix and match for dynamic song arrangements.</div>
+      <div class="feat-tag">METATAGS</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:linear-gradient(135deg,rgba(255,181,32,0.15),rgba(255,181,32,0.05))">🎸</div>
+      <div class="feat-title">INSTRUMENTATION</div>
+      <div class="feat-desc">Define specific instruments: [Distorted electric guitar], [Synth pads], [808 bass], [Live drums], [String quartet]. Craft your exact sonic palette with precision.</div>
+      <div class="feat-tag">METATAGS</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:linear-gradient(135deg,rgba(255,45,107,0.15),rgba(255,45,107,0.05))">🌍</div>
+      <div class="feat-title">ALL LANGUAGES</div>
+      <div class="feat-desc">Generate music in English, Spanish, French, Mandarin, Arabic, Portuguese, Hindi, Japanese — and understand regional dialects, slang, and cultural musical references.</div>
+      <div class="feat-tag">MULTILINGUAL</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:linear-gradient(135deg,rgba(0,245,200,0.1),rgba(155,93,229,0.1))">⚡</div>
+      <div class="feat-title">INSTRUMENTAL MODE</div>
+      <div class="feat-desc">Generate pure instrumental tracks with no vocals. Perfect for background music, film scores, game soundtracks, podcasts, or any content needing clean audio beds.</div>
+      <div class="feat-tag">NO VOCALS</div>
+    </div>
+  </div>
+
+  <!-- METATAG DEMO -->
+  <div class="meta-demo">
+    <div class="meta-title">Custom Mode Example</div>
+    <div class="meta-code">
+<span class="mc">// Style of Music field:</span><br>
+<span class="mv">dark trap, 140 BPM, melodic, cinematic, 808 bass, atmospheric</span><br><br>
+<span class="mc">// Lyrics field with metatags:</span><br>
+<span class="mt">[Intro]</span><br>
+<span class="mv">*haunting synth melody, no vocals*</span><br><br>
+<span class="mt">[Verse 1]</span> <span class="mt">[Male rapper]</span><br>
+<span class="mv">Lost in the city lights, searching for a sign<br>
+Every step I take just blurs the bottom line</span><br><br>
+<span class="mt">[Chorus]</span> <span class="mt">[Female singer]</span> <span class="mt">[Harmonized]</span><br>
+<span class="mv">We rise, we fall, we rise again<br>
+Through the fire and the rain</span><br><br>
+<span class="mt">[Bridge]</span> <span class="mt">[Distorted electric guitar]</span> <span class="mt">[Build]</span><br>
+<span class="mv">*intense instrumental break*</span><br><br>
+<span class="mt">[Outro]</span> <span class="mt">[Fade]</span><br>
+<span class="mv">*melodic synth, fading to silence*</span>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how" style="padding-top:0">
+  <div class="section-badge">Process</div>
+  <div class="section-title">HOW IT WORKS</div>
+  <div class="section-sub">From idea to finished track in under a minute.</div>
+  <div class="steps-row">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-title">DESCRIBE</div>
+      <div class="step-desc">Type your idea in plain language. Genre, mood, tempo, instruments, language — be as vague or specific as you want.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-title">STRUCTURE</div>
+      <div class="step-desc">Optionally use metatags to define song structure: verses, chorus, bridge, specific vocal styles and instruments.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-title">GENERATE</div>
+      <div class="step-desc">Our AI composes, performs, and produces your track in real time. Full stereo audio output in MP3 format.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <div class="step-title">DOWNLOAD</div>
+      <div class="step-desc">Preview your track instantly, then download the full audio file. Iterate with variations or tweaked prompts.</div>
+    </div>
+  </div>
+</section>
+
+<!-- GENRES -->
+<section class="section" id="genres" style="padding-top:0">
+  <div class="section-badge">All Genres Supported</div>
+  <div class="section-title">ANY GENRE.<br>ANY CULTURE.</div>
+  <div class="section-sub">SOUNDFORGE understands music from every corner of the world.</div>
+  <div class="genres-scroll" id="genreCloud"></div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-box">
+    <div class="cta-title">READY TO<br>FORGE?</div>
+    <div class="cta-sub">Join thousands of creators making AI music. Free to start.</div>
+    <button class="btn-primary" onclick="goToStudio()" style="font-size:16px;padding:18px 48px">
+      Launch Studio →
+    </button>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-logo">SOUNDFORGE</div>
+  <div class="footer-txt">POWERED BY MUSICGEN AI · BUILT FOR CREATORS</div>
+</footer>
+
+</div><!-- /landingPage -->
+
+
+<!-- ═══════════════════════════════ STUDIO PAGE ═══════════════════════════════ -->
+<div id="studioPage">
+
+
 <!-- MOBILE HEADER -->
 <header class="m-hd">
-  <div class="m-brand">SOUNDFORGE</div>
+  <button class="m-back" onclick="goToLanding()">← Back</button>
+  <div class="m-brand" onclick="goToLanding()" style="cursor:pointer">SOUNDFORGE</div>
   <button class="m-key-btn" onclick="openModal()">
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
     API KEY
@@ -296,7 +583,7 @@ body::after{
 
 <!-- ICON NAV -->
 <nav class="icon-nav">
-  <div class="logo-mark">SF</div>
+  <div class="logo-mark" onclick="goToLanding()" style="cursor:pointer;-webkit-tap-highlight-color:transparent" title="Back to home">SF</div>
   <button class="inav on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4"/></svg></button>
   <button class="inav"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></button>
   <button class="inav"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
@@ -328,7 +615,7 @@ body::after{
 
   <div class="mode-tabs">
     <button class="mtab on" onclick="setMode('simple',this)">Simple</button>
-    <button class="mtab" onclick="setMode('lyrics',this)">Custom Lyrics</button>
+    <button class="mtab" onclick="setMode('custom',this)">Custom</button>
     <button class="mtab" onclick="setMode('instrumental',this)">Instrumental</button>
   </div>
 
@@ -364,6 +651,56 @@ body::after{
     </div>
   </div>
 
+
+    <!-- METATAG BUILDER (shown in lyrics/custom mode) -->
+    <div class="mtag-builder" id="mtagBuilder" style="display:none">
+      <div class="mtag-row">
+        <div class="mtag-lbl">Song Structure</div>
+        <button class="mtag-btn" onclick="insertTag('[Intro]')">[Intro]</button>
+        <button class="mtag-btn" onclick="insertTag('[Verse]')">[Verse]</button>
+        <button class="mtag-btn" onclick="insertTag('[Pre-Chorus]')">[Pre-Chorus]</button>
+        <button class="mtag-btn" onclick="insertTag('[Chorus]')">[Chorus]</button>
+        <button class="mtag-btn" onclick="insertTag('[Bridge]')">[Bridge]</button>
+        <button class="mtag-btn" onclick="insertTag('[Drop]')">[Drop]</button>
+        <button class="mtag-btn" onclick="insertTag('[Outro]')">[Outro]</button>
+        <button class="mtag-btn" onclick="insertTag('[Hook]')">[Hook]</button>
+        <button class="mtag-btn" onclick="insertTag('[Break]')">[Break]</button>
+      </div>
+      <div class="mtag-row">
+        <div class="mtag-lbl">Vocals</div>
+        <button class="mtag-btn" onclick="insertTag('[Male singer]')">[Male singer]</button>
+        <button class="mtag-btn" onclick="insertTag('[Female singer]')">[Female singer]</button>
+        <button class="mtag-btn" onclick="insertTag('[Rap]')">[Rap]</button>
+        <button class="mtag-btn" onclick="insertTag('[Whispers]')">[Whispers]</button>
+        <button class="mtag-btn" onclick="insertTag('[Harmonized]')">[Harmonized]</button>
+        <button class="mtag-btn" onclick="insertTag('[Opera]')">[Opera]</button>
+        <button class="mtag-btn" onclick="insertTag('[No vocals]')">[No vocals]</button>
+        <button class="mtag-btn" onclick="insertTag('[Ad libs]')">[Ad libs]</button>
+      </div>
+      <div class="mtag-row">
+        <div class="mtag-lbl">Instruments</div>
+        <button class="mtag-btn" onclick="insertTag('[Electric guitar]')">[Electric guitar]</button>
+        <button class="mtag-btn" onclick="insertTag('[808 bass]')">[808 bass]</button>
+        <button class="mtag-btn" onclick="insertTag('[Synth pads]')">[Synth pads]</button>
+        <button class="mtag-btn" onclick="insertTag('[Live drums]')">[Live drums]</button>
+        <button class="mtag-btn" onclick="insertTag('[Piano]')">[Piano]</button>
+        <button class="mtag-btn" onclick="insertTag('[Strings]')">[Strings]</button>
+        <button class="mtag-btn" onclick="insertTag('[Brass]')">[Brass]</button>
+        <button class="mtag-btn" onclick="insertTag('[Build]')">[Build]</button>
+        <button class="mtag-btn" onclick="insertTag('[Fade]')">[Fade]</button>
+      </div>
+    </div>
+
+
+    <!-- STYLE INPUT (custom mode) -->
+    <div id="styleInputWrap" style="display:none">
+      <div class="cg" style="margin-top:-10px">
+        <div class="clbl">Style of Music <span style="color:var(--mid);font-size:9px">Custom Mode</span></div>
+        <input class="style-input" id="styleInput" type="text"
+          placeholder="dark trap, 140 BPM, 808 bass, atmospheric, melodic...">
+      </div>
+    </div>
+
   <div class="ctrl-row">
     <div class="cg">
       <div class="clbl">Genre</div>
@@ -384,6 +721,15 @@ body::after{
     <div class="cg">
       <div class="clbl">BPM — <span class="bpmv" id="bpmVal">88</span></div>
       <input type="range" class="cslider" min="60" max="180" value="88" oninput="document.getElementById('bpmVal').textContent=this.value">
+    </div>
+    <div class="cg">
+      <div class="clbl">Voice</div>
+      <select class="csel" id="voiceSelect">
+        <option value="female">👩 Female</option>
+        <option value="male">👨 Male</option>
+        <option value="duet">🎤 Duet (M+F)</option>
+        <option value="none">🎹 Instrumental</option>
+      </select>
     </div>
     <button class="forge" id="forgeBtn" onclick="startGen()">FORGE</button>
   </div>
@@ -504,8 +850,94 @@ body::after{
   </div>
 </div>
 
+
+</div><!-- /studioPage -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- API MODAL -->
+<div id="apiModal" onclick="if(event.target===this&&REP_KEY)this.style.display='none'">
+  <div class="modal-box">
+    <div class="mhandle"></div>
+    <div class="mttl">FREE SETUP</div>
+    <div class="msub">SOUNDFORGE uses <strong style="color:var(--txt)">Replicate's AI music API</strong> + your Vercel proxy. Works on all browsers with no CORS issues.</div>
+    <div class="msteps">
+      <div class="msteps-ttl">Get your free Replicate key (2 min)</div>
+      <div class="mstep"><div class="msnum">1</div><span>Go to <a href="https://replicate.com" target="_blank" style="color:var(--neon);text-decoration:none">replicate.com</a> → Sign in with GitHub/Google</span></div>
+      <div class="mstep"><div class="msnum">2</div><span>Profile picture → <strong>API tokens</strong> → <strong>Create token</strong> → copy</span></div>
+      <div class="mstep"><div class="msnum">3</div><span>Paste key below + your Vercel proxy URL → <strong style="color:var(--neon)">Launch Studio</strong></span></div>
+    </div>
+    <div class="minp-wrap">
+      <div class="minp-lbl"><div class="minp-dot"></div>Replicate API Key</div>
+      <input class="minp" id="repKeyInput" type="password" placeholder="r8_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" onkeydown="if(event.key==='Enter')saveKey()">
+      <div class="minp-hint">Starts with <code style="color:var(--neon);background:rgba(0,245,200,0.08);padding:1px 5px;border-radius:3px">r8_</code> · ~$0.003/track</div>
+    </div>
+    <div class="minp-wrap">
+      <div class="minp-lbl"><div class="minp-dot" style="background:var(--amber)"></div>Vercel Proxy URL <span style="color:var(--amber);font-size:9px">REQUIRED</span></div>
+      <input class="minp" id="proxyInput" type="url" placeholder="https://soundforge-proxy.vercel.app" onkeydown="if(event.key==='Enter')saveKey()">
+      <div class="minp-hint">Your deployed Vercel proxy URL</div>
+    </div>
+    <div class="mbtns">
+      <button class="mprimary" onclick="saveKey()">LAUNCH STUDIO</button>
+      <button class="mskip" onclick="enterDemo()">Demo mode</button>
+    </div>
+    <div class="mnote">No key? Demo mode lets you explore the full UI.</div>
+  </div>
+</div>
+
 <script>
 'use strict';
+const ALL_GENRES=['Hip-Hop', 'Trap', 'Drill', 'Boom Bap', 'Lo-fi', 'R&B', 'Soul', 'Gospel', 'Blues', 'Jazz', 'Bebop', 'Fusion', 'Rock', 'Indie Rock', 'Alt Rock', 'Metal', 'Heavy Metal', 'Death Metal', 'Black Metal', 'Punk', 'Pop Punk', 'Electronic', 'House', 'Deep House', 'Techno', 'Trance', 'Dubstep', 'Drum & Bass', 'Ambient', 'New Age', 'Classical', 'Orchestral', 'Cinematic', 'Opera', 'Country', 'Bluegrass', 'Folk', 'Americana', 'Reggae', 'Dancehall', 'Reggaeton', 'Latin Pop', 'Salsa', 'Cumbia', 'Bossa Nova', 'Samba', 'Afrobeats', 'Afropop', 'Amapiano', 'Highlife', 'Gqom', 'K-Pop', 'J-Pop', 'City Pop', 'Anime OST', 'Bollywood', 'Bhangra', 'Qawwali', 'Arabic Pop', 'Turkish', 'Flamenco', 'Fado', 'Celtic', 'Ska', 'Funk', 'Disco', 'EDM', 'Future Bass', 'Phonk', 'Cloud Rap', 'Emo', 'Shoegaze', 'Post-Rock', 'Math Rock', 'Prog Rock', 'Synthwave', 'Retrowave', 'Vaporwave', 'Chillwave', 'Gospel Choir', 'Trap Soul', 'Neo Soul', 'Bedroom Pop', 'Hyperpop', 'Jersey Club', 'Baltimore Club', 'Grime', 'UK Garage', 'Drum Machine', 'Industrial', 'Noise', 'Experimental', 'Minimalist', 'Baroque'];
+
+function goToStudio(){
+  document.getElementById('landingPage').style.display='none';
+  document.getElementById('studioPage').style.display='block';
+  window.scrollTo(0,0);
+}
+function goToLanding(){
+  document.getElementById('studioPage').style.display='none';
+  document.getElementById('landingPage').style.display='block';
+  window.scrollTo(0,0);
+}
+
+// Populate genre cloud on landing
+window.addEventListener('DOMContentLoaded',()=>{
+  const gc=document.getElementById('genreCloud');
+  if(gc){
+    ALL_GENRES.forEach(g=>{
+      const p=document.createElement('div');
+      p.className='gpill';p.textContent=g;
+      gc.appendChild(p);
+    });
+  }
+  // Session restore
+  try{
+    const k=sessionStorage.getItem('sf_rk');
+    if(k){REP_KEY=k;const el=document.getElementById('repKeyInput');if(el)el.value=k;}
+    const px=sessionStorage.getItem('sf_proxy');
+    if(px){PROXY_URL=px;const el=document.getElementById('proxyInput');if(el)el.value=px;}
+    if(k){
+      document.getElementById('apiModal').style.display='none';
+    }else{
+      // Don't show modal on landing page
+    }
+  }catch(e){}
+});
+
+// Insert metatag into lyrics textarea
+function insertTag(tag){
+  const ta=document.getElementById('lyricsInput');
+  if(!ta)return;
+  const pos=ta.selectionStart;
+  const val=ta.value;
+  ta.value=val.slice(0,pos)+tag+'
+'+val.slice(pos);
+  ta.selectionStart=ta.selectionEnd=pos+tag.length+1;
+  ta.focus();
+}
+
+
 let REP_KEY='',IS_DEMO=false,cancelFlag=false,songs=[],curIdx=-1,curMode='simple',curDur='0:30',isPlaying=false;
 const DS={'0:30':15,'1:00':30,'2:00':60,'3:00':90,'4:00':120};
 const EM=['🌊','⚡','🌙','🔥','🎸','🌌','🎹','💫','🌿','🎷'];
@@ -574,7 +1006,14 @@ function showErr(msg){
 }
 
 function onPI(){document.getElementById('charLen').textContent=document.getElementById('promptInput').value.length+'/500'}
-function setMode(m,btn){curMode=m;document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.getElementById('lyricsArea').style.display=m==='lyrics'?'block':'none'}
+function setMode(m,btn){
+  curMode=m;
+  document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('lyricsArea').style.display=m==='lyrics'||m==='custom'?'block':'none';
+  const mb=document.getElementById('mtagBuilder');if(mb)mb.style.display=m==='custom'?'block':'none';
+  const sw=document.getElementById('styleInputWrap');if(sw)sw.style.display=m==='custom'?'block':'none';
+}
 function setDur(btn,d){curDur=d;document.querySelectorAll('.dur-row .chip').forEach(c=>c.classList.remove('on'));btn.classList.add('on')}
 function chipTog(el,w){el.classList.toggle('on');const ta=document.getElementById('promptInput');if(el.classList.contains('on')){ta.value=(ta.value+' '+w).trim()}else{ta.value=ta.value.replace(new RegExp('\\b'+w+'\\b','gi'),'').replace(/\s+/g,' ').trim()}onPI()}
 
@@ -595,7 +1034,7 @@ function doGenLyrics(){const g=document.getElementById('genreSelect').value,m=do
 // e.g. 'https://soundforge-proxy.vercel.app'
 let PROXY_URL = '';
 
-async function callReplicate(prompt,secs){
+async function callReplicate(prompt,secs,lyrics){
   // If no proxy set, try direct (works on some networks)
   const base = PROXY_URL || 'https://api.replicate.com';
   const genUrl = PROXY_URL ? PROXY_URL+'/api/generate' : 'https://api.replicate.com/v1/models/meta/musicgen/predictions';
@@ -606,7 +1045,7 @@ async function callReplicate(prompt,secs){
   let r;
   try {
     if(PROXY_URL){
-      r=await fetch(genUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({repKey:REP_KEY,prompt,duration:secs})});
+      r=await fetch(genUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({repKey:REP_KEY,prompt,duration:secs,lyrics:lyrics||''})});
     } else {
       r=await fetch(genUrl,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${REP_KEY}`,'Prefer':'wait=20'},body:JSON.stringify({input:{prompt,model_version:'stereo-large',duration:secs,output_format:'mp3',normalization_strategy:'loudness'}})});
     }
@@ -656,15 +1095,28 @@ async function startGen(){
   document.getElementById('genStatus').classList.add('show');
   document.getElementById('resultSec').classList.remove('show');
   const genre=document.getElementById('genreSelect').value,mood=document.getElementById('moodSelect').value,bpm=document.getElementById('bpmVal').textContent;
-  const secs=DS[curDur]||15,noVox=curMode==='instrumental',custom=curMode==='lyrics'?document.getElementById('lyricsInput').value.trim():'';
+  const voice=document.getElementById('voiceSelect').value;
+  const secs=DS[curDur]||15,noVox=curMode==='instrumental'||voice==='none';
+  const customLyrics=curMode==='lyrics'||curMode==='custom'?document.getElementById('lyricsInput').value.trim():'';
+  const styleInput=curMode==='custom'?(document.getElementById('styleInput').value.trim()||''):'';
+  const voiceDesc=voice==='female'?'female vocalist, female singing voice':voice==='male'?'male vocalist, male singing voice':voice==='duet'?'male and female duet, two singers':noVox?'instrumental, no vocals':'';
   const meta=buildMeta(prompt,genre,mood,bpm);
   let audioUrl=null;
   try{
     setStep('ss1','active');setProg('Analyzing description…',12);await new Promise(r=>setTimeout(r,400));if(cancelFlag)throw new Error('cancelled');
     setStep('ss1','done');setStep('ss2','active');setProg('Building composition…',28);await new Promise(r=>setTimeout(r,500));if(cancelFlag)throw new Error('cancelled');
     setStep('ss2','done');setStep('ss3','active');setProg('Generating with MusicGen AI…',50);
-    const mp=[genre,mood,`${bpm} BPM`,prompt,noVox?'instrumental no vocals':''].filter(Boolean).join(', ');
-    if(!IS_DEMO){audioUrl=await callReplicate(mp,secs)}
+    // Build music prompt and lyrics for MiniMax Music 2.5
+    let mp, lyricsToSend='';
+    const voicePart=voiceDesc?voiceDesc+', ':'';
+    if(curMode==='custom'&&styleInput){
+      mp=voicePart+styleInput;
+      lyricsToSend=customLyrics||'';
+    } else {
+      mp=[voicePart+genre,mood,`${bpm} BPM`,prompt,noVox?'instrumental no vocals':''].filter(Boolean).join(', ');
+      lyricsToSend=customLyrics||'';
+    }
+    if(!IS_DEMO){audioUrl=await callReplicate(mp,secs,lyricsToSend)}
     else{for(let p=52;p<=92;p+=4){if(cancelFlag)throw new Error('cancelled');await new Promise(r=>setTimeout(r,250));document.getElementById('sBar').style.width=p+'%'}}
     if(cancelFlag)throw new Error('cancelled');
     setStep('ss3','done');setStep('ss4','active');setProg('Mastering…',96);await new Promise(r=>setTimeout(r,350));
@@ -767,6 +1219,7 @@ function mTab(tab,btn){
   }
 }
 function mSelTrack(i){curIdx=i;updateNP(songs[i]);mTab('studio',document.getElementById('mnStudio'));renderResult(songs[i]);toast(songs[i].title,'▶')}
+
 </script>
 </body>
 </html>
