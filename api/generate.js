@@ -11,14 +11,15 @@ export default async function handler(req, res) {
   if (!repKey || !repKey.startsWith('r8_')) return res.status(401).json({ error: 'Invalid key' });
 
   try {
-    const r = await fetch('https://api.replicate.com/v1/models/meta/musicgen/predictions', {
+    const r = await fetch('https://api.replicate.com/v1/predictions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${repKey}`,
-        'Prefer': 'wait=20',
+        'Prefer': 'wait=25',
       },
       body: JSON.stringify({
+        version: 'b05b1dff1d8c6dc63d14b0cdb42135378dcb87f6373b0d3d341ede46e59e2b38',
         input: {
           prompt,
           model_version: 'stereo-large',
