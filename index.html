@@ -2160,16 +2160,22 @@ async function startGen(){
     setStep('ss1','active');setProg('Analyzing description…',12);await new Promise(r=>setTimeout(r,400));if(cancelFlag)throw new Error('cancelled');
     setStep('ss1','done');setStep('ss2','active');setProg('Building composition…',28);await new Promise(r=>setTimeout(r,500));if(cancelFlag)throw new Error('cancelled');
     setStep('ss2','done');setStep('ss3','active');setProg('Generating with MusicGen AI…',50);
-    // Build music prompt and lyrics for MiniMax Music 2.5
-    let mp, lyricsToSend='';
-    const voicePart=voiceDesc?voiceDesc+', ':'';
-    if(curMode==='custom'&&styleInput){
-      mp=voicePart+(subStyle?subStyle+', ':'')+styleInput;
-      lyricsToSend=customLyrics||'';
-    } else {
-      mp=[voicePart+genreLabel,mood,`${bpm} BPM`,prompt,noVox?'instrumental no vocals':''].filter(Boolean).join(', ');
-      lyricsToSend=customLyrics||'';
+    // ── STYLE prompt: genre/mood/BPM/voice only — NO lyric words ──
+    const styleParts=[genreLabel,substyle||'',mood,bpm+' BPM',voiceDesc,noVox?'instrumental, no vocals':'',styleInput||''].filter(Boolean);
+    const mp=styleParts.join(', ');
+
+    // ── LYRICS: only what the user typed (or generated). Never mix with style. ──
+    // If user wrote custom lyrics use those; otherwise send empty so the model
+    // improvises vocals that match the style prompt without repeating prompt text.
+    let lyricsToSend='';
+    if(customLyrics){
+      lyricsToSend=customLyrics;
+    } else if(!noVox){
+      // Auto-generate a simple lyric scaffold so model sings real words,
+      // not the style description
+      lyricsToSend=`[Verse]\nOooh yeah\nFeel the rhythm take control\nLet the music touch your soul\nDancing through the night\n\n[Chorus]\nLet it go, let it flow\nLet the beat take over slow\nFeel it in your bones\nYou're never, never alone\n\n[Verse 2]\nEvery note a memory\nEvery drop sets you free\nClose your eyes and feel the sound\n\n[Chorus]\nLet it go, let it flow\nLet the beat take over slow\nFeel it in your bones\nYou're never, never alone\n\n[Outro]\nFade away, fade away`;
     }
+
     if(!IS_DEMO){audioUrl=await callReplicate(mp,secs,lyricsToSend)}
     else{for(let p=52;p<=92;p+=4){if(cancelFlag)throw new Error('cancelled');await new Promise(r=>setTimeout(r,250));document.getElementById('sBar').style.width=p+'%'}}
     if(cancelFlag)throw new Error('cancelled');
