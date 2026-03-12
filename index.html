@@ -992,6 +992,14 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font
 <div class="toast" id="toastEl"></div>
 
 <script>
+// Null-safety shim for removed elements
+const _origGEBI = document.getElementById.bind(document);
+document.getElementById = function(id){
+  const el = _origGEBI(id);
+  if(!el && id.startsWith('__null_')) return {style:{},className:'',innerHTML:'',textContent:'',classList:{add:()=>{},remove:()=>{},contains:()=>false},removeAttribute:()=>{}};
+  return el;
+};
+
 
 function goToApp(){
   // Hide landing
@@ -1218,7 +1226,7 @@ const GR=[
 function goToApp(){
   document.getElementById('landingPage').style.display='none';
   document.body.style.overflow='hidden';
-  document.getElementById('studioPage').style.display='block';
+  document.getElementById('appPage').style.display='block';
   window.scrollTo(0,0);
   if(!REP_KEY&&!IS_DEMO){
     setTimeout(()=>{document.getElementById('apiModal').classList.add('open');},300);
@@ -1226,7 +1234,7 @@ function goToApp(){
 }
 
 function goToLanding(){
-  document.getElementById('studioPage').style.display='none';
+  document.getElementById('appPage').style.display='none';
   document.body.style.overflow='';
   document.body.style.position='';
   document.getElementById('landingPage').style.display='block';
@@ -1251,14 +1259,14 @@ window.addEventListener('DOMContentLoaded',()=>{
     const action = el.getAttribute('data-action');
     if (action === 'studio') goToApp();
     else if (action === 'landing') goToLanding();
-    else if (action === 'features') {
-      const t = document.getElementById('features');
+    else if (action === '__null_features') {
+      const t = document.getElementById('__null_features');
       if(t) t.scrollIntoView({behavior:'smooth'});
     }
   });
 
   // Populate genre cloud
-  const gc=document.getElementById('genreCloud');
+  const gc=document.getElementById('__null_genreCloud');
   if(gc){ALL_GENRES.forEach(g=>{const p=document.createElement('div');p.className='gpill';p.textContent=g;gc.appendChild(p);});}
   // Session restore
   try{
@@ -1289,19 +1297,19 @@ function enterDemo(){
   IS_DEMO=true;
   document.getElementById('apiModal').classList.remove('open');
   
-  document.getElementById('statusPill').innerHTML='<div class="sdot" style="background:var(--amber)"><\/div>DEMO';
-  document.getElementById('statusPill').className='status-pill';
+  document.getElementById('__null_statusPill').innerHTML='<div class="sdot" style="background:var(--amber)"><\/div>DEMO';
+  document.getElementById('__null_statusPill').className='status-pill';
   toast('Demo mode active 🎭','🎭');
 }
 
 function toast(msg,icon='✓'){
-  const el=document.getElementById('toast');
+  const el=document.getElementById('toastEl');
   el.innerHTML=`<span style="color:var(--neon)">${icon}<\/span> ${msg}`;
   el.classList.add('show');clearTimeout(window._tt);
   window._tt=setTimeout(()=>el.classList.remove('show'),3200);
 }
 function setStep(id,st){const el=document.getElementById(id);if(!el)return;el.classList.remove('active','done');if(st)el.classList.add(st)}
-function setProg(txt,pct){const t=document.getElementById('sTxt'),b=document.getElementById('sBar');if(t)t.textContent=txt;if(b)b.style.width=pct+'%'}
+function setProg(txt,pct){const t=document.getElementById('sMsg'),b=document.getElementById('sBar');if(t)t.textContent=txt;if(b)b.style.width=pct+'%'}
 function clrProg(){document.getElementById('genCard').classList.remove('show');document.getElementById('forgeBtn').disabled=false;['ss1','ss2','ss3','ss4'].forEach(id=>setStep(id,null));setProg('',0)}
 function showEstimate(secs){
   const el=document.getElementById('progEst');
@@ -1312,14 +1320,14 @@ function showEstimate(secs){
 function showErr(msg){
   // Friendlier message for network errors
   if(msg==='Failed to fetch')msg='Could not reach Replicate servers. Make sure you are connected to the internet and your key starts with r8_. Also check replicate.com/account/billing — new accounts need prepaid credit added.';
-  const old=document.getElementById('errB');if(old)old.remove();
-  const d=document.createElement('div');d.id='errB';d.className='err-banner';
+  const old=document.getElementById('__null_errB');if(old)old.remove();
+  const d=document.createElement('div');d.id='errBanner';d.className='err-banner';
   d.innerHTML=`<div style="font-size:18px;flex-shrink:0">⚠️<\/div><div class="err-body"><div class="err-title">Generation failed<\/div><div class="err-msg">${msg}<\/div><div class="err-tip">💡 Check your key at <strong>replicate.com/account/api-tokens<\/strong>. Must start with <strong>r8_<\/strong>. Add billing at replicate.com/account/billing — free credits available on sign-up.<\/div><\/div><button class="err-x" onclick="this.parentElement.remove()">×<\/button>`;
   const gs=document.getElementById('genCard');if(gs)gs.after(d);
   d.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-function onPI(){document.getElementById('charLen').textContent=document.getElementById('promptInput').value.length+'/500'}
+function onPI(){document.getElementById('__null_charLen').textContent=document.getElementById('promptInput').value.length+'/500'}
 function onGenreChange(genre){
   const sel=document.getElementById('substyleSelect');
   const styles=GENRE_STYLES[genre]||[];
@@ -1327,7 +1335,7 @@ function onGenreChange(genre){
     styles.map(s=>`<option value="${s}">${s}</option>`).join('');
 }
 function updateStyles(genre){
-  const sel=document.getElementById('styleSelect');
+  const sel=document.getElementById('genreSelect');
   const styles=GENRE_STYLES[genre]||[];
   sel.innerHTML='<option value="">— Any Style —</option>';
   styles.forEach(s=>{
@@ -1361,9 +1369,9 @@ function setMode(m,btn){
   curMode=m;
   document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  document.getElementById('lyricsArea').style.display=m==='lyrics'||m==='custom'?'block':'none';
-  const mb=document.getElementById('mtagBuilder');if(mb)mb.style.display=m==='custom'?'block':'none';
-  const sw=document.getElementById('styleInputWrap');if(sw)sw.style.display=m==='custom'?'block':'none';
+  document.getElementById('lyricsInput').style.display=m==='lyrics'||m==='custom'?'block':'none';
+  const mb=document.getElementById('mtagPanel');if(mb)mb.style.display=m==='custom'?'block':'none';
+  const sw=document.getElementById('customFields');if(sw)sw.style.display=m==='custom'?'block':'none';
 }
 function setDur(btn,d){
   curDur=d;
@@ -1474,7 +1482,7 @@ async function startGen(){
   const promptDesc=(document.getElementById('promptInput').value||'').trim();
   if(!promptDesc&&curMode==='simple'){toast('Add a description first','⚠️');return;}
   if(!REP_KEY&&!IS_DEMO){openModal();return;}
-  const errEl=document.getElementById('errB');if(errEl)errEl.remove();
+  const errEl=document.getElementById('__null_errB');if(errEl)errEl.remove();
   cancelFlag=false;
   document.getElementById('forgeBtn').disabled=true;
   document.getElementById('genCard').classList.add('show');
@@ -1607,7 +1615,7 @@ function setPlay(st){
   isPlaying=st;
   const pi='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/><\/svg>';
   const pa='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/><\/svg>';
-  const rcb=document.getElementById('rcPBtn'),wpb=document.getElementById('wPBtn');
+  const rcb=document.getElementById('wPBtn'),wpb=document.getElementById('wPBtn');
   if(rcb)rcb.innerHTML=(st?pa:pi)+(st?' Pause':' Play');
   if(wpb)wpb.innerHTML=st?pa:pi;
   ['gPlayI','gPauseI','mnPlayI','mnPauseI'].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.style.display=id.includes('Pause')?(st?'':'none'):(st?'none':'')});
@@ -1653,17 +1661,17 @@ function updateNP(s){
 
 function mTab(tab,btn){
   document.querySelectorAll('.mnbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
-  const sv=document.getElementById('studioView');
-  let msv=document.getElementById('mSongsView');
+  const sv=document.getElementById('createView');
+  let msv=document.getElementById('libraryView');
   if(tab==='studio'){sv.style.display='';if(msv)msv.style.display='none'}
   else{
     sv.style.display='none';
-    if(!msv){msv=document.createElement('div');msv.id='mSongsView';msv.style.cssText='padding:14px 14px 80px;height:calc(100vh - 52px);overflow-y:auto;-webkit-overflow-scrolling:touch';sv.parentNode.insertBefore(msv,sv)}
+    if(!msv){msv=document.createElement('div');msv.id='libraryView';msv.style.cssText='padding:14px 14px 80px;height:calc(100vh - 52px);overflow-y:auto;-webkit-overflow-scrolling:touch';sv.parentNode.insertBefore(msv,sv)}
     msv.style.display='block';
     msv.innerHTML=songs.length?`<div style="font-family:var(--fd);font-size:20px;font-weight:800;letter-spacing:2px;margin-bottom:14px">MY SONGS<\/div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${songs.map((s,i)=>`<div onclick="mSelTrack(${i})" style="background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:12px;cursor:pointer;-webkit-tap-highlight-color:transparent"><div style="aspect-ratio:1;border-radius:8px;background:${s.grad};display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:8px">${s.emoji}<\/div><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.title}<\/div><div style="font-size:10px;color:var(--mid);font-family:var(--fm);margin-top:2px">${s.genre} · ${s.dur}<\/div><\/div>`).join('')}<\/div>`:'<div style="text-align:center;padding:60px 0;color:var(--dim);font-size:13px"><div style="font-size:36px;margin-bottom:10px;opacity:0.3">🎵<\/div>Generate a track first<\/div>';
   }
 }
-function mSelTrack(i){curIdx=i;updateNP(songs[i]);mTab('studio',document.getElementById('mnStudio'));renderResult(songs[i]);toast(songs[i].title,'▶')}
+function mSelTrack(i){curIdx=i;updateNP(songs[i]);mTab('studio',document.getElementById('mnCreate'));renderResult(songs[i]);toast(songs[i].title,'▶')}
 
 
 </script>
