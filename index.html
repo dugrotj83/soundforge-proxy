@@ -1192,13 +1192,13 @@ const GR=[
 ];
 
 
-function goToStudio(){
+function goToApp(){
   document.getElementById('landingPage').style.display='none';
   document.body.style.overflow='hidden';
   document.getElementById('studioPage').style.display='block';
   window.scrollTo(0,0);
   if(!REP_KEY&&!IS_DEMO){
-    setTimeout(()=>{document.getElementById('apiModal').style.display='flex';},300);
+    setTimeout(()=>{document.getElementById('apiModal').classList.add('open');},300);
   }
 }
 
@@ -1226,7 +1226,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     const el = e.target.closest('[data-action]');
     if (!el) return;
     const action = el.getAttribute('data-action');
-    if (action === 'studio') goToStudio();
+    if (action === 'studio') goToApp();
     else if (action === 'landing') goToLanding();
     else if (action === 'features') {
       const t = document.getElementById('features');
@@ -1240,31 +1240,34 @@ window.addEventListener('DOMContentLoaded',()=>{
   // Session restore
   try{
     const k=sessionStorage.getItem('sf_rk');
-    if(k){REP_KEY=k;const el=document.getElementById('repKeyInput');if(el)el.value=k;}
+    if(k){REP_KEY=k;const el=document.getElementById('apiKeyInput');if(el)el.value=k;}
     const px=sessionStorage.getItem('sf_proxy');
     if(px){PROXY_URL=px;const el=document.getElementById('proxyInput');if(el)el.value=px;}
-    if(k){document.getElementById('apiModal').style.display='none';}
+    if(k){document.getElementById('apiModal').classList.remove('open');
+  }
   }catch(e){}
   renderLib();
 });
 
-function openModal(){document.getElementById('apiModal').style.display='flex'}
+function openModal(){document.getElementById('apiModal').classList.add('open')}
 function saveKey(){
-  const k=(document.getElementById('repKeyInput').value||'').trim();
+  const k=(document.getElementById('apiKeyInput').value||'').trim();
   const px=(document.getElementById('proxyInput').value||'').trim().replace(/\/$/,'');
   if(!k){toast('Paste your Replicate key first','⚠️');return}
   if(!k.startsWith('r8_')){toast('Key must start with r8_','⚠️');return}
   REP_KEY=k;IS_DEMO=false;
   if(px){PROXY_URL=px;try{sessionStorage.setItem('sf_proxy',px)}catch(e){}}
   try{sessionStorage.setItem('sf_rk',k)}catch(e){}
-  document.getElementById('apiModal').style.display='none';
+  document.getElementById('apiModal').classList.remove('open');
+  
   document.getElementById('statusPill').innerHTML='<div class="sdot"><\/div>'+(px?'PROXY READY':'REPLICATE');
   document.getElementById('statusPill').className='status-pill live';
   toast(px?'Proxy + Key saved — tap FORGE! 🚀':'Key saved — tap FORGE! 🎛️','✓');
 }
 function enterDemo(){
   IS_DEMO=true;
-  document.getElementById('apiModal').style.display='none';
+  document.getElementById('apiModal').classList.remove('open');
+  
   document.getElementById('statusPill').innerHTML='<div class="sdot" style="background:var(--amber)"><\/div>DEMO';
   document.getElementById('statusPill').className='status-pill';
   toast('Demo mode active 🎭','🎭');
