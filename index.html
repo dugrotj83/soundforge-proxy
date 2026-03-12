@@ -8,684 +8,346 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0a0a0a;
-  --bg2:#111111;
-  --bg3:#1a1a1a;
-  --bg4:#222222;
-  --border:#2a2a2a;
-  --border2:#333333;
-  --txt:#f5f5f5;
-  --txt2:#a0a0a0;
-  --txt3:#666;
-  --accent:#8b5cf6;
-  --accent2:#7c3aed;
-  --accent3:#a78bfa;
-  --accentbg:rgba(139,92,246,0.1);
-  --accentborder:rgba(139,92,246,0.3);
-  --green:#22c55e;
-  --greenbg:rgba(34,197,94,0.1);
-  --red:#ef4444;
-  --font:'Inter',sans-serif;
-  --r:12px;
-  --r2:8px;
-  --r3:6px;
+  --bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--bg4:#222;
+  --bd:#2a2a2a;--bd2:#333;
+  --tx:#f5f5f5;--tx2:#a0a0a0;--tx3:#555;
+  --ac:#8b5cf6;--ac2:#7c3aed;--ac3:#a78bfa;
+  --acbg:rgba(139,92,246,.1);--acbd:rgba(139,92,246,.3);
+  --green:#22c55e;--red:#ef4444;
+  --font:'Inter',sans-serif;--r:12px;--r2:8px;
 }
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font-family:var(--font);font-size:14px;-webkit-font-smoothing:antialiased}
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:var(--font);font-size:14px;-webkit-font-smoothing:antialiased;overflow:hidden}
 
-/* ─── LANDING PAGE ─── */
-#landingPage{
-  position:fixed;inset:0;overflow-y:auto;background:var(--bg);
-  display:flex;flex-direction:column;
-}
-.lnd-nav{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:20px 40px;position:sticky;top:0;
-  background:rgba(10,10,10,0.8);backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);z-index:10;
-}
-.lnd-logo{font-size:22px;font-weight:800;letter-spacing:-0.5px;color:var(--txt)}
-.lnd-logo span{color:var(--accent)}
-.lnd-nav-btns{display:flex;gap:10px;align-items:center}
-.lnd-sign{padding:8px 18px;border-radius:var(--r2);border:1px solid var(--border2);background:none;color:var(--txt2);font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
-.lnd-sign:hover{border-color:var(--accent);color:var(--txt)}
-.lnd-start{padding:8px 20px;border-radius:var(--r2);border:none;background:var(--accent);color:#fff;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
-.lnd-start:hover{background:var(--accent2);transform:translateY(-1px)}
+/* ── PAGES ── */
+.page{display:none;position:fixed;inset:0;overflow-y:auto;background:var(--bg)}
+.page.on{display:block}
 
-.lnd-hero{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:80px 20px;text-align:center;
-  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(139,92,246,0.12),transparent);
-}
-.lnd-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:5px 14px;border-radius:100px;
-  border:1px solid var(--accentborder);background:var(--accentbg);
-  font-size:12px;font-weight:500;color:var(--accent3);margin-bottom:28px;
-}
-.lnd-h1{font-size:clamp(40px,7vw,80px);font-weight:800;line-height:1.05;letter-spacing:-2px;margin-bottom:20px}
-.lnd-h1 span{
-  background:linear-gradient(135deg,var(--accent),#ec4899);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.lnd-sub{font-size:18px;color:var(--txt2);max-width:520px;line-height:1.6;margin-bottom:40px}
-.lnd-ctas{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-.lnd-cta-main{
-  padding:14px 32px;border-radius:var(--r2);border:none;
-  background:var(--accent);color:#fff;font-family:var(--font);
-  font-size:16px;font-weight:700;cursor:pointer;transition:all .2s;
-  box-shadow:0 0 30px rgba(139,92,246,0.3);
-}
-.lnd-cta-main:hover{background:var(--accent2);transform:translateY(-2px);box-shadow:0 0 40px rgba(139,92,246,0.5)}
-.lnd-cta-sec{
-  padding:14px 32px;border-radius:var(--r2);
-  border:1px solid var(--border2);background:none;
-  color:var(--txt);font-family:var(--font);font-size:16px;font-weight:600;cursor:pointer;transition:all .2s;
-}
-.lnd-cta-sec:hover{border-color:var(--accent);color:var(--accent)}
+/* ── LANDING ── */
+#pg-land{background:var(--bg)}
+.lnav{display:flex;align-items:center;justify-content:space-between;padding:18px 36px;border-bottom:1px solid var(--bd);background:rgba(10,10,10,.85);backdrop-filter:blur(12px);position:sticky;top:0;z-index:10}
+.llogo{font-size:20px;font-weight:800;letter-spacing:-.5px}
+.llogo b{color:var(--ac)}
+.lnav-btns{display:flex;gap:8px}
+.btn-ghost{padding:7px 16px;border-radius:var(--r2);border:1px solid var(--bd2);background:none;color:var(--tx2);font:500 13px var(--font);cursor:pointer;transition:.15s all}
+.btn-ghost:hover{border-color:var(--ac3);color:var(--tx)}
+.btn-ac{padding:7px 16px;border-radius:var(--r2);border:none;background:var(--ac);color:#fff;font:600 13px var(--font);cursor:pointer;transition:.15s all}
+.btn-ac:hover{background:var(--ac2)}
+.lhero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:80px 20px 60px;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(139,92,246,.12),transparent)}
+.lbadge{display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:100px;border:1px solid var(--acbd);background:var(--acbg);font-size:12px;font-weight:500;color:var(--ac3);margin-bottom:24px}
+.lh1{font-size:clamp(36px,6vw,72px);font-weight:800;line-height:1.06;letter-spacing:-2px;margin-bottom:16px}
+.lh1 em{font-style:normal;background:linear-gradient(135deg,var(--ac),#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lsub{font-size:17px;color:var(--tx2);max-width:500px;line-height:1.65;margin-bottom:36px}
+.lctas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-hero{padding:14px 32px;border-radius:var(--r2);border:none;background:var(--ac);color:#fff;font:700 15px var(--font);cursor:pointer;transition:.2s all;box-shadow:0 0 28px rgba(139,92,246,.3)}
+.btn-hero:hover{background:var(--ac2);transform:translateY(-1px);box-shadow:0 0 38px rgba(139,92,246,.45)}
+.btn-hero-out{padding:14px 32px;border-radius:var(--r2);border:1px solid var(--bd2);background:none;color:var(--tx);font:600 15px var(--font);cursor:pointer;transition:.2s all}
+.btn-hero-out:hover{border-color:var(--ac3);color:var(--ac3)}
+.lfeats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:860px;margin:60px auto;padding:0 20px}
+@media(max-width:640px){.lfeats{grid-template-columns:1fr 1fr}.lnav{padding:14px 16px}}
+.lfeat{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:22px}
+.lfeat-icon{font-size:26px;margin-bottom:10px}
+.lfeat-title{font-size:15px;font-weight:700;margin-bottom:5px}
+.lfeat-desc{font-size:12px;color:var(--tx2);line-height:1.6}
 
-.lnd-demo{
-  max-width:600px;width:100%;margin:60px auto;
-  background:var(--bg2);border:1px solid var(--border);border-radius:16px;
-  padding:24px;text-align:left;
-}
-.lnd-demo-label{font-size:11px;font-weight:600;color:var(--txt3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
-.lnd-demo-input{
-  background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);
-  padding:14px 16px;font-family:var(--font);font-size:15px;color:var(--txt2);
-  width:100%;margin-bottom:12px;
-}
-.lnd-demo-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.lnd-demo-tag{
-  padding:5px 12px;border-radius:100px;
-  border:1px solid var(--border2);background:var(--bg3);
-  font-size:12px;color:var(--txt2);
-}
-.lnd-create-btn{
-  width:100%;padding:12px;border-radius:var(--r2);border:none;
-  background:var(--accent);color:#fff;font-family:var(--font);
-  font-size:15px;font-weight:700;cursor:pointer;
-}
+/* ── APP PAGE ── */
+#pg-app{overflow:hidden}
+.app-wrap{display:flex;height:100vh}
 
-.lnd-features{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
-  max-width:900px;margin:0 auto 80px;padding:0 20px;
-}
-@media(max-width:600px){.lnd-features{grid-template-columns:1fr}}
-.lnd-feat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px}
-.lnd-feat-icon{font-size:28px;margin-bottom:12px}
-.lnd-feat-title{font-size:16px;font-weight:700;margin-bottom:6px}
-.lnd-feat-desc{font-size:13px;color:var(--txt2);line-height:1.6}
+/* Sidebar */
+.sidebar{width:216px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--bd);display:flex;flex-direction:column;padding:14px 10px;height:100vh;overflow-y:auto}
+.sb-logo{font-size:19px;font-weight:800;letter-spacing:-.4px;padding:6px 10px 18px}
+.sb-logo b{color:var(--ac)}
+.sb-sec{font-size:10px;font-weight:600;color:var(--tx3);letter-spacing:.1em;text-transform:uppercase;padding:2px 10px 7px}
+.sb-btn{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--r2);font:500 13px var(--font);color:var(--tx2);cursor:pointer;transition:.15s all;background:none;border:none;width:100%;text-align:left;margin-bottom:1px}
+.sb-btn:hover{background:var(--bg3);color:var(--tx)}
+.sb-btn.on{background:var(--acbg);color:var(--ac)}
+.sb-div{height:1px;background:var(--bd);margin:8px 0}
+.sb-key{margin-top:auto;display:flex;align-items:center;gap:7px;padding:8px 10px;border-radius:var(--r2);border:1px solid var(--acbd);background:var(--acbg);color:var(--ac);font:600 12px var(--font);cursor:pointer;transition:.15s all}
+.sb-key:hover{background:rgba(139,92,246,.18)}
 
-/* ─── APP LAYOUT ─── */
-#appPage{
-  display:none;
-  position:fixed;inset:0;
-  background:var(--bg);
-  overflow:hidden;
-  flex-direction:row;
-}
-/* Sidebar hidden by default, JS shows/hides based on screen */
-.sidebar{ display:none; }
-.mob-header{ display:none; }
-.mob-bottom{ display:none; }
-/* Desktop overrides */
-@media(min-width:768px){
-  .app-main{ padding-bottom:80px; }
-}
-@media(max-width:767px){
-  .app-main{
-    height:100%;
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-  }
-}
+/* Main */
+.app-main{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--bg);min-width:0}
 
-/* ─── SIDEBAR ─── */
-.sidebar{
-  width:220px;flex-shrink:0;
-  background:var(--bg2);border-right:1px solid var(--border);
-  display:flex;flex-direction:column;padding:16px 12px;
-  height:100vh;overflow-y:auto;
-}
-.sb-logo{font-size:20px;font-weight:800;letter-spacing:-0.5px;padding:8px 12px 20px;color:var(--txt)}
-.sb-logo span{color:var(--accent)}
-.sb-section{font-size:10px;font-weight:600;color:var(--txt3);letter-spacing:.1em;text-transform:uppercase;padding:4px 12px 8px}
-.sb-item{
-  display:flex;align-items:center;gap:10px;
-  padding:9px 12px;border-radius:var(--r2);
-  font-size:13px;font-weight:500;color:var(--txt2);
-  cursor:pointer;transition:all .15s;margin-bottom:2px;
-  border:none;background:none;width:100%;text-align:left;
-}
-.sb-item:hover{background:var(--bg3);color:var(--txt)}
-.sb-item.active{background:var(--accentbg);color:var(--accent)}
-.sb-item svg{flex-shrink:0;opacity:.7}
-.sb-item.active svg{opacity:1}
-.sb-divider{height:1px;background:var(--border);margin:8px 0}
-.sb-key-btn{
-  margin-top:auto;display:flex;align-items:center;gap:8px;
-  padding:9px 12px;border-radius:var(--r2);
-  border:1px solid var(--accentborder);background:var(--accentbg);
-  color:var(--accent);font-size:12px;font-weight:600;cursor:pointer;
-  font-family:var(--font);transition:all .15s;
-}
-.sb-key-btn:hover{background:rgba(139,92,246,0.15)}
+/* Views */
+.view{display:none;min-height:100%}
+.view.on{display:block}
 
-/* ─── MAIN AREA ─── */
-.app-main{
-  flex:1;min-width:0;background:var(--bg);
-  display:flex;flex-direction:column;
-  overflow-y:auto;overflow-x:hidden;
-  height:100vh;
-}
-
-/* ─── VIEWS ─── */
-.view{display:none;flex:1;flex-direction:column}
-.view.active{display:flex}
-
-/* ─── CREATE VIEW ─── */
-.create-view{
-  max-width:680px;width:100%;
-  margin:0 auto;padding:40px 20px 40px;
-}
-@media(max-width:767px){.create-view{padding:20px 16px 20px}}
-
-.create-heading{font-size:28px;font-weight:800;margin-bottom:6px;letter-spacing:-.5px}
-.create-sub{font-size:14px;color:var(--txt2);margin-bottom:28px}
+/* ── CREATE VIEW ── */
+.cv{max-width:660px;margin:0 auto;padding:36px 20px 60px}
+.cv-h{font-size:26px;font-weight:800;letter-spacing:-.4px;margin-bottom:4px}
+.cv-sub{font-size:13px;color:var(--tx2);margin-bottom:24px}
 
 /* Mode tabs */
-.mode-tabs{
-  display:flex;gap:2px;background:var(--bg2);
-  border:1px solid var(--border);border-radius:var(--r2);
-  padding:3px;margin-bottom:20px;width:fit-content;
-}
-.mtab{
-  padding:7px 20px;border-radius:6px;border:none;
-  background:none;color:var(--txt2);font-family:var(--font);
-  font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;
-  white-space:nowrap;
-}
-.mtab.on{background:var(--bg4);color:var(--txt);box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.tabs{display:flex;gap:2px;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r2);padding:3px;width:fit-content;margin-bottom:18px}
+.tab{padding:6px 18px;border-radius:6px;border:none;background:none;color:var(--tx2);font:600 13px var(--font);cursor:pointer;transition:.15s all}
+.tab.on{background:var(--bg4);color:var(--tx);box-shadow:0 1px 3px rgba(0,0,0,.5)}
 
-/* Prompt box */
-.prompt-card{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:16px;padding:20px;margin-bottom:16px;
-  transition:border-color .2s;
-}
-.prompt-card:focus-within{border-color:var(--accentborder)}
-.prompt-label{font-size:11px;font-weight:600;color:var(--txt3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
-.prompt-ta{
-  width:100%;background:none;border:none;
-  color:var(--txt);font-family:var(--font);font-size:15px;
-  line-height:1.6;resize:none;outline:none;min-height:80px;
-}
-.prompt-ta::placeholder{color:var(--txt3)}
-.prompt-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
-.pchip{
-  padding:4px 12px;border-radius:100px;border:1px solid var(--border2);
-  background:none;color:var(--txt2);font-size:12px;font-weight:500;
-  cursor:pointer;transition:all .15s;font-family:var(--font);
-}
-.pchip:hover{border-color:var(--accent);color:var(--accent)}
-.pchip.on{border-color:var(--accent);color:var(--accent);background:var(--accentbg)}
+/* Prompt */
+.pcard{background:var(--bg2);border:1px solid var(--bd);border-radius:14px;padding:18px;margin-bottom:14px;transition:.2s border-color}
+.pcard:focus-within{border-color:var(--acbd)}
+.plabel{font-size:10px;font-weight:600;color:var(--tx3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.pta{width:100%;background:none;border:none;color:var(--tx);font:15px/1.6 var(--font);resize:none;outline:none;min-height:72px}
+.pta::placeholder{color:var(--tx3)}
+.pchips{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--bd)}
+.pchip{padding:4px 11px;border-radius:100px;border:1px solid var(--bd2);background:none;color:var(--tx2);font:500 11px var(--font);cursor:pointer;transition:.15s all}
+.pchip:hover,.pchip.on{border-color:var(--ac);color:var(--ac);background:var(--acbg)}
 
-/* Custom mode fields */
-.custom-fields{display:none}
-.field-group{margin-bottom:14px}
-.field-label{font-size:11px;font-weight:600;color:var(--txt3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:6px}
-.field-label span{color:var(--accent);font-size:9px;letter-spacing:.06em}
-.field-input,.field-ta{
-  width:100%;background:var(--bg2);border:1px solid var(--border);
-  border-radius:var(--r2);color:var(--txt);font-family:var(--font);
-  font-size:14px;padding:11px 14px;outline:none;transition:border-color .2s;
-}
-.field-input:focus,.field-ta:focus{border-color:var(--accentborder)}
-.field-input::placeholder,.field-ta::placeholder{color:var(--txt3)}
-.field-ta{resize:none;line-height:1.6;min-height:140px}
-.field-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-.fa-btn{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:6px 12px;border-radius:var(--r3);border:1px solid var(--border2);
-  background:none;color:var(--txt2);font-family:var(--font);font-size:12px;
-  font-weight:500;cursor:pointer;transition:all .15s;
-}
-.fa-btn:hover{border-color:var(--accent);color:var(--accent)}
+/* Custom fields */
+#customFields{display:none}
+.flabel{font-size:10px;font-weight:600;color:var(--tx3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;display:block}
+.finput,.fta{width:100%;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r2);color:var(--tx);font:14px var(--font);padding:10px 13px;outline:none;transition:.2s border-color;margin-bottom:12px}
+.finput:focus,.fta:focus{border-color:var(--acbd)}
+.finput::placeholder,.fta::placeholder{color:var(--tx3)}
+.fta{resize:none;line-height:1.6;min-height:130px;margin-bottom:6px}
+.factions{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.faction{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:var(--r2);border:1px solid var(--bd2);background:none;color:var(--tx2);font:500 12px var(--font);cursor:pointer;transition:.15s all}
+.faction:hover{border-color:var(--ac3);color:var(--ac3)}
+.mtags{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r2);padding:13px;margin-bottom:13px;display:none}
+.mtag-sec{margin-bottom:9px}
+.mtag-sec-label{font-size:10px;font-weight:600;color:var(--tx3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.mtag-btns{display:flex;gap:4px;flex-wrap:wrap}
+.mtag-btn{padding:3px 8px;border-radius:4px;border:1px solid var(--bd2);background:none;color:var(--tx3);font:11px var(--font);cursor:pointer;transition:.15s all}
+.mtag-btn:hover{border-color:var(--ac3);color:var(--ac3)}
 
-/* Metatag builder */
-.mtag-panel{
-  background:var(--bg3);border:1px solid var(--border);
-  border-radius:var(--r2);padding:14px;margin-bottom:14px;
-  display:none;
-}
-.mtag-group{margin-bottom:10px}
-.mtag-group:last-child{margin:0}
-.mtag-group-label{font-size:10px;font-weight:600;color:var(--txt3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
-.mtag-btns{display:flex;gap:5px;flex-wrap:wrap}
-.mt-btn{
-  padding:3px 9px;border-radius:4px;border:1px solid var(--border2);
-  background:none;color:var(--txt3);font-family:var(--font);font-size:11px;
-  cursor:pointer;transition:all .15s;
-}
-.mt-btn:hover{border-color:var(--accent3);color:var(--accent3)}
+/* Settings grid */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+@media(max-width:420px){.sgrid{grid-template-columns:1fr}}
+.sgroup{}
+.ssel{width:100%;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r2);color:var(--tx);font:13px var(--font);padding:9px 32px 9px 12px;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;transition:.2s border-color}
+.ssel:focus{border-color:var(--acbd)}
+.bpmrow{display:flex;align-items:center;gap:8px}
+.bpmslider{flex:1;accent-color:var(--ac);cursor:pointer}
 
-/* Settings row */
-.settings-row{
-  display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;
-}
-@media(max-width:420px){.settings-row{grid-template-columns:1fr}}
-.setting-group{}
-.setting-label{font-size:11px;font-weight:600;color:var(--txt3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
-.setting-sel{
-  width:100%;background:var(--bg2);border:1px solid var(--border);
-  border-radius:var(--r2);color:var(--txt);font-family:var(--font);
-  font-size:13px;padding:9px 32px 9px 12px;outline:none;cursor:pointer;
-  transition:border-color .2s;appearance:none;-webkit-appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 12px center;
-}
-.setting-sel:focus{border-color:var(--accentborder)}
+/* Button rows */
+.btn-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.tbtn{padding:6px 13px;border-radius:100px;border:1px solid var(--bd2);background:none;color:var(--tx2);font:500 12px var(--font);cursor:pointer;transition:.15s all;white-space:nowrap}
+.tbtn:hover{border-color:var(--ac3);color:var(--tx)}
+.tbtn.on{border-color:var(--ac);color:var(--ac);background:var(--acbg)}
 
-/* Voice + lang buttons */
-.btn-grid{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
-.vbtn,.lbtn,.tbtn{
-  padding:6px 14px;border-radius:100px;
-  border:1px solid var(--border2);background:none;
-  color:var(--txt2);font-family:var(--font);font-size:12px;font-weight:500;
-  cursor:pointer;transition:all .15s;white-space:nowrap;
-}
-.vbtn:hover,.lbtn:hover,.tbtn:hover{border-color:var(--accent3);color:var(--txt)}
-.vbtn.on,.lbtn.on,.tbtn.on{border-color:var(--accent);color:var(--accent);background:var(--accentbg)}
+/* Duration */
+.dur-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px}
+.dpill{padding:6px 13px;border-radius:100px;border:1px solid var(--bd2);background:none;color:var(--tx2);font:500 12px var(--font);cursor:pointer;transition:.15s all}
+.dpill:hover{border-color:var(--tx3);color:var(--tx)}
+.dpill.on{border-color:var(--ac);color:var(--ac);background:var(--acbg)}
 
-/* Duration pills */
-.dur-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
-.dpill{
-  padding:6px 14px;border-radius:100px;
-  border:1px solid var(--border2);background:none;
-  color:var(--txt2);font-family:var(--font);font-size:12px;font-weight:500;
-  cursor:pointer;transition:all .15s;
-}
-.dpill:hover{border-color:var(--txt3);color:var(--txt)}
-.dpill.on{border-color:var(--accent);color:var(--accent);background:var(--accentbg)}
+/* Section label */
+.slabel{font-size:10px;font-weight:600;color:var(--tx3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px;display:block}
+
+/* Progress card */
+.prog-card{background:var(--bg2);border:1px solid var(--bd);border-radius:14px;padding:18px;margin-bottom:14px;display:none}
+.prog-card.on{display:block}
+.prog-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.prog-title{font-size:14px;font-weight:600}
+.prog-cancel{background:none;border:none;color:var(--tx3);font:12px var(--font);cursor:pointer;padding:3px 7px;border-radius:4px}
+.prog-cancel:hover{color:var(--red)}
+.prog-steps{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.pstep{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--tx3);transition:.3s color}
+.pstep.active{color:var(--ac3)}
+.pstep.done{color:var(--green)}
+.pstep-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.pstep.active .pstep-dot{animation:blink 1s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.pbar-wrap{height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-bottom:7px}
+.pbar{height:100%;background:linear-gradient(90deg,var(--ac),#ec4899);width:0;transition:.5s width ease;border-radius:2px}
+.pmsg{display:flex;justify-content:space-between;font-size:12px;color:var(--tx2)}
+.pest{font-size:11px;color:var(--ac3);margin-top:4px}
+
+/* Result card */
+.res-card{background:var(--bg2);border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin-bottom:14px;display:none}
+.res-card.on{display:block}
+.res-top{display:flex;align-items:flex-start;gap:14px;padding:18px;border-bottom:1px solid var(--bd)}
+.res-art{width:68px;height:68px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.res-info{flex:1;min-width:0}
+.res-title{font-size:17px;font-weight:700;margin-bottom:3px}
+.res-desc{font-size:12px;color:var(--tx2);margin-bottom:8px}
+.res-tags{display:flex;gap:4px;flex-wrap:wrap}
+.res-tag{padding:2px 8px;border-radius:4px;border:1px solid var(--bd2);font-size:11px;color:var(--tx3)}
+.res-tag.live{border-color:var(--acbd);color:var(--ac3)}
+.res-player{padding:14px 18px 18px}
+.waveform{height:52px;display:flex;align-items:center;gap:1px;cursor:pointer;margin-bottom:10px;border-radius:6px;background:var(--bg3);padding:7px;overflow:hidden}
+.wb{flex:1;min-width:2px;border-radius:2px;background:var(--bd2);transition:.1s background}
+.wb.played{background:var(--ac)}
+.prow{display:flex;align-items:center;gap:10px}
+.play-btn{width:38px;height:38px;border-radius:50%;background:var(--ac);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s all}
+.play-btn:hover{background:var(--ac2);transform:scale(1.06)}
+.ptime{font-size:12px;color:var(--tx2);font-variant-numeric:tabular-nums}
+.pactions{display:flex;gap:5px;margin-left:auto;flex-wrap:wrap}
+.paction{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:var(--r2);border:1px solid var(--bd2);background:none;color:var(--tx2);font:500 12px var(--font);cursor:pointer;transition:.15s all;text-decoration:none}
+.paction:hover{border-color:var(--ac3);color:var(--tx)}
+.lyr-wrap{padding:0 18px 18px}
+.lyr-body{font-size:13px;line-height:2;color:var(--tx3);white-space:pre-line;font-style:italic}
 
 /* Create button */
-.create-btn{
-  width:100%;padding:15px;border-radius:var(--r);border:none;
-  background:var(--accent);color:#fff;
-  font-family:var(--font);font-size:16px;font-weight:700;
-  cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
-  box-shadow:0 4px 20px rgba(139,92,246,0.3);margin-bottom:10px;
-}
-.create-btn::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);
-  transform:translateX(-100%);transition:transform .5s;
-}
-.create-btn:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 6px 28px rgba(139,92,246,0.45)}
+.create-btn{width:100%;padding:14px;border-radius:var(--r);border:none;background:var(--ac);color:#fff;font:700 15px var(--font);cursor:pointer;transition:.2s all;position:relative;overflow:hidden;box-shadow:0 4px 18px rgba(139,92,246,.3);margin-bottom:9px}
+.create-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);transform:translateX(-100%);transition:.5s transform}
+.create-btn:hover{background:var(--ac2);transform:translateY(-1px);box-shadow:0 6px 26px rgba(139,92,246,.45)}
 .create-btn:hover::after{transform:translateX(100%)}
 .create-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
-.create-hint{text-align:center;font-size:11px;color:var(--txt3);line-height:1.5}
-.create-hint b{color:var(--accent3)}
+.create-hint{text-align:center;font-size:11px;color:var(--tx3);line-height:1.6}
+.create-hint b{color:var(--ac3)}
 
-/* ─── GENERATION STATUS ─── */
-.gen-card{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:16px;padding:20px;margin-bottom:16px;
-  display:none;
-}
-.gen-card.show{display:block}
-.gen-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.gen-title{font-size:14px;font-weight:600}
-.gen-cancel{background:none;border:none;color:var(--txt3);font-size:12px;cursor:pointer;font-family:var(--font);padding:4px 8px;border-radius:4px;transition:all .15s}
-.gen-cancel:hover{color:var(--red)}
-.gen-steps{display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap}
-.gstep{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--txt3);transition:color .3s}
-.gstep.active{color:var(--accent3)}
-.gstep.done{color:var(--green)}
-.gstep-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
-.gstep.active .gstep-dot{animation:pulse 1s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.gen-bar-wrap{height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-bottom:8px}
-.gen-bar{height:100%;background:linear-gradient(90deg,var(--accent),#ec4899);border-radius:2px;width:0;transition:width .5s ease}
-.gen-msg{font-size:12px;color:var(--txt2);display:flex;justify-content:space-between}
-.gen-est{font-size:11px;color:var(--accent3);margin-top:4px}
+/* Error */
+.err-card{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.25);border-radius:var(--r2);padding:13px 15px;margin-bottom:14px;display:none}
+.err-card.on{display:block}
+.err-title{font-weight:600;color:var(--red);font-size:13px;margin-bottom:3px}
+.err-body{color:var(--tx2);font-size:12px;line-height:1.6}
 
-/* ─── RESULT CARD ─── */
-.result-card{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:16px;overflow:hidden;margin-bottom:16px;
-  display:none;
-}
-.result-card.show{display:block}
-.rc-top{
-  display:flex;align-items:flex-start;gap:16px;
-  padding:20px;border-bottom:1px solid var(--border);
-}
-.rc-art{
-  width:72px;height:72px;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:30px;flex-shrink:0;
-}
-.rc-info{flex:1;min-width:0}
-.rc-title{font-size:18px;font-weight:700;margin-bottom:4px}
-.rc-desc{font-size:12px;color:var(--txt2);margin-bottom:10px}
-.rc-tags{display:flex;gap:5px;flex-wrap:wrap}
-.rc-tag{
-  padding:3px 9px;border-radius:4px;
-  border:1px solid var(--border2);
-  font-size:11px;color:var(--txt3);
-}
-.rc-tag.demo{border-color:rgba(251,191,36,0.3);color:#fbbf24}
-.rc-tag.real{border-color:var(--accentborder);color:var(--accent3)}
-
-/* Player */
-.rc-player{padding:16px 20px 20px}
-.wave-wrap{
-  height:56px;display:flex;align-items:center;gap:1px;
-  cursor:pointer;margin-bottom:12px;overflow:hidden;border-radius:6px;
-  background:var(--bg3);padding:8px;
-}
-.wb{flex:1;min-width:2px;border-radius:2px;background:var(--border2);transition:background .1s}
-.wb.played{background:var(--accent)}
-.wb.current{background:var(--accent3)}
-.player-row{display:flex;align-items:center;gap:12px}
-.play-btn{
-  width:40px;height:40px;border-radius:50%;background:var(--accent);
-  border:none;color:#fff;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;transition:all .15s;
-}
-.play-btn:hover{background:var(--accent2);transform:scale(1.05)}
-.time-label{font-size:12px;color:var(--txt2);font-variant-numeric:tabular-nums}
-.player-actions{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
-.pa-btn{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:7px 14px;border-radius:var(--r3);border:1px solid var(--border2);
-  background:none;color:var(--txt2);font-family:var(--font);font-size:12px;
-  font-weight:500;cursor:pointer;transition:all .15s;text-decoration:none;
-}
-.pa-btn:hover{border-color:var(--accent3);color:var(--txt)}
-
-/* Lyrics */
-.lyrics-sec{padding:0 20px 20px}
-.lyr-toggle{
-  display:flex;align-items:center;gap:6px;
-  font-size:12px;font-weight:600;color:var(--txt3);
-  cursor:pointer;margin-bottom:10px;background:none;border:none;font-family:var(--font);
-}
-.lyr-toggle:hover{color:var(--txt2)}
-.lyr-body{
-  font-size:13px;line-height:2;color:var(--txt3);white-space:pre-line;
-  font-style:italic;
-}
-
-/* ─── LIBRARY VIEW ─── */
-.library-view{padding:32px 24px;flex:1;display:flex;flex-direction:column}
-.lib-heading{font-size:22px;font-weight:800;margin-bottom:20px;letter-spacing:-.3px}
-.lib-empty{
-  flex:1;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;color:var(--txt3);text-align:center;gap:12px;
-}
-.lib-empty-icon{font-size:48px;opacity:.4}
-.song-list{display:flex;flex-direction:column;gap:4px}
-.song-item{
-  display:flex;align-items:center;gap:12px;
-  padding:10px 14px;border-radius:var(--r2);cursor:pointer;
-  transition:background .15s;
-}
-.song-item:hover,.song-item.active{background:var(--bg3)}
-.si-num{font-size:13px;color:var(--txt3);width:20px;text-align:center;flex-shrink:0}
-.si-art{width:42px;height:42px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+/* Library */
+.lv{padding:30px 22px 60px}
+.lv-h{font-size:22px;font-weight:800;letter-spacing:-.3px;margin-bottom:18px}
+.lib-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;color:var(--tx3);text-align:center;gap:10px}
+.lib-empty-icon{font-size:44px;opacity:.35}
+.song-list{display:flex;flex-direction:column;gap:2px}
+.si{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:var(--r2);cursor:pointer;transition:.15s background}
+.si:hover,.si.on{background:var(--bg3)}
+.si-num{font-size:12px;color:var(--tx3);width:18px;text-align:center;flex-shrink:0}
+.si-art{width:40px;height:40px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
 .si-info{flex:1;min-width:0}
-.si-title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.si-meta{font-size:11px;color:var(--txt3);margin-top:2px}
-.si-dur{font-size:12px;color:var(--txt3);flex-shrink:0}
+.si-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.si-meta{font-size:11px;color:var(--tx3);margin-top:1px}
+.si-dur{font-size:11px;color:var(--tx3);flex-shrink:0}
 
-/* ─── ERROR BANNER ─── */
-.err-banner{
-  background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.25);
-  border-radius:var(--r2);padding:14px 16px;margin-bottom:16px;
-}
-.err-title{font-weight:600;color:#ef4444;margin-bottom:4px;font-size:13px}
-.err-body{color:var(--txt2);font-size:12px;line-height:1.6}
-.err-tip{color:var(--txt3);font-size:11px;margin-top:6px}
-.err-close{float:right;background:none;border:none;color:var(--txt3);cursor:pointer;font-size:16px}
+/* Bottom player */
+.bot-player{position:fixed;bottom:0;left:216px;right:0;height:70px;background:rgba(10,10,10,.95);backdrop-filter:blur(12px);border-top:1px solid var(--bd);display:none;align-items:center;padding:0 18px;gap:14px;z-index:20}
+.bot-player.on{display:flex}
+.bp-art{width:38px;height:38px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.bp-info{min-width:0}
+.bp-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.bp-sub{font-size:11px;color:var(--tx3)}
+.bp-play{width:34px;height:34px;border-radius:50%;background:var(--ac);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:auto;transition:.15s all;flex-shrink:0}
+.bp-play:hover{background:var(--ac2)}
+.bp-time{font-size:11px;color:var(--tx3);margin-left:10px;white-space:nowrap}
 
-/* ─── BOTTOM PLAYER BAR ─── */
-.player-bar{
-  position:fixed;bottom:0;left:220px;right:0;
-  height:72px;background:rgba(10,10,10,0.95);backdrop-filter:blur(12px);
-  border-top:1px solid var(--border);
-  display:none;align-items:center;padding:0 20px;gap:16px;z-index:20;
+/* Mobile */
+@media(max-width:767px){
+  .sidebar{display:none}
+  .bot-player{left:0;bottom:54px}
+  .mob-hd{display:flex!important}
+  .mob-nav{display:flex!important}
+  .cv{padding:16px 14px 80px}
+  .lv{padding:16px 14px 80px}
 }
-.player-bar.show{display:flex}
-@media(max-width:767px){.player-bar{left:0;height:60px;bottom:56px}}
-.pb-art{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.pb-info{min-width:0}
-.pb-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
-.pb-sub{font-size:11px;color:var(--txt3)}
-.pb-center{flex:1;display:flex;justify-content:center}
-.pb-play{
-  width:36px;height:36px;border-radius:50%;background:var(--accent);
-  border:none;color:#fff;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .15s;
+@media(min-width:768px){
+  .mob-hd{display:none!important}
+  .mob-nav{display:none!important}
 }
-.pb-play:hover{background:var(--accent2)}
-.pb-time{font-size:11px;color:var(--txt3);margin-left:auto;white-space:nowrap}
+.mob-hd{display:none;align-items:center;justify-content:space-between;height:50px;padding:0 14px;background:var(--bg2);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:10;flex-shrink:0}
+.mob-logo{font-size:17px;font-weight:800;letter-spacing:-.3px}
+.mob-logo b{color:var(--ac)}
+.mob-key{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:var(--r2);border:1px solid var(--acbd);background:var(--acbg);color:var(--ac);font:600 11px var(--font);cursor:pointer}
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:54px;background:var(--bg2);border-top:1px solid var(--bd);z-index:20;align-items:stretch}
+.mnbtn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;font-weight:500;color:var(--tx3);border:none;background:none;cursor:pointer;font-family:var(--font);transition:.15s color}
+.mnbtn.on{color:var(--ac)}
 
-/* ─── MOBILE HEADER ─── */
-.mob-header{
-  display:none;align-items:center;justify-content:space-between;
-  height:52px;padding:0 16px;
-  background:var(--bg2);border-bottom:1px solid var(--border);
-  position:sticky;top:0;z-index:10;flex-shrink:0;
-}
-.mob-logo{font-size:18px;font-weight:800;letter-spacing:-.3px}
-.mob-logo span{color:var(--accent)}
-.mob-key-btn{
-  display:flex;align-items:center;gap:5px;
-  padding:6px 12px;border-radius:var(--r3);
-  border:1px solid var(--accentborder);background:var(--accentbg);
-  color:var(--accent);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font);
-}
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center;padding:20px}
+.modal-bg.on{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--bd);border-radius:18px;padding:26px;max-width:420px;width:100%}
+.modal-title{font-size:19px;font-weight:800;margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--tx2);margin-bottom:18px;line-height:1.5}
+.modal-lbl{font-size:10px;font-weight:600;color:var(--tx3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.modal-in{width:100%;background:var(--bg3);border:1px solid var(--bd2);border-radius:var(--r2);color:var(--tx);font:14px var(--font);padding:10px 13px;outline:none;transition:.2s border-color;margin-bottom:11px}
+.modal-in:focus{border-color:var(--acbd)}
+.modal-in::placeholder{color:var(--tx3)}
+.modal-btns{display:flex;gap:9px}
+.modal-save{flex:1;padding:10px;border-radius:var(--r2);border:none;background:var(--ac);color:#fff;font:700 14px var(--font);cursor:pointer;transition:.15s background}
+.modal-save:hover{background:var(--ac2)}
+.modal-demo{padding:10px 16px;border-radius:var(--r2);border:1px solid var(--bd2);background:none;color:var(--tx2);font:600 14px var(--font);cursor:pointer;transition:.15s all}
+.modal-demo:hover{border-color:var(--ac3);color:var(--tx)}
+.modal-note{font-size:11px;color:var(--tx3);margin-top:12px;line-height:1.6}
+.modal-note a{color:var(--ac3)}
 
-/* ─── MOBILE BOTTOM NAV ─── */
-.mob-bottom{
-  display:none;position:fixed;bottom:0;left:0;right:0;
-  height:56px;background:var(--bg2);border-top:1px solid var(--border);z-index:20;
-}
-.mob-bottom{display:none;align-items:stretch;}
-.mnbtn{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-  font-size:10px;font-weight:500;color:var(--txt3);border:none;background:none;
-  cursor:pointer;font-family:var(--font);transition:color .15s;
-}
-.mnbtn.on{color:var(--accent)}
+/* Toast */
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(6px);background:var(--bg4);border:1px solid var(--bd2);border-radius:var(--r2);padding:9px 16px;font:600 13px var(--font);opacity:0;transition:.25s all;pointer-events:none;z-index:999;white-space:nowrap;max-width:calc(100vw - 32px);box-shadow:0 8px 22px rgba(0,0,0,.4)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(min-width:768px){.toast{bottom:18px}}
 
-/* ─── MODAL ─── */
-.modal-overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);
-  z-index:100;align-items:center;justify-content:center;padding:20px;
-}
-.modal-overlay.open{display:flex}
-.modal{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:20px;padding:28px;max-width:440px;width:100%;
-}
-.modal-title{font-size:20px;font-weight:800;margin-bottom:4px}
-.modal-sub{font-size:13px;color:var(--txt2);margin-bottom:20px;line-height:1.5}
-.modal-label{font-size:11px;font-weight:600;color:var(--txt3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
-.modal-input{
-  width:100%;background:var(--bg3);border:1px solid var(--border2);
-  border-radius:var(--r2);color:var(--txt);font-family:var(--font);
-  font-size:14px;padding:11px 14px;outline:none;transition:border-color .2s;margin-bottom:12px;
-}
-.modal-input:focus{border-color:var(--accentborder)}
-.modal-input::placeholder{color:var(--txt3)}
-.modal-btns{display:flex;gap:10px;flex-wrap:wrap}
-.modal-save{
-  flex:1;padding:11px;border-radius:var(--r2);border:none;
-  background:var(--accent);color:#fff;font-family:var(--font);
-  font-size:14px;font-weight:700;cursor:pointer;transition:background .15s;
-}
-.modal-save:hover{background:var(--accent2)}
-.modal-demo{
-  padding:11px 18px;border-radius:var(--r2);
-  border:1px solid var(--border2);background:none;
-  color:var(--txt2);font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;
-}
-.modal-demo:hover{border-color:var(--accent3);color:var(--txt)}
-
-/* ─── TOAST ─── */
-.toast{
-  position:fixed;bottom:90px;left:50%;
-  transform:translateX(-50%) translateY(10px);
-  background:var(--bg4);border:1px solid var(--border2);
-  border-radius:var(--r2);padding:10px 18px;
-  font-size:13px;font-weight:600;
-  opacity:0;transition:all .25s;pointer-events:none;z-index:999;
-  white-space:nowrap;max-width:calc(100vw - 32px);
-  box-shadow:0 8px 24px rgba(0,0,0,.4);
-}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-@media(min-width:768px){.toast{bottom:20px}}
-
-/* ─── SCROLLBAR ─── */
 ::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
 </style>
 </head>
 <body>
 
-<!-- ══════════ LANDING PAGE ══════════ -->
-<div id="landingPage">
-  <nav class="lnd-nav">
-    <div class="lnd-logo">Sound<span>Forge</span></div>
-    <div class="lnd-nav-btns">
-      <button class="lnd-sign" onclick="openModal()">Add API Key</button>
-      <button class="lnd-start" onclick="goToApp()">Launch App →</button>
+<!-- ═══ LANDING ═══ -->
+<div id="pg-land" class="page on">
+  <nav class="lnav">
+    <div class="llogo">Sound<b>Forge</b></div>
+    <div class="lnav-btns">
+      <button class="btn-ghost" onclick="openModal()">API Key</button>
+      <button class="btn-ac" onclick="goToApp()">Launch App →</button>
     </div>
   </nav>
-
-  <div class="lnd-hero">
-    <div class="lnd-badge">✦ Powered by MiniMax Music 2.5</div>
-    <h1 class="lnd-h1">Make any song<br>you can <span>imagine</span></h1>
-    <p class="lnd-sub">Describe your sound — SoundForge turns it into a full song with vocals, instruments, and radio-quality production in seconds.</p>
-    <div class="lnd-ctas">
-      <button class="lnd-cta-main" onclick="goToApp()">Start Creating Free</button>
-      <button class="lnd-cta-sec" onclick="openModal()">Enter API Key</button>
-    </div>
-
-    <div class="lnd-demo">
-      <div class="lnd-demo-label">Try it yourself</div>
-      <div class="lnd-demo-input">An upbeat bachata about falling in love in Havana, Spanish vocals, romantic and passionate…</div>
-      <div class="lnd-demo-tags">
-        <span class="lnd-demo-tag">🎵 Bachata</span>
-        <span class="lnd-demo-tag">❤️ Romantic</span>
-        <span class="lnd-demo-tag">🇪🇸 Spanish</span>
-        <span class="lnd-demo-tag">⚡ ~35s wait</span>
-      </div>
-      <button class="lnd-create-btn" onclick="goToApp()">Create Song →</button>
+  <div class="lhero">
+    <div class="lbadge">✦ Powered by MiniMax Music 2.5</div>
+    <h1 class="lh1">Make any song<br>you can <em>imagine</em></h1>
+    <p class="lsub">Describe your sound — SoundForge turns it into a full song with vocals, instruments, and radio‑quality production.</p>
+    <div class="lctas">
+      <button class="btn-hero" onclick="goToApp()">Start Creating Free</button>
+      <button class="btn-hero-out" onclick="openModal()">Enter API Key</button>
     </div>
   </div>
-
-  <div class="lnd-features">
-    <div class="lnd-feat">
-      <div class="lnd-feat-icon">🎤</div>
-      <div class="lnd-feat-title">Real Vocals</div>
-      <div class="lnd-feat-desc">Female, male, duet, or choir — fully produced radio-ready vocal performances.</div>
-    </div>
-    <div class="lnd-feat">
-      <div class="lnd-feat-icon">🌍</div>
-      <div class="lnd-feat-title">12 Languages</div>
-      <div class="lnd-feat-desc">English, Spanish, Portuguese, French, Mandarin, Japanese, Korean, Arabic, Hindi and more.</div>
-    </div>
-    <div class="lnd-feat">
-      <div class="lnd-feat-icon">🎼</div>
-      <div class="lnd-feat-title">50+ Genres</div>
-      <div class="lnd-feat-desc">Hip-Hop, Latin, K-Pop, Classical, Metal, Jazz, Afrobeats — every style with authentic sub-genres.</div>
-    </div>
-    <div class="lnd-feat">
-      <div class="lnd-feat-icon">⚡</div>
-      <div class="lnd-feat-title">Fast</div>
-      <div class="lnd-feat-desc">15-second previews in ~20s. Full songs in 1–2 minutes.</div>
-    </div>
-    <div class="lnd-feat">
-      <div class="lnd-feat-icon">🎛️</div>
-      <div class="lnd-feat-title">Custom Lyrics</div>
-      <div class="lnd-feat-desc">Write your own lyrics or generate them. Full metatag control for structure.</div>
-    </div>
-    <div class="lnd-feat">
-      <div class="lnd-feat-icon">📥</div>
-      <div class="lnd-feat-title">Download MP3</div>
-      <div class="lnd-feat-desc">Every track is yours. Download and use however you like.</div>
-    </div>
+  <div class="lfeats">
+    <div class="lfeat"><div class="lfeat-icon">🎤</div><div class="lfeat-title">Real Vocals</div><div class="lfeat-desc">Female, male, duet, choir — fully produced radio‑ready performances.</div></div>
+    <div class="lfeat"><div class="lfeat-icon">🌍</div><div class="lfeat-title">12 Languages</div><div class="lfeat-desc">English, Spanish, Portuguese, French, Mandarin, Japanese, Korean, Arabic, Hindi and more.</div></div>
+    <div class="lfeat"><div class="lfeat-icon">🎼</div><div class="lfeat-title">50+ Genres</div><div class="lfeat-desc">Hip‑Hop, Latin, K‑Pop, Classical, Metal, Jazz, Afrobeats — every style with authentic sub‑genres.</div></div>
+    <div class="lfeat"><div class="lfeat-icon">⚡</div><div class="lfeat-title">Fast</div><div class="lfeat-desc">15‑second previews in ~20s. Full songs in 1–2 minutes.</div></div>
+    <div class="lfeat"><div class="lfeat-icon">🎛️</div><div class="lfeat-title">Custom Lyrics</div><div class="lfeat-desc">Write your own lyrics or auto‑generate them with full metatag control.</div></div>
+    <div class="lfeat"><div class="lfeat-icon">📥</div><div class="lfeat-title">Download</div><div class="lfeat-desc">Every track is yours. Download and use however you like.</div></div>
   </div>
-</div><!-- /landing -->
+</div>
 
-<!-- ══════════ APP PAGE ══════════ -->
-<div id="appPage">
+<!-- ═══ APP ═══ -->
+<div id="pg-app" class="page">
+  <div class="app-wrap">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sb-logo">Sound<span>Forge</span></div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sb-logo">Sound<b>Forge</b></div>
+      <div class="sb-sec">Menu</div>
+      <button class="sb-btn on" id="sb-create" onclick="showView('create',this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        Create
+      </button>
+      <button class="sb-btn" id="sb-library" onclick="showView('library',this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        My Songs
+      </button>
+      <div class="sb-div"></div>
+      <div class="sb-sec">Account</div>
+      <button class="sb-btn" onclick="goToLanding()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        Home
+      </button>
+      <button class="sb-key" onclick="openModal()">🔑 API Key</button>
+    </aside>
 
-    <div class="sb-section">Menu</div>
-    <button class="sb-item active" id="sbCreate" onclick="showView('create',this)">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-      Create
-    </button>
-    <button class="sb-item" id="sbLibrary" onclick="showView('library',this)">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-      My Songs
-    </button>
+    <!-- Main -->
+    <div class="app-main">
 
-    <div class="sb-divider"></div>
-    <div class="sb-section">Account</div>
-    <button class="sb-item" onclick="goToLanding()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-      Home
-    </button>
+      <!-- Mobile header -->
+      <header class="mob-hd">
+        <div class="mob-logo">Sound<b>Forge</b></div>
+        <button class="mob-key" onclick="openModal()">🔑 Key</button>
+      </header>
 
-    <button class="sb-key-btn" onclick="openModal()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-      API Key
-    </button>
-  </aside>
+      <!-- CREATE VIEW -->
+      <div class="view on" id="view-create">
+        <div class="cv">
+          <div class="cv-h">Create</div>
+          <div class="cv-sub">Describe the song you want to make</div>
 
-  <!-- MAIN CONTENT -->
-  <main class="app-main" id="appMain">
+          <!-- Mode tabs -->
+          <div class="tabs">
+            <button class="tab on" onclick="setMode('song',this)">Song</button>
+            <button class="tab" onclick="setMode('custom',this)">Custom</button>
+          </div>
 
-    <!-- Mobile Header -->
-    <header class="mob-header">
-      <div class="mob-logo">Sound<span>Forge</span></div>
-      <button class="mob-key-btn" onclick="openModal()">🔑 API Key</button>
-    </header>
-
-    <!-- ── CREATE VIEW ── -->
-    <div class="view active" id="createView">
-      <div class="create-view">
-
-        <div class="create-heading">Create</div>
-        <div class="create-sub">Describe the song you want to make</div>
-
-        <!-- Mode tabs -->
-        <div class="mode-tabs">
-          <button class="mtab on" onclick="setMode('song',this)">Song</button>
-          <button class="mtab" onclick="setMode('custom',this)">Custom</button>
-        </div>
-
-        <!-- SONG MODE -->
-        <div id="songModeFields">
-          <div class="prompt-card">
-            <div class="prompt-label">Song Description</div>
-            <textarea class="prompt-ta" id="promptInput" rows="3"
-              placeholder="A moody lo-fi hip-hop beat with female vocals about late night thoughts, melancholic and dreamy…"
-              oninput="onPI()"></textarea>
-            <div class="prompt-chips">
+          <!-- Prompt -->
+          <div class="pcard">
+            <div class="plabel">Song Description</div>
+            <textarea class="pta" id="promptInput" rows="3"
+              placeholder="A moody lo‑fi hip‑hop beat with female vocals about late night thoughts, melancholic and dreamy…"></textarea>
+            <div class="pchips">
               <button class="pchip" onclick="chipTog(this,'lo-fi')">lo-fi</button>
               <button class="pchip" onclick="chipTog(this,'epic')">epic</button>
               <button class="pchip" onclick="chipTog(this,'dark')">dark</button>
@@ -696,295 +358,253 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font
               <button class="pchip" onclick="chipTog(this,'aggressive')">aggressive</button>
             </div>
           </div>
-        </div>
 
-        <!-- CUSTOM MODE -->
-        <div class="custom-fields" id="customFields">
-          <div class="field-group">
-            <div class="field-label">Style Description</div>
-            <input class="field-input" id="styleInput" type="text"
-              placeholder="dark trap, 808 bass, 140 BPM, atmospheric, female vocalist…">
-          </div>
-          <div class="field-group">
-            <div class="field-label">
-              Lyrics
-              <span>AI ASSISTED</span>
+          <!-- Custom fields -->
+          <div id="customFields">
+            <label class="flabel">Style Description</label>
+            <input class="finput" id="styleInput" type="text" placeholder="dark trap, 808 bass, 140 BPM, atmospheric, female vocalist…">
+            <label class="flabel">Lyrics <span style="color:var(--ac);font-size:9px;margin-left:4px">AI ASSISTED</span></label>
+            <textarea class="fta" id="lyricsInput" placeholder="Write your own lyrics or generate them…"></textarea>
+            <div id="langHint" style="font-size:11px;color:var(--ac3);margin-bottom:8px;opacity:.8">Lyrics: English</div>
+            <div class="factions">
+              <button class="faction" onclick="doGenLyrics()">⚡ Generate Lyrics</button>
+              <button class="faction" onclick="toggleMtags()">≡ Metatags</button>
             </div>
-            <textarea class="field-ta" id="lyricsInput"
-              placeholder="Write your own lyrics or generate them…"></textarea>
-            <div id="langHint" style="font-size:11px;color:var(--accent3);margin-top:5px;opacity:.8">Lyrics: English</div>
-            <div class="field-actions">
-              <button class="fa-btn" onclick="doGenLyrics()">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                Generate Lyrics
-              </button>
-              <button class="fa-btn" onclick="toggleMetatags()">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10M7 12h10M7 17h7"/></svg>
-                Metatags
-              </button>
+            <div class="mtags" id="mtagPanel">
+              <div class="mtag-sec"><div class="mtag-sec-label">Structure</div><div class="mtag-btns">
+                <button class="mtag-btn" onclick="insertTag('[Intro]')">[Intro]</button>
+                <button class="mtag-btn" onclick="insertTag('[Verse]')">[Verse]</button>
+                <button class="mtag-btn" onclick="insertTag('[Pre-Chorus]')">[Pre-Chorus]</button>
+                <button class="mtag-btn" onclick="insertTag('[Chorus]')">[Chorus]</button>
+                <button class="mtag-btn" onclick="insertTag('[Bridge]')">[Bridge]</button>
+                <button class="mtag-btn" onclick="insertTag('[Outro]')">[Outro]</button>
+              </div></div>
+              <div class="mtag-sec"><div class="mtag-sec-label">Vocals</div><div class="mtag-btns">
+                <button class="mtag-btn" onclick="insertTag('[Male singer]')">[Male singer]</button>
+                <button class="mtag-btn" onclick="insertTag('[Female singer]')">[Female singer]</button>
+                <button class="mtag-btn" onclick="insertTag('[Rap]')">[Rap]</button>
+                <button class="mtag-btn" onclick="insertTag('[Whisper]')">[Whisper]</button>
+                <button class="mtag-btn" onclick="insertTag('[No vocals]')">[No vocals]</button>
+              </div></div>
+              <div class="mtag-sec" style="margin:0"><div class="mtag-sec-label">FX</div><div class="mtag-btns">
+                <button class="mtag-btn" onclick="insertTag('[Build]')">[Build]</button>
+                <button class="mtag-btn" onclick="insertTag('[Drop]')">[Drop]</button>
+                <button class="mtag-btn" onclick="insertTag('[Fade]')">[Fade]</button>
+                <button class="mtag-btn" onclick="insertTag('[808 bass]')">[808 bass]</button>
+                <button class="mtag-btn" onclick="insertTag('[Strings]')">[Strings]</button>
+              </div></div>
             </div>
           </div>
 
-          <!-- Metatag builder -->
-          <div class="mtag-panel" id="mtagPanel">
-            <div class="mtag-group">
-              <div class="mtag-group-label">Structure</div>
-              <div class="mtag-btns">
-                <button class="mt-btn" onclick="insertTag('[Intro]')">[Intro]</button>
-                <button class="mt-btn" onclick="insertTag('[Verse]')">[Verse]</button>
-                <button class="mt-btn" onclick="insertTag('[Pre-Chorus]')">[Pre-Chorus]</button>
-                <button class="mt-btn" onclick="insertTag('[Chorus]')">[Chorus]</button>
-                <button class="mt-btn" onclick="insertTag('[Bridge]')">[Bridge]</button>
-                <button class="mt-btn" onclick="insertTag('[Drop]')">[Drop]</button>
-                <button class="mt-btn" onclick="insertTag('[Outro]')">[Outro]</button>
+          <!-- Settings -->
+          <div class="sgrid">
+            <div class="sgroup">
+              <label class="flabel">Genre</label>
+              <select class="ssel" id="genreSelect" onchange="onGenreChange(this.value)">
+                <option>Hip-Hop</option><option>Trap</option><option>Pop</option>
+                <option>R&amp;B / Soul</option><option>Electronic</option><option>House</option>
+                <option>Lo-fi</option><option>Ambient</option><option>Rock</option>
+                <option>Indie Rock</option><option>Alternative Rock</option><option>Metal</option>
+                <option>Jazz</option><option>Blues</option><option>Country</option>
+                <option>Reggae</option><option>Latin</option><option>Reggaeton</option>
+                <option>Salsa</option><option>Merengue</option><option>Bachata</option>
+                <option>Cumbia</option><option>Afrobeats</option><option>Classical</option>
+                <option>Cinematic / Soundtrack</option><option>K-Pop</option>
+                <option>Drill</option><option>Funk</option><option>Gospel</option>
+                <option>Folk</option><option>Punk</option><option>Dancehall</option>
+                <option>Phonk</option><option>Drum and Bass</option><option>Techno</option>
+                <option>Trance</option><option>Future Bass</option><option>Vaporwave</option>
+                <option>Hyperpop</option><option>Bossa Nova</option><option>Samba</option>
+                <option>Flamenco</option><option>Bollywood / Bhangra</option>
+                <option>Anime OST</option><option>Video Game Music</option>
+                <option>Experimental</option><option>Tango</option><option>Ska</option>
+                <option>Swing</option><option>Synth-Pop</option><option>Grunge</option><option>Emo</option>
+              </select>
+            </div>
+            <div class="sgroup">
+              <label class="flabel">Sub-Style</label>
+              <select class="ssel" id="substyleSelect"><option value="">— Any —</option></select>
+            </div>
+            <div class="sgroup">
+              <label class="flabel">Mood</label>
+              <select class="ssel" id="moodSelect">
+                <option>Happy</option><option>Euphoric</option><option>Chill</option>
+                <option>Dreamy</option><option>Nostalgic</option><option>Melancholic</option>
+                <option>Heartbroken</option><option>Dark</option><option>Energetic</option>
+                <option>Aggressive</option><option>Romantic</option><option>Mysterious</option>
+                <option>Cinematic</option><option>Groovy</option><option>Epic</option>
+                <option>Soulful</option><option>Uplifting</option><option>Spiritual</option>
+              </select>
+            </div>
+            <div class="sgroup">
+              <label class="flabel">BPM — <span id="bpmVal" style="color:var(--ac3)">88</span></label>
+              <div class="bpmrow"><input type="range" class="bpmslider" min="60" max="180" value="88" oninput="document.getElementById('bpmVal').textContent=this.value"></div>
+            </div>
+          </div>
+
+          <!-- Voice -->
+          <span class="slabel">Voice</span>
+          <div class="btn-row" style="margin-bottom:16px">
+            <button class="tbtn on" onclick="setVoice('female',this)">🎙 Female</button>
+            <button class="tbtn" onclick="setVoice('male',this)">🎤 Male</button>
+            <button class="tbtn" onclick="setVoice('duet',this)">🎵 Duet</button>
+            <button class="tbtn" onclick="setVoice('choir',this)">🎼 Choir</button>
+            <button class="tbtn" onclick="setVoice('none',this)">🎹 Instrumental</button>
+          </div>
+
+          <!-- Language -->
+          <span class="slabel">Language</span>
+          <div class="btn-row" style="margin-bottom:16px">
+            <button class="tbtn on" onclick="setLang('en',this)">🇺🇸 English</button>
+            <button class="tbtn" onclick="setLang('es',this)">🇪🇸 Español</button>
+            <button class="tbtn" onclick="setLang('pt',this)">🇧🇷 Português</button>
+            <button class="tbtn" onclick="setLang('fr',this)">🇫🇷 Français</button>
+            <button class="tbtn" onclick="setLang('zh',this)">🇨🇳 中文</button>
+            <button class="tbtn" onclick="setLang('ja',this)">🇯🇵 日本語</button>
+            <button class="tbtn" onclick="setLang('ko',this)">🇰🇷 한국어</button>
+            <button class="tbtn" onclick="setLang('ar',this)">🇸🇦 عربي</button>
+            <button class="tbtn" onclick="setLang('hi',this)">🇮🇳 हिंदी</button>
+            <button class="tbtn" onclick="setLang('de',this)">🇩🇪 Deutsch</button>
+            <button class="tbtn" onclick="setLang('it',this)">🇮🇹 Italiano</button>
+            <button class="tbtn" onclick="setLang('ru',this)">🇷🇺 Русский</button>
+          </div>
+
+          <!-- Timbre -->
+          <span class="slabel">Vocal Timbre</span>
+          <div class="btn-row" style="margin-bottom:20px">
+            <button class="tbtn on" onclick="setTimbre('bright',this)">Bright</button>
+            <button class="tbtn" onclick="setTimbre('warm',this)">Warm</button>
+            <button class="tbtn" onclick="setTimbre('airy',this)">Airy</button>
+            <button class="tbtn" onclick="setTimbre('powerful',this)">Powerful</button>
+            <button class="tbtn" onclick="setTimbre('smooth',this)">Smooth</button>
+            <button class="tbtn" onclick="setTimbre('raspy',this)">Raspy</button>
+            <button class="tbtn" onclick="setTimbre('soulful',this)">Soulful</button>
+            <button class="tbtn" onclick="setTimbre('falsetto',this)">Falsetto</button>
+          </div>
+
+          <!-- Duration -->
+          <span class="slabel">Duration <span id="durNote" style="color:var(--ac3);font-size:10px;margin-left:5px"></span></span>
+          <div class="dur-row" style="margin-bottom:24px">
+            <button class="dpill" onclick="setDur(this,'0:15')">0:15 ⚡</button>
+            <button class="dpill on" onclick="setDur(this,'1:00')">1:00</button>
+            <button class="dpill" onclick="setDur(this,'1:30')">1:30</button>
+            <button class="dpill" onclick="setDur(this,'2:00')">2:00</button>
+            <button class="dpill" onclick="setDur(this,'3:00')">3:00</button>
+            <button class="dpill" onclick="setDur(this,'4:00')">4:00</button>
+            <button class="dpill" onclick="setDur(this,'5:00')">5:00</button>
+          </div>
+
+          <!-- Error -->
+          <div class="err-card" id="errCard">
+            <div class="err-title" id="errTitle">Error</div>
+            <div class="err-body" id="errBody"></div>
+          </div>
+
+          <!-- Progress -->
+          <div class="prog-card" id="progCard">
+            <div class="prog-hd">
+              <div class="prog-title">Creating your song…</div>
+              <button class="prog-cancel" onclick="doCancel()">Cancel</button>
+            </div>
+            <div class="prog-steps">
+              <div class="pstep" id="ps1"><div class="pstep-dot"></div>Lyrics</div>
+              <div class="pstep" id="ps2"><div class="pstep-dot"></div>Structure</div>
+              <div class="pstep" id="ps3"><div class="pstep-dot"></div>Generating</div>
+              <div class="pstep" id="ps4"><div class="pstep-dot"></div>Mastering</div>
+            </div>
+            <div class="pbar-wrap"><div class="pbar" id="pBar"></div></div>
+            <div class="pmsg"><span id="pMsg">Initializing…</span><span id="pPct">0%</span></div>
+            <div class="pest" id="pEst"></div>
+          </div>
+
+          <!-- Result -->
+          <div class="res-card" id="resCard">
+            <div class="res-top">
+              <div class="res-art" id="resArt">🎵</div>
+              <div class="res-info">
+                <div class="res-title" id="resTitle">—</div>
+                <div class="res-desc" id="resDesc">—</div>
+                <div class="res-tags" id="resTags"></div>
               </div>
             </div>
-            <div class="mtag-group">
-              <div class="mtag-group-label">Vocals</div>
-              <div class="mtag-btns">
-                <button class="mt-btn" onclick="insertTag('[Male singer]')">[Male singer]</button>
-                <button class="mt-btn" onclick="insertTag('[Female singer]')">[Female singer]</button>
-                <button class="mt-btn" onclick="insertTag('[Rap]')">[Rap]</button>
-                <button class="mt-btn" onclick="insertTag('[Whisper]')">[Whisper]</button>
-                <button class="mt-btn" onclick="insertTag('[Harmonized]')">[Harmonized]</button>
-                <button class="mt-btn" onclick="insertTag('[No vocals]')">[No vocals]</button>
+            <div class="res-player">
+              <audio id="rAudio" style="display:none" onended="onEnd()" ontimeupdate="syncW()" onloadedmetadata="onMeta()"></audio>
+              <div class="waveform" id="waveform" onclick="seekA(event)"></div>
+              <div class="prow">
+                <button class="play-btn" id="wPlay" onclick="togAudio()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </button>
+                <span class="ptime" id="wTime">0:00</span>
+                <div class="pactions" id="resActions"></div>
               </div>
             </div>
-            <div class="mtag-group">
-              <div class="mtag-group-label">Instruments</div>
-              <div class="mtag-btns">
-                <button class="mt-btn" onclick="insertTag('[808 bass]')">[808 bass]</button>
-                <button class="mt-btn" onclick="insertTag('[Electric guitar]')">[Electric guitar]</button>
-                <button class="mt-btn" onclick="insertTag('[Piano]')">[Piano]</button>
-                <button class="mt-btn" onclick="insertTag('[Strings]')">[Strings]</button>
-                <button class="mt-btn" onclick="insertTag('[Synth pads]')">[Synth pads]</button>
-                <button class="mt-btn" onclick="insertTag('[Build]')">[Build]</button>
-                <button class="mt-btn" onclick="insertTag('[Fade]')">[Fade]</button>
-              </div>
+            <div class="lyr-wrap" id="lyrWrap" style="display:none">
+              <div class="lyr-body" id="lyrBody"></div>
             </div>
           </div>
+
+          <!-- Create button -->
+          <button class="create-btn" id="createBtn" onclick="startGen()">Create Song</button>
+          <div class="create-hint">⚡ <b>0:15</b> preview ~20s &nbsp;·&nbsp; 1:00 song ~35s &nbsp;·&nbsp; longer songs 1–3 min</div>
         </div>
+      </div><!-- /create view -->
 
-        <!-- Settings -->
-        <div class="settings-row" style="margin-bottom:12px">
-          <div class="setting-group">
-            <div class="setting-label">Genre</div>
-            <select class="setting-sel" id="genreSelect" onchange="onGenreChange(this.value)">
-              <option>Hip-Hop</option><option>Trap</option><option>Pop</option>
-              <option>R&amp;B / Soul</option><option>Electronic</option><option>House</option>
-              <option>Lo-fi</option><option>Ambient</option><option>Rock</option>
-              <option>Indie Rock</option><option>Alternative Rock</option><option>Metal</option>
-              <option>Jazz</option><option>Blues</option><option>Country</option>
-              <option>Reggae</option><option>Latin</option><option>Reggaeton</option>
-              <option>Salsa</option><option>Merengue</option><option>Bachata</option>
-              <option>Cumbia</option><option>Afrobeats</option><option>Classical</option>
-              <option>Cinematic / Soundtrack</option><option>K-Pop</option>
-              <option>Drill</option><option>Funk</option><option>Gospel</option>
-              <option>Folk</option><option>Punk</option><option>Dancehall</option>
-              <option>Phonk</option><option>Drum and Bass</option><option>Techno</option>
-              <option>Trance</option><option>Future Bass</option><option>Vaporwave</option>
-              <option>Hyperpop</option><option>Bossa Nova</option><option>Samba</option>
-              <option>Flamenco</option><option>Bollywood / Bhangra</option>
-              <option>Anime OST</option><option>Video Game Music</option>
-              <option>Experimental</option><option>Tango</option><option>Soul</option>
-              <option>Ska</option><option>Swing</option><option>Synth-Pop</option>
-              <option>Grunge</option><option>Emo</option>
-            </select>
-          </div>
-          <div class="setting-group">
-            <div class="setting-label">Sub-Style</div>
-            <select class="setting-sel" id="substyleSelect">
-              <option value="">— Any —</option>
-            </select>
-          </div>
-          <div class="setting-group">
-            <div class="setting-label">Mood</div>
-            <select class="setting-sel" id="moodSelect">
-              <option>Happy</option><option>Euphoric</option><option>Confident</option>
-              <option>Empowered</option><option>Chill</option><option>Dreamy</option>
-              <option>Nostalgic</option><option>Melancholic</option><option>Heartbroken</option>
-              <option>Dark</option><option>Ominous</option><option>Energetic</option>
-              <option>Aggressive</option><option>Romantic</option><option>Passionate</option>
-              <option>Mysterious</option><option>Cinematic</option><option>Groovy</option>
-              <option>Rebellious</option><option>Epic</option><option>Soulful</option>
-              <option>Peaceful</option><option>Uplifting</option><option>Spiritual</option>
-            </select>
-          </div>
-          <div class="setting-group">
-            <div class="setting-label">BPM — <span id="bpmVal" style="color:var(--accent3)">88</span></div>
-            <input type="range" class="field-input" style="padding:8px 0;background:none;border:none;cursor:pointer"
-              min="60" max="180" value="88"
-              oninput="document.getElementById('bpmVal').textContent=this.value">
-          </div>
-        </div>
-
-        <!-- Voice -->
-        <div class="setting-label" style="margin-bottom:8px">Voice</div>
-        <div class="btn-grid" style="margin-bottom:16px">
-          <button class="vbtn on" onclick="setVoice('female',this)">🎙 Female</button>
-          <button class="vbtn" onclick="setVoice('male',this)">🎤 Male</button>
-          <button class="vbtn" onclick="setVoice('duet',this)">🎵 Duet</button>
-          <button class="vbtn" onclick="setVoice('choir',this)">🎼 Choir</button>
-          <button class="vbtn" onclick="setVoice('none',this)">🎹 Instrumental</button>
-        </div>
-
-        <!-- Language -->
-        <div class="setting-label" style="margin-bottom:8px">Language</div>
-        <div class="btn-grid" style="margin-bottom:16px">
-          <button class="lbtn on" onclick="setLang('en',this)">🇺🇸 English</button>
-          <button class="lbtn" onclick="setLang('es',this)">🇪🇸 Español</button>
-          <button class="lbtn" onclick="setLang('pt',this)">🇧🇷 Português</button>
-          <button class="lbtn" onclick="setLang('fr',this)">🇫🇷 Français</button>
-          <button class="lbtn" onclick="setLang('zh',this)">🇨🇳 中文</button>
-          <button class="lbtn" onclick="setLang('ja',this)">🇯🇵 日本語</button>
-          <button class="lbtn" onclick="setLang('ko',this)">🇰🇷 한국어</button>
-          <button class="lbtn" onclick="setLang('ar',this)">🇸🇦 عربي</button>
-          <button class="lbtn" onclick="setLang('hi',this)">🇮🇳 हिंदी</button>
-          <button class="lbtn" onclick="setLang('de',this)">🇩🇪 Deutsch</button>
-          <button class="lbtn" onclick="setLang('it',this)">🇮🇹 Italiano</button>
-          <button class="lbtn" onclick="setLang('ru',this)">🇷🇺 Русский</button>
-        </div>
-
-        <!-- Timbre -->
-        <div class="setting-label" style="margin-bottom:8px">Vocal Timbre</div>
-        <div class="btn-grid" style="margin-bottom:20px">
-          <button class="tbtn on" onclick="setTimbre('bright',this)">Bright</button>
-          <button class="tbtn" onclick="setTimbre('warm',this)">Warm</button>
-          <button class="tbtn" onclick="setTimbre('airy',this)">Airy</button>
-          <button class="tbtn" onclick="setTimbre('powerful',this)">Powerful</button>
-          <button class="tbtn" onclick="setTimbre('smooth',this)">Smooth</button>
-          <button class="tbtn" onclick="setTimbre('raspy',this)">Raspy</button>
-          <button class="tbtn" onclick="setTimbre('soulful',this)">Soulful</button>
-          <button class="tbtn" onclick="setTimbre('falsetto',this)">Falsetto</button>
-        </div>
-
-        <!-- Duration -->
-        <div class="setting-label" style="margin-bottom:8px">Duration <span id="durNote" style="color:var(--accent3);font-size:10px;margin-left:6px"></span></div>
-        <div class="dur-pills" style="margin-bottom:24px">
-          <button class="dpill" onclick="setDur(this,'0:15')">0:15 ⚡</button>
-          <button class="dpill on" onclick="setDur(this,'1:00')">1:00</button>
-          <button class="dpill" onclick="setDur(this,'1:30')">1:30</button>
-          <button class="dpill" onclick="setDur(this,'2:00')">2:00</button>
-          <button class="dpill" onclick="setDur(this,'3:00')">3:00</button>
-          <button class="dpill" onclick="setDur(this,'4:00')">4:00</button>
-          <button class="dpill" onclick="setDur(this,'5:00')">5:00</button>
-        </div>
-
-        <!-- Generate status -->
-        <div class="gen-card" id="genCard">
-          <div class="gen-header">
-            <div class="gen-title">Creating your song…</div>
-            <button class="gen-cancel" onclick="doCancel()">Cancel</button>
-          </div>
-          <div class="gen-steps">
-            <div class="gstep" id="ss1"><div class="gstep-dot"></div>Lyrics</div>
-            <div class="gstep" id="ss2"><div class="gstep-dot"></div>Structure</div>
-            <div class="gstep" id="ss3"><div class="gstep-dot"></div>Generating</div>
-            <div class="gstep" id="ss4"><div class="gstep-dot"></div>Mastering</div>
-          </div>
-          <div class="gen-bar-wrap"><div class="gen-bar" id="sBar"></div></div>
-          <div class="gen-msg"><span id="sMsg">Initializing…</span><span id="sPct">0%</span></div>
-          <div class="gen-est" id="progEst"></div>
-        </div>
-
-        <!-- Result card -->
-        <div class="result-card" id="resultCard">
-          <div class="rc-top">
-            <div class="rc-art" id="rcArt">🎵</div>
-            <div class="rc-info">
-              <div class="rc-title" id="rcTitle">—</div>
-              <div class="rc-desc" id="rcDesc">—</div>
-              <div class="rc-tags" id="rcTags"></div>
-            </div>
-          </div>
-          <div class="rc-player">
-            <audio id="rAudio" style="display:none" onended="onEnd()" ontimeupdate="syncW()" onloadedmetadata="onMeta()"></audio>
-            <div class="wave-wrap" id="wBars" onclick="seekA(event)"></div>
-            <div class="player-row">
-              <button class="play-btn" id="wPBtn" onclick="togAudio()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              </button>
-              <span class="time-label" id="wTime">0:00</span>
-              <div class="player-actions" id="rcActions"></div>
-            </div>
-          </div>
-          <div class="lyrics-sec" id="lyrSec" style="display:none">
-            <div class="lyr-body" id="lyrBody"></div>
-          </div>
-        </div>
-
-        <!-- Create button -->
-        <button class="create-btn" id="forgeBtn" onclick="startGen()">Create Song</button>
-        <div class="create-hint">
-          ⚡ <b>0:15</b> preview is fastest (~20s) &nbsp;·&nbsp; 1:00 song takes ~35s &nbsp;·&nbsp; 3:00+ takes 1–2 min
-        </div>
-
-      </div>
-    </div><!-- /createView -->
-
-    <!-- ── LIBRARY VIEW ── -->
-    <div class="view" id="libraryView">
-      <div class="library-view" id="libInner" style="display:flex">
-        <div class="lib-heading">My Songs <span id="trackBadge" style="font-size:14px;font-weight:400;color:var(--txt3)"></span></div>
-        <div id="songListWrap">
-          <div class="lib-empty" id="libEmpty">
+      <!-- LIBRARY VIEW -->
+      <div class="view" id="view-library">
+        <div class="lv">
+          <div class="lv-h">My Songs <span id="libCount" style="font-size:14px;font-weight:400;color:var(--tx3)"></span></div>
+          <div id="libEmpty" class="lib-empty">
             <div class="lib-empty-icon">🎵</div>
-            <div style="font-size:16px;font-weight:600">No songs yet</div>
-            <div style="font-size:13px;color:var(--txt3)">Create your first song in the Create tab</div>
+            <div style="font-size:15px;font-weight:600">No songs yet</div>
+            <div style="font-size:13px">Create your first song in the Create tab</div>
           </div>
           <div class="song-list" id="songList"></div>
         </div>
       </div>
-    </div>
 
-    <!-- Mobile bottom nav -->
-    <nav class="mob-bottom" id="mobBottom">
-      <button class="mnbtn on" id="mnCreate" onclick="showView('create',this);mTabSwitch('create')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4"/></svg>
-        Create
-      </button>
-      <button class="mnbtn" id="mnLibrary" onclick="showView('library',this);mTabSwitch('library')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-        Songs
-      </button>
-    </nav>
+      <!-- Mobile nav -->
+      <nav class="mob-nav" id="mobNav">
+        <button class="mnbtn on" id="mn-create" onclick="showView('create',this);syncMobNav('create')">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4"/></svg>
+          Create
+        </button>
+        <button class="mnbtn" id="mn-library" onclick="showView('library',this);syncMobNav('library')">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          Songs
+        </button>
+      </nav>
 
-  </main>
+    </div><!-- /app-main -->
+  </div><!-- /app-wrap -->
 
   <!-- Bottom player bar -->
-  <div class="player-bar" id="playerBar">
-    <div class="pb-art" id="pbArt">🎵</div>
-    <div class="pb-info">
-      <div class="pb-title" id="pbTitle">—</div>
-      <div class="pb-sub" id="pbSub">—</div>
+  <div class="bot-player" id="botPlayer">
+    <div class="bp-art" id="bpArt">🎵</div>
+    <div class="bp-info">
+      <div class="bp-title" id="bpTitle">—</div>
+      <div class="bp-sub" id="bpSub">—</div>
     </div>
-    <div class="pb-center">
-      <button class="pb-play" id="pbPlay" onclick="togAudio()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      </button>
-    </div>
-    <div class="pb-time" id="pbTime"></div>
+    <button class="bp-play" id="bpPlay" onclick="togAudio()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    </button>
+    <span class="bp-time" id="bpTime"></span>
   </div>
+</div><!-- /pg-app -->
 
-</div><!-- /appPage -->
-
-<!-- ══════════ API KEY MODAL ══════════ -->
-<div class="modal-overlay" id="apiModal">
+<!-- Modal -->
+<div class="modal-bg" id="apiModal">
   <div class="modal">
     <div class="modal-title">🔑 Connect Replicate</div>
-    <div class="modal-sub">Enter your Replicate API key to generate songs with MiniMax Music 2.5. Free credits available on sign-up.</div>
-    <div class="modal-label">Replicate API Key</div>
-    <input class="modal-input" id="apiKeyInput" type="password" placeholder="r8_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
-    <div class="modal-label">Proxy URL</div>
-    <input class="modal-input" id="proxyInput" type="text" placeholder="https://your-proxy.vercel.app" autocomplete="off">
+    <div class="modal-sub">Enter your Replicate API key to generate real songs. Or try demo mode to explore the UI.</div>
+    <div class="modal-lbl">Replicate API Key</div>
+    <input class="modal-in" id="apiKeyIn" type="password" placeholder="r8_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+    <div class="modal-lbl">Proxy URL</div>
+    <input class="modal-in" id="proxyIn" type="text" placeholder="https://soundforge-proxy.vercel.app" autocomplete="off">
     <div class="modal-btns">
-      <button class="modal-save" onclick="saveKey()">Save &amp; Create</button>
+      <button class="modal-save" onclick="saveKey()">Save &amp; Continue</button>
       <button class="modal-demo" onclick="enterDemo()">Try Demo</button>
     </div>
-    <div style="font-size:11px;color:var(--txt3);margin-top:14px;line-height:1.6">
-      Get a free key at <a href="https://replicate.com/account/api-tokens" target="_blank" style="color:var(--accent3)">replicate.com</a>. 
-      Deploy the proxy to <a href="https://vercel.com" target="_blank" style="color:var(--accent3)">Vercel</a> for CORS bypass.
-    </div>
+    <div class="modal-note">Get a free key at <a href="https://replicate.com/account/api-tokens" target="_blank">replicate.com</a>. Deploy the proxy to <a href="https://vercel.com" target="_blank">Vercel</a>.</div>
   </div>
 </div>
 
@@ -992,7 +612,465 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font
 <div class="toast" id="toastEl"></div>
 
 <script>
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let REP_KEY = '', PROXY_URL = '', IS_DEMO = false;
+try {
+  const k = sessionStorage.getItem('sf_rk');
+  const p = sessionStorage.getItem('sf_proxy');
+  if (k && k.startsWith('r8_')) REP_KEY = k;
+  if (p) PROXY_URL = p;
+} catch(e) {}
 
+let cancelFlag = false;
+let curDur = '1:00';
+let curMode = 'song';
+let curVoice = 'female';
+let curLang = 'en';
+let curTimbre = 'bright';
+let isPlaying = false;
+let songs = [];
+let curIdx = 0;
+
+const DS = {'0:15':10,'0:30':15,'1:00':30,'1:30':45,'2:00':60,'3:00':90,'4:00':120,'5:00':180};
+const EM = ['🔥','🌊','⚡','🎭','💫','🌙','🎯','🌈','🖤','💎','🌀','🎪'];
+const GR = [
+  'linear-gradient(135deg,#1a1a2e,#16213e)',
+  'linear-gradient(135deg,#0f3460,#533483)',
+  'linear-gradient(135deg,#1a0533,#3d1a78)',
+  'linear-gradient(135deg,#0d1b2a,#1b4332)',
+  'linear-gradient(135deg,#2d1b69,#11998e)',
+  'linear-gradient(135deg,#16213e,#0f3460)',
+  'linear-gradient(135deg,#200122,#6f0000)',
+  'linear-gradient(135deg,#0a0a0a,#434343)'
+];
+
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+function goToApp() {
+  document.getElementById('pg-land').classList.remove('on');
+  document.getElementById('pg-app').classList.add('on');
+  if (!REP_KEY && !IS_DEMO) {
+    setTimeout(openModal, 400);
+  }
+}
+function goToLanding() {
+  document.getElementById('pg-app').classList.remove('on');
+  document.getElementById('pg-land').classList.add('on');
+}
+function showView(name, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+  document.getElementById('view-' + name).classList.add('on');
+  document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('on'));
+  const sbBtn = document.getElementById('sb-' + name);
+  if (sbBtn) sbBtn.classList.add('on');
+  if (name === 'library') renderLib();
+}
+function syncMobNav(name) {
+  document.querySelectorAll('.mnbtn').forEach(b => b.classList.remove('on'));
+  const b = document.getElementById('mn-' + name);
+  if (b) b.classList.add('on');
+}
+
+// ══════════════════════════════════════
+// MODAL / KEY
+// ══════════════════════════════════════
+function openModal() {
+  const m = document.getElementById('apiModal');
+  m.classList.add('on');
+  // Pre-fill saved values
+  const ki = document.getElementById('apiKeyIn');
+  const pi = document.getElementById('proxyIn');
+  if (ki && REP_KEY) ki.value = REP_KEY;
+  if (pi && PROXY_URL) pi.value = PROXY_URL;
+}
+function closeModal() {
+  document.getElementById('apiModal').classList.remove('on');
+}
+function saveKey() {
+  const k = (document.getElementById('apiKeyIn').value || '').trim();
+  const p = (document.getElementById('proxyIn').value || '').trim().replace(/\/$/, '');
+  if (!k) { toast('Paste your Replicate API key first', '⚠️'); return; }
+  if (!k.startsWith('r8_')) { toast('Key must start with r8_', '⚠️'); return; }
+  REP_KEY = k;
+  IS_DEMO = false;
+  if (p) {
+    PROXY_URL = p;
+    try { sessionStorage.setItem('sf_proxy', p); } catch(e) {}
+  }
+  try { sessionStorage.setItem('sf_rk', k); } catch(e) {}
+  closeModal();
+  toast(p ? 'Key + proxy saved! Ready to create 🚀' : 'Key saved! Ready to create 🎵', '✅');
+  goToApp();
+}
+function enterDemo() {
+  IS_DEMO = true;
+  REP_KEY = '';
+  closeModal();
+  toast('Demo mode active — no real audio', '🎭');
+  goToApp();
+}
+
+// ══════════════════════════════════════
+// UI HELPERS
+// ══════════════════════════════════════
+function toast(msg, icon) {
+  const el = document.getElementById('toastEl');
+  if (!el) return;
+  el.textContent = (icon || '✓') + ' ' + msg;
+  el.classList.add('on');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => el.classList.remove('on'), 3200);
+}
+function setMode(m, btn) {
+  curMode = m;
+  document.querySelectorAll('.tabs .tab').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('customFields').style.display = m === 'custom' ? 'block' : 'none';
+}
+function setVoice(v, btn) {
+  curVoice = v;
+  document.querySelectorAll('.btn-row .tbtn[onclick*="setVoice"]').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+function setLang(l, btn) {
+  curLang = l;
+  document.querySelectorAll('.btn-row .tbtn[onclick*="setLang"]').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const hint = document.getElementById('langHint');
+  const names = {en:'English',es:'Spanish',pt:'Portuguese',fr:'French',zh:'Mandarin',ja:'Japanese',ko:'Korean',ar:'Arabic',hi:'Hindi',de:'German',it:'Italian',ru:'Russian'};
+  if (hint) hint.textContent = 'Lyrics: ' + (names[l] || l);
+}
+function setTimbre(t, btn) {
+  curTimbre = t;
+  document.querySelectorAll('.btn-row .tbtn[onclick*="setTimbre"]').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+function setDur(btn, d) {
+  curDur = d;
+  document.querySelectorAll('.dur-row .dpill').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const est = {'0:15':'~20s','0:30':'~25s','1:00':'~35s','1:30':'~50s','2:00':'~60s','3:00':'~90s','4:00':'~2min','5:00':'~3min'};
+  const n = document.getElementById('durNote');
+  if (n) n.textContent = 'wait: ' + (est[d] || '');
+}
+function chipTog(btn, word) {
+  btn.classList.toggle('on');
+  const ta = document.getElementById('promptInput');
+  if (!ta) return;
+  let txt = ta.value;
+  if (btn.classList.contains('on')) {
+    if (!txt.toLowerCase().includes(word)) txt = txt.trim() + (txt.trim() ? ', ' : '') + word;
+  } else {
+    txt = txt.replace(new RegExp(',?\\s*' + word, 'gi'), '').trim().replace(/^,\s*/, '');
+  }
+  ta.value = txt;
+}
+function insertTag(tag) {
+  const ta = document.getElementById('lyricsInput');
+  if (!ta) return;
+  const pos = ta.selectionStart;
+  ta.value = ta.value.substring(0, pos) + '\n' + tag + '\n' + ta.value.substring(pos);
+}
+function toggleMtags() {
+  const p = document.getElementById('mtagPanel');
+  if (p) p.style.display = p.style.display === 'block' ? 'none' : 'block';
+}
+function onGenreChange(genre) {
+  const sel = document.getElementById('substyleSelect');
+  if (!sel) return;
+  const styles = GENRE_STYLES[genre] || [];
+  sel.innerHTML = '<option value="">— Any —</option>' + styles.map(s => `<option>${s}</option>`).join('');
+}
+
+// Progress helpers
+function setProg(msg, pct) {
+  const msgEl = document.getElementById('pMsg');
+  const pctEl = document.getElementById('pPct');
+  const bar = document.getElementById('pBar');
+  if (msgEl) msgEl.textContent = msg;
+  if (pctEl) pctEl.textContent = Math.round(pct) + '%';
+  if (bar) bar.style.width = pct + '%';
+}
+function setStep(id, state) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('active', 'done');
+  if (state) el.classList.add(state);
+}
+function clrProg() {
+  document.getElementById('progCard').classList.remove('on');
+  document.getElementById('createBtn').disabled = false;
+  ['ps1','ps2','ps3','ps4'].forEach(id => setStep(id, null));
+  setProg('', 0);
+}
+function showErr(msg) {
+  const card = document.getElementById('errCard');
+  const body = document.getElementById('errBody');
+  if (card) card.classList.add('on');
+  if (body) body.textContent = msg;
+}
+
+// ══════════════════════════════════════
+// AUDIO PLAYER
+// ══════════════════════════════════════
+function togAudio() {
+  const a = document.getElementById('rAudio');
+  if (!a || !a.src) return;
+  if (isPlaying) { a.pause(); setPlay(false); }
+  else { a.play(); setPlay(true); }
+}
+function setPlay(playing) {
+  isPlaying = playing;
+  const PLAY_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+  const PAUSE_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  const svg = playing ? PAUSE_SVG : PLAY_SVG;
+  ['wPlay','bpPlay'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = svg;
+  });
+}
+function onEnd() { setPlay(false); }
+function onMeta() {
+  const a = document.getElementById('rAudio');
+  if (!a) return;
+  const dur = isNaN(a.duration) ? 0 : a.duration;
+  const m = Math.floor(dur/60), s = Math.floor(dur%60);
+  document.getElementById('wTime').textContent = '0:00 / ' + m + ':' + String(s).padStart(2,'0');
+}
+function syncW() {
+  const a = document.getElementById('rAudio');
+  if (!a || isNaN(a.duration)) return;
+  const pct = a.currentTime / a.duration;
+  const bars = document.querySelectorAll('#waveform .wb');
+  const played = Math.floor(pct * bars.length);
+  bars.forEach((b, i) => {
+    b.classList.toggle('played', i < played);
+  });
+  const cur = Math.floor(a.currentTime), dur = Math.floor(a.duration);
+  const fmt = t => Math.floor(t/60) + ':' + String(t%60).padStart(2,'0');
+  const wt = document.getElementById('wTime');
+  const bt = document.getElementById('bpTime');
+  if (wt) wt.textContent = fmt(cur) + ' / ' + fmt(dur);
+  if (bt) bt.textContent = fmt(cur) + ' / ' + fmt(dur);
+}
+function seekA(e) {
+  const a = document.getElementById('rAudio');
+  const wrap = document.getElementById('waveform');
+  if (!a || !wrap || isNaN(a.duration)) return;
+  const rect = wrap.getBoundingClientRect();
+  const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+  a.currentTime = pct * a.duration;
+}
+
+// ══════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════
+function renderResult(song) {
+  // Art
+  const art = document.getElementById('resArt');
+  art.textContent = song.emoji;
+  art.style.background = song.grad;
+  document.getElementById('resTitle').textContent = song.title;
+  document.getElementById('resDesc').textContent = song.tagline;
+  document.getElementById('resTags').innerHTML =
+    `<span class="res-tag">${song.genre}</span>` +
+    `<span class="res-tag">${song.mood}</span>` +
+    `<span class="res-tag">${song.bpm} BPM</span>` +
+    `<span class="res-tag ${song.audioUrl ? 'live' : ''}">${song.audioUrl ? '✓ Real audio' : '🎭 Demo'}</span>`;
+
+  // Waveform
+  const bars = Array.from({length:80}, () => Math.random() * 0.7 + 0.3);
+  document.getElementById('waveform').innerHTML =
+    bars.map(h => `<div class="wb" style="height:${(h*38)|0}px"></div>`).join('');
+
+  // Audio
+  const a = document.getElementById('rAudio');
+  if (song.audioUrl) { a.src = song.audioUrl; }
+  setPlay(false);
+
+  // Download button
+  document.getElementById('resActions').innerHTML = song.audioUrl
+    ? `<a class="paction" href="${song.audioUrl}" download="${song.title}.mp3">↓ Download</a>` : '';
+
+  // Lyrics
+  const lw = document.getElementById('lyrWrap');
+  const lb = document.getElementById('lyrBody');
+  if (song.lyrics && lw && lb) {
+    lb.textContent = song.lyrics;
+    lw.style.display = 'block';
+  }
+
+  // Show card
+  document.getElementById('resCard').classList.add('on');
+
+  // Bottom bar
+  const bpArt = document.getElementById('bpArt');
+  const bpTitle = document.getElementById('bpTitle');
+  const bpSub = document.getElementById('bpSub');
+  if (bpArt) { bpArt.textContent = song.emoji; bpArt.style.background = song.grad; }
+  if (bpTitle) bpTitle.textContent = song.title;
+  if (bpSub) bpSub.textContent = song.genre.toUpperCase() + ' · ' + song.mood;
+  document.getElementById('botPlayer').classList.add('on');
+}
+
+function renderLib() {
+  const cnt = songs.length;
+  const lc = document.getElementById('libCount');
+  if (lc) lc.textContent = cnt ? `(${cnt})` : '';
+  document.getElementById('libEmpty').style.display = cnt ? 'none' : 'flex';
+  document.getElementById('songList').innerHTML = songs.map((s, i) => `
+    <div class="si ${i===curIdx?'on':''}" onclick="selTrack(${i})">
+      <div class="si-num">${i===curIdx && isPlaying ? '▶' : i+1}</div>
+      <div class="si-art" style="background:${s.grad}">${s.emoji}</div>
+      <div class="si-info">
+        <div class="si-title">${s.title}</div>
+        <div class="si-meta">${s.genre} · ${s.mood} · ${s.bpm} BPM</div>
+      </div>
+      <div class="si-dur">${s.dur}</div>
+    </div>`).join('');
+}
+
+function selTrack(i) {
+  curIdx = i;
+  const s = songs[i];
+  if (!s) return;
+  const a = document.getElementById('rAudio');
+  if (s.audioUrl && a) { a.src = s.audioUrl; }
+  renderResult(s);
+  showView('create', document.getElementById('sb-create'));
+}
+
+// ══════════════════════════════════════
+// GENERATE
+// ══════════════════════════════════════
+async function doGenLyrics() {
+  const g = (document.getElementById('genreSelect') || {}).value || 'Pop';
+  const m = (document.getElementById('moodSelect') || {}).value || 'Happy';
+  const secs = DS[curDur] || 60;
+  const lyrics = makeLyrics(g, m, curLang, secs);
+  const ta = document.getElementById('lyricsInput');
+  if (ta) ta.value = lyrics;
+  toast('Lyrics generated!', '✍️');
+}
+
+async function startGen() {
+  // Get description
+  const promptDesc = (document.getElementById('promptInput').value || '').trim();
+  if (!promptDesc && curMode !== 'custom') {
+    toast('Write a song description first ✍️', '⚠️');
+    return;
+  }
+  // Check key
+  if (!REP_KEY && !IS_DEMO) {
+    openModal();
+    return;
+  }
+
+  // Reset UI
+  cancelFlag = false;
+  document.getElementById('createBtn').disabled = true;
+  document.getElementById('errCard').classList.remove('on');
+  document.getElementById('progCard').classList.add('on');
+  document.getElementById('resCard').classList.remove('on');
+
+  // Read settings
+  const genre = (document.getElementById('genreSelect') || {}).value || 'Pop';
+  const substyleEl = document.getElementById('substyleSelect');
+  const substyle = substyleEl ? substyleEl.value : '';
+  const genreLabel = substyle || genre;
+  const mood = (document.getElementById('moodSelect') || {}).value || 'Happy';
+  const bpm = document.getElementById('bpmVal').textContent || '88';
+  const secs = DS[curDur] || 60;
+  const noVox = curVoice === 'none';
+
+  const lyricsEl = document.getElementById('lyricsInput');
+  const customLyrics = curMode === 'custom' && lyricsEl ? lyricsEl.value.trim() : '';
+  const styleEl = document.getElementById('styleInput');
+  const styleInput = curMode === 'custom' && styleEl ? styleEl.value.trim() : '';
+
+  // Build prompt
+  let prompt;
+  if (curMode === 'custom' && styleInput) {
+    prompt = styleInput;
+  } else {
+    prompt = buildMusicPrompt(genreLabel, mood, curVoice, curTimbre, curLang, bpm, promptDesc);
+  }
+
+  const lyrics = noVox
+    ? '[verse]\n*instrumental, no vocals*\n\n[chorus]\n*instrumental break*'
+    : (customLyrics || makeLyrics(genreLabel, mood, curLang, secs));
+
+  const meta = buildMeta(promptDesc || genreLabel, genre, mood, bpm);
+  let audioUrl = null;
+
+  try {
+    setStep('ps1', 'active'); setProg('Building song structure…', 12);
+    await sleep(400); if (cancelFlag) throw new Error('cancelled');
+
+    setStep('ps1', 'done'); setStep('ps2', 'active'); setProg('Crafting lyrics…', 28);
+    await sleep(400); if (cancelFlag) throw new Error('cancelled');
+
+    setStep('ps2', 'done'); setStep('ps3', 'active'); setProg('Sending to AI…', 48);
+
+    if (!IS_DEMO) {
+      audioUrl = await callReplicate(prompt, secs, lyrics);
+    } else {
+      // Demo animation
+      for (let p = 50; p <= 92; p += 3) {
+        if (cancelFlag) throw new Error('cancelled');
+        await sleep(180);
+        document.getElementById('pBar').style.width = p + '%';
+        document.getElementById('pPct').textContent = p + '%';
+        const elapsed = Math.round((p - 50) / 3 * 0.18);
+        document.getElementById('pMsg').textContent =
+          elapsed < 4 ? 'Loading AI model…' : 'Generating audio…';
+      }
+    }
+
+    if (cancelFlag) throw new Error('cancelled');
+    setStep('ps3', 'done'); setStep('ps4', 'active'); setProg('Mastering…', 96);
+    await sleep(300);
+    setStep('ps4', 'done'); setProg('Complete!', 100);
+    await sleep(200);
+
+  } catch(err) {
+    clrProg();
+    if (err.message !== 'cancelled') showErr(err.message);
+    return;
+  }
+
+  clrProg();
+
+  const emoji = EM[Math.random() * EM.length | 0];
+  const grad = GR[Math.random() * GR.length | 0];
+  const song = {
+    ...meta, emoji, grad,
+    dur: curDur, genre, mood, bpm,
+    lyrics: customLyrics || lyrics,
+    audioUrl, demo: !audioUrl,
+    lang: curLang, voice: curVoice, timbre: curTimbre
+  };
+  songs.unshift(song);
+  curIdx = 0;
+  renderResult(song);
+  renderLib();
+  toast('"' + meta.title + '" created!', '🎵');
+}
+
+function doCancel() {
+  cancelFlag = true;
+  clrProg();
+  toast('Cancelled', '✗');
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ══════════════════════════════════════
+// DATA MAPS + CORE LOGIC (injected below)
+// ══════════════════════════════════════
 // Null-safety shim for removed elements
 const _origGEBI = document.getElementById.bind(document);
 document.getElementById = function(id){
@@ -1002,29 +1080,8 @@ document.getElementById = function(id){
 };
 
 
-function goToApp(){
-  // Hide landing
-  document.getElementById('landingPage').style.display='none';
-  // Show app
-  const ap=document.getElementById('appPage');
-  const isMob=window.innerWidth<768;
-  ap.style.display=isMob?'block':'flex';
-  ap.style.flexDirection='row';
-  // Show/hide responsive elements
-  document.querySelector('.sidebar').style.display=isMob?'none':'flex';
-  document.querySelector('.mob-header').style.display=isMob?'flex':'none';
-  document.querySelector('.mob-bottom').style.display=isMob?'flex':'none';
-  // Ensure create view is active
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.getElementById('createView').classList.add('active');
-  window.scrollTo(0,0);
-  if(!REP_KEY&&!IS_DEMO)setTimeout(()=>openModal(),400);
-}
-function goToLanding(){
-  document.getElementById('appPage').style.display='none';
-  document.getElementById('landingPage').style.display='flex';
-  window.scrollTo(0,0);
-}
+/* removed duplicate */
+/* removed duplicate */
 function showView(v,btn){
   document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
   const target=document.getElementById(v+'View');
@@ -1170,7 +1227,6 @@ const LANG_TAGS={
   'zh':'Mandarin','ja':'japanese','ko':'korean',
   'ar':'arabic','hi':'hindi','de':'german','it':'italian','ru':'russian'
 };
-
 function buildMusicPrompt(genre,mood,voice,timbre,lang,bpm,promptDesc){
   // MiniMax Music 2.5 uses natural language prompts
   const instr=YUE_INSTR_MAP[genre]||'piano guitar bass drums';
@@ -1195,198 +1251,6 @@ function buildMusicPrompt(genre,mood,voice,timbre,lang,bpm,promptDesc){
   return parts.filter(Boolean).join(', ');
 }
 
-const GENRE_STYLES={"Hip-Hop": ["Boom Bap", "Trap", "Drill", "Cloud Rap", "Lo-fi Hip-Hop", "Conscious Rap", "East Coast", "West Coast", "Southern Rap", "Mumble Rap", "Jazz Rap", "Emo Rap", "Phonk", "Gangsta Rap", "Underground"], "Trap": ["Dark Trap", "Melodic Trap", "Trap Soul", "Latin Trap", "UK Trap", "Memphis Trap", "SoundCloud Trap", "Pluggnb", "Rage Trap", "Drill"], "Pop": ["Dance-Pop", "Electropop", "Synth-Pop", "Indie Pop", "Art Pop", "Dream Pop", "Bubblegum Pop", "Power Pop", "Chamber Pop", "Bedroom Pop", "Teen Pop", "K-Pop", "J-Pop", "City Pop"], "R&B / Soul": ["Neo-Soul", "Contemporary R&B", "Quiet Storm", "Funk", "Motown", "Philly Soul", "Gospel Soul", "Alternative R&B", "New Jack Swing", "Trap Soul", "Smooth R&B", "Old School Soul"], "Electronic": ["House", "Deep House", "Tech House", "Progressive House", "Techno", "Trance", "Dubstep", "Drum and Bass", "Jungle", "Breakbeat", "Ambient", "IDM", "Electro", "Garage", "UK Garage", "Acid House", "Industrial", "EBM"], "House": ["Deep House", "Tech House", "Progressive House", "Acid House", "Afro House", "Vocal House", "Chicago House", "Detroit House", "Nu-Disco", "Soulful House", "Tribal House", "Electro House"], "Lo-fi": ["Lo-fi Hip-Hop", "Lo-fi Jazz", "Lo-fi Soul", "Chillhop", "Jazzhop", "Bedroom Pop", "Rainy Day", "Study Beats", "Lo-fi Bossa Nova", "Cassette Tape Lo-fi"], "Ambient": ["Dark Ambient", "Space Ambient", "Nature Sounds", "Drone", "New Age", "Meditation", "Sleep Music", "Cinematic Ambient", "Ethereal Ambient", "Atmospheric"], "Rock": ["Classic Rock", "Hard Rock", "Soft Rock", "Garage Rock", "Surf Rock", "Psychedelic Rock", "Arena Rock", "Southern Rock", "Blues Rock", "Glam Rock", "Art Rock", "Progressive Rock", "Indie Rock"], "Indie Rock": ["Dream Pop", "Shoegaze", "Slowcore", "Post-Punk Revival", "Math Rock", "Noise Rock", "Lo-fi Rock", "Emo", "Midwest Emo", "Alternative", "College Rock"], "Alternative Rock": ["Grunge", "Post-Grunge", "Indie Rock", "Emo", "Post-Rock", "Art Rock", "Britpop", "Shoegaze", "College Rock", "Alternative Metal"], "Metal": ["Heavy Metal", "Thrash Metal", "Death Metal", "Black Metal", "Doom Metal", "Power Metal", "Progressive Metal", "Metalcore", "Deathcore", "Symphonic Metal", "Groove Metal", "Nu Metal", "Folk Metal", "Industrial Metal", "Speed Metal", "Glam Metal", "Sludge Metal", "Viking Metal"], "Jazz": ["Bebop", "Cool Jazz", "Hard Bop", "Free Jazz", "Swing", "Big Band", "Latin Jazz", "Smooth Jazz", "Gypsy Jazz", "Modal Jazz", "Acid Jazz", "Vocal Jazz", "Jazz Fusion", "Dixieland", "Contemporary Jazz", "Bossa Nova Jazz"], "Blues": ["Delta Blues", "Chicago Blues", "Electric Blues", "Country Blues", "Soul Blues", "Blues Rock", "Swamp Blues", "Piano Blues", "Texas Blues", "Piedmont Blues", "Jump Blues"], "Country": ["Traditional Country", "Outlaw Country", "Country Pop", "Country Rock", "Bluegrass", "Honky-Tonk", "Americana", "Alt-Country", "Western Swing", "Nashville Sound", "Contemporary Country", "Country Rap", "Bro-Country"], "Reggae": ["Roots Reggae", "Dancehall", "Dub", "Ska", "Rocksteady", "Reggae Fusion", "Lovers Rock", "Ragga", "Digital Reggae", "One Drop"], "Latin": ["Salsa", "Merengue", "Bachata", "Cumbia", "Reggaeton", "Latin Pop", "Bossa Nova", "Samba", "Tango", "Mambo", "Cha-Cha", "Bolero", "Dembow", "Corridos", "Norteño", "Banda", "Mariachi", "Vallenato", "Son Cubano", "Timba", "Guaracha", "Plena", "Bomba"], "Afrobeats": ["Afropop", "Amapiano", "Highlife", "Afro-Fusion", "Afroswing", "Gqom", "Afrohouse", "Jùjú", "Fuji", "Makossa", "Soukous", "Ndombolo", "Kizomba", "Zouk"], "Classical": ["Baroque", "Romantic", "Contemporary Classical", "Opera", "Symphony", "Chamber Music", "Concerto", "Minimalist", "Sacred Choral", "Early Music", "Renaissance", "Avant-Garde Classical"], "Cinematic / Soundtrack": ["Orchestral Epic", "Dark Cinematic", "Emotional Score", "Action Score", "Horror Score", "Adventure Theme", "Sci-Fi Score", "Romantic Score", "Western Score", "Anime OST", "Video Game Music", "Documentary Score"], "K-Pop": ["BG (Boy Group)", "GG (Girl Group)", "Solo", "K-R&B", "K-Hip-Hop", "K-Ballad", "K-Trot", "K-Dance", "K-Indie", "Idol Pop"], "Drill": ["UK Drill", "NY Drill", "Chicago Drill", "Brooklyn Drill", "Australian Drill", "Melodic Drill", "Pop Drill"], "Funk": ["P-Funk", "Funk Rock", "Electro-Funk", "Go-Go", "New Orleans Funk", "Minneapolis Sound", "Nu-Funk", "Afrofunk"], "Gospel": ["Traditional Gospel", "Contemporary Gospel", "Southern Gospel", "Urban Gospel", "Praise & Worship", "Gospel Rap", "Gospel R&B", "Mass Choir"], "Folk": ["Traditional Folk", "Contemporary Folk", "Indie Folk", "Folk Rock", "Celtic Folk", "Appalachian Folk", "Protest Folk", "Singer-Songwriter", "Folk Pop", "Neo-Folk"], "Punk": ["Classic Punk", "Hardcore Punk", "Post-Punk", "Pop Punk", "Skate Punk", "Anarcho-Punk", "Horror Punk", "Crust Punk", "Folk Punk", "Emo", "Screamo", "Post-Hardcore"], "Dancehall": ["Digital Dancehall", "Ragga", "Bashment", "Jungle", "UK Dancehall", "Reggaeton", "Afrobeats-Dancehall"], "Phonk": ["Memphis Phonk", "Drift Phonk", "Brazilian Phonk", "Dark Phonk", "Hyperpop Phonk", "Hard Phonk", "Electro Phonk"], "Drum and Bass": ["Liquid DnB", "Neurofunk", "Jump Up", "Dark DnB", "Jungle", "Techstep", "Drumstep", "Intelligent DnB", "Ragga DnB"], "Techno": ["Detroit Techno", "Industrial Techno", "Minimal Techno", "Hard Techno", "Acid Techno", "Berlin Techno", "Melodic Techno", "Tech House", "Dark Techno"], "Trance": ["Progressive Trance", "Uplifting Trance", "Psytrance", "Goa Trance", "Tech Trance", "Vocal Trance", "Hard Trance", "Dream Trance", "Melodic Trance"], "Future Bass": ["Melodic Future Bass", "Dark Future Bass", "Chill Future Bass", "Electro Future Bass", "Future Pop", "Kawaii Future Bass"], "Vaporwave": ["Classic Vaporwave", "Future Funk", "Mallsoft", "Hardvapour", "Dreampunk", "Chillwave", "Synthwave", "Retrowave", "Outrun"], "Hyperpop": ["Digicore", "Glitchcore", "UK Hyperpop", "Bubblegum Bass", "Electropop Hyperpop", "Emo Hyperpop", "Trap Hyperpop"], "Bossa Nova": ["Classic Bossa Nova", "Jazz Bossa Nova", "Contemporary Bossa Nova", "Samba-Jazz", "Choro", "MPB", "Brazilian Jazz"], "Samba": ["Samba Enredo", "Pagode", "Axé", "Forró", "Baião", "Maracatu", "Samba-Rock", "Samba Reggae"], "Flamenco": ["Classic Flamenco", "Flamenco Fusion", "Rumba Flamenca", "Nuevo Flamenco", "Flamenco Jazz", "Flamenco Pop"], "Bollywood / Bhangra": ["Classic Bollywood", "Item Song", "Sufi Bollywood", "Punjabi Bhangra", "Filmi", "Ghazal", "Qawwali", "Indi-Pop", "Fusion Bhangra"], "Anime OST": ["Shonen Battle", "Shojo Romance", "Isekai Adventure", "Horror Anime", "Mecha", "Slice of Life", "Opening Theme", "Ending Theme", "Insert Song"], "Video Game Music": ["8-bit Chiptune", "16-bit SNES", "RPG Battle Theme", "Boss Fight", "Exploration Theme", "Puzzle Game", "Racing Game", "Horror Game", "Open World"], "Experimental": ["Noise", "Drone", "Musique Concrète", "Sound Art", "Glitch", "Avant-Garde", "Dark Ambient", "Microtonal", "Free Improvisation"]};
-
-const ALL_GENRES=['Blues', 'Delta Blues', 'Chicago Blues', 'Electric Blues', 'Country Blues', 'Soul Blues', 'Blues Rock', 'Swamp Blues', 'Piano Blues', 'Classical', 'Baroque', 'Chamber Music', 'Choral', 'Concerto', 'Contemporary Classical', 'Early Music', 'Opera', 'Orchestral', 'Renaissance', 'Romantic', 'Symphony', 'Avant-Garde Classical', 'Minimalist Classical', 'Sacred Music', 'Country', 'Traditional Country', 'Outlaw Country', 'Country Pop', 'Country Rock', 'Bluegrass', 'Honky-Tonk', 'Americana', 'Alt-Country', 'Western Swing', 'Nashville Sound', 'Bakersfield Sound', 'Contemporary Country', 'Electronic', 'House', 'Techno', 'Trance', 'Drum and Bass', 'Dubstep', 'Ambient', 'EDM', 'Electro', 'Industrial', 'Synth-Pop', 'Trip-Hop', 'IDM', 'Downtempo', 'Chillout', 'Hardstyle', 'Jungle', 'Garage', 'Breakbeat', 'Acid House', 'Progressive House', 'Deep House', 'Tech House', 'Future Bass', 'Lo-fi', 'Vaporwave', 'Hyperpop', 'Chillwave', 'Witch House', 'Nightcore', 'Phonk', 'Digicore', 'Glitchcore', 'Future Funk', 'Electro Swing', 'Folk', 'Traditional Folk', 'Contemporary Folk', 'Indie Folk', 'Folk Rock', 'Neo-Folk', 'Celtic Folk', 'Singer-Songwriter', 'Protest Folk', 'Appalachian Folk', 'World Folk', 'Folk Punk', 'Folk Metal', 'Hip-Hop', 'Rap', 'Old School Hip-Hop', 'Boom Bap', 'Trap', 'Conscious Hip-Hop', 'Gangsta Rap', 'Drill', 'UK Drill', 'Alternative Hip-Hop', 'Underground Hip-Hop', 'East Coast Rap', 'West Coast Rap', 'Southern Rap', 'Latin Trap', 'Jazz Rap', 'Horrorcore', 'Emo Rap', 'Cloud Rap', 'Experimental Hip-Hop', 'Rap Rock', 'Country Rap', 'Gospel Rap', 'Trap Soul', 'Comedy Rap', 'Jazz', 'Swing', 'Bebop', 'Cool Jazz', 'Hard Bop', 'Free Jazz', 'Jazz Fusion', 'Latin Jazz', 'Smooth Jazz', 'Gypsy Jazz', 'Big Band', 'Modal Jazz', 'Acid Jazz', 'Vocal Jazz', 'Contemporary Jazz', 'Dixieland', 'Latin', 'Salsa', 'Reggaeton', 'Bachata', 'Merengue', 'Cumbia', 'Son Cubano', 'Bolero', 'Mambo', 'Cha-Cha-Chá', 'Timba', 'Latin Pop', 'Corridos', 'Norteño', 'Banda', 'Mariachi', 'Tejano', 'Vallenato', 'Rumba', 'Plena', 'Bomba', 'Dembow', 'Tango', 'Samba', 'Bossa Nova', 'Forró', 'Pagode', 'Sertanejo', 'Salsa Choke', 'Reggaeton Pop', 'Son Jarocho', 'Zouk', 'Metal', 'Heavy Metal', 'Thrash Metal', 'Death Metal', 'Black Metal', 'Doom Metal', 'Power Metal', 'Progressive Metal', 'Metalcore', 'Deathcore', 'Symphonic Metal', 'Groove Metal', 'Nu Metal', 'Industrial Metal', 'Speed Metal', 'Glam Metal', 'Sludge Metal', 'Symphonic Rock', 'Pop', 'Dance-Pop', 'Indie Pop', 'Electropop', 'Teen Pop', 'Art Pop', 'Chamber Pop', 'Dream Pop', 'K-Pop', 'J-Pop', 'Mandopop', 'Baroque Pop', 'Pop Rock', 'Bedroom Pop', 'City Pop', 'Anime OST', 'Punk', 'Classic Punk', 'Punk Rock', 'Hardcore Punk', 'Post-Punk', 'Pop Punk', 'Skate Punk', 'Anarcho-Punk', 'Horror Punk', 'Crust Punk', 'Emo', 'Screamo', 'Post-Punk Revival', 'Noise Rock', 'R&B', 'Soul', 'Neo-Soul', 'Funk', 'Motown', 'Quiet Storm', 'Philly Soul', 'Gospel Soul', 'Alternative R&B', 'Contemporary R&B', 'P-Funk', 'Funk Rock', 'Electro-Funk', 'Go-Go', 'Reggae', 'Roots Reggae', 'Dancehall', 'Dub', 'Ska', 'Rocksteady', 'Reggae Fusion', 'Lovers Rock', 'Rock', 'Classic Rock', 'Hard Rock', 'Alternative Rock', 'Indie Rock', 'Progressive Rock', 'Psychedelic Rock', 'Garage Rock', 'Soft Rock', 'Glam Rock', 'Grunge', 'Post-Rock', 'Southern Rock', 'Surf Rock', 'Arena Rock', 'Art Rock', 'Shoegaze', 'Slowcore', 'Math Rock', 'Gospel', 'Traditional Gospel', 'Contemporary Gospel', 'Southern Gospel', 'Urban Gospel', 'Christian', 'Worship', 'Islamic Nasheed', 'Hindu Devotional', 'Buddhist Chant', 'Jewish Liturgical', 'Sacred Choral', 'Afrobeat', 'Afropop', 'Afro-Fusion', 'Highlife', 'Rai', 'Qawwali', 'Flamenco', 'Fado', 'Bhangra', 'Enka', 'Soukous', 'Amapiano', 'Gqom', 'Mbalax', 'Gnawa', 'Zouglou', 'Taarab', 'Sevdah', 'Gamelan', 'Cajun', 'Zydeco', 'Celtic', 'Experimental', 'Drone', 'Sound Art', 'Dark Ambient', 'Glitch', 'Avant-Garde', 'Noise', 'Musique Concrète', 'Disco', 'Eurodance', 'Freestyle', 'Ballroom', 'Waltz', 'Soundtrack', 'Film Score', 'Musical Theater', 'Video Game Music', "Children's Music", 'Lullabies', 'Nursery Rhymes', 'Parody', 'Novelty'];
-
-// ── STATE ──
-let REP_KEY='', PROXY_URL='', IS_DEMO=false;
-try{
-  const sk=sessionStorage.getItem('sf_rk');
-  const sp=sessionStorage.getItem('sf_proxy');
-  if(sk&&sk.startsWith('r8_')){REP_KEY=sk;}
-  if(sp){PROXY_URL=sp;}
-}catch(e){}
-let cancelFlag=false, curDur='1:00', isPlaying=false, curIdx=0;
-let curMode='song';
-let songs=[];
-
-// Duration map
-const DS={'0:15':10,'0:30':15,'1:00':30,'1:30':45,'2:00':60,'3:00':90,'4:00':120,'5:00':180};
-
-// Emoji & gradient pools
-const EM=['🔥','🌊','⚡','🎭','💫','🌙','🎯','🌈','🖤','💎','🌀','🎪'];
-const GR=[
-  'linear-gradient(135deg,#1a1a2e,#16213e)',
-  'linear-gradient(135deg,#0f3460,#533483)',
-  'linear-gradient(135deg,#2d1b69,#11998e)',
-  'linear-gradient(135deg,#373b44,#4286f4)',
-  'linear-gradient(135deg,#c94b4b,#4b134f)',
-  'linear-gradient(135deg,#136a8a,#267871)',
-  'linear-gradient(135deg,#360033,#0b8793)',
-  'linear-gradient(135deg,#1d4350,#a43931)',
-  'linear-gradient(135deg,#4a00e0,#8e2de2)',
-  'linear-gradient(135deg,#f7971e,#ffd200)',
-  'linear-gradient(135deg,#11998e,#38ef7d)',
-  'linear-gradient(135deg,#fc466b,#3f5efb)'
-];
-
-
-/* goToApp defined above */
-
-/* goToLanding defined above */
-
-
-function insertTag(tag){
-  const ta=document.getElementById('lyricsInput');
-  if(!ta)return;
-  const pos=ta.selectionStart,val=ta.value;
-  ta.value=val.slice(0,pos)+tag+'\n'+val.slice(pos);
-  ta.selectionStart=ta.selectionEnd=pos+tag.length+1;
-  ta.focus();
-};
-
-window.addEventListener('DOMContentLoaded',()=>{
-  // Wire up all data-action buttons (avoids global scope issues)
-  document.addEventListener('click', function(e) {
-    const el = e.target.closest('[data-action]');
-    if (!el) return;
-    const action = el.getAttribute('data-action');
-    if (action === 'studio') goToApp();
-    else if (action === 'landing') goToLanding();
-    else if (action === '__null_features') {
-      const t = document.getElementById('__null_features');
-      if(t) t.scrollIntoView({behavior:'smooth'});
-    }
-  });
-
-  // Populate genre cloud
-  const gc=document.getElementById('__null_genreCloud');
-  if(gc){ALL_GENRES.forEach(g=>{const p=document.createElement('div');p.className='gpill';p.textContent=g;gc.appendChild(p);});}
-  // Session restore
-  try{
-    const k=sessionStorage.getItem('sf_rk');
-    if(k){REP_KEY=k;const el=document.getElementById('apiKeyInput');if(el)el.value=k;}
-    const px=sessionStorage.getItem('sf_proxy');
-    if(px){PROXY_URL=px;const el=document.getElementById('proxyInput');if(el)el.value=px;}
-    if(k){const am=document.getElementById('apiModal');if(am)am.classList.remove('open');}
-  }catch(e){}
-  renderLib();
-});
-
-function openModal(){document.getElementById('apiModal').classList.add('open')}
-function saveKey(){
-  const k=(document.getElementById('apiKeyInput').value||'').trim();
-  const px=(document.getElementById('proxyInput').value||'').trim().replace(/\/$/,'');
-  if(!k){toast('Paste your Replicate key first','⚠️');return;}
-  if(!k.startsWith('r8_')){toast('Key must start with r8_','⚠️');return;}
-  REP_KEY=k; IS_DEMO=false;
-  if(px){PROXY_URL=px;try{sessionStorage.setItem('sf_proxy',px);}catch(e){}}
-  try{sessionStorage.setItem('sf_rk',k);}catch(e){}
-  document.getElementById('apiModal').classList.remove('open');
-  toast(px?'Ready to create! 🚀':'Key saved! 🎵','✅');
-  goToApp();
-}
-function enterDemo(){
-  IS_DEMO=true;
-  document.getElementById('apiModal').classList.remove('open');
-  
-  // statusPill removed in new UI
-  toast('Demo mode active 🎭','🎭');
-}
-
-function toast(msg,icon='✓'){
-  const el=document.getElementById('toastEl');
-  if(!el)return;
-  el.textContent=icon+' '+msg;
-  el.classList.add('show');clearTimeout(window._tt);
-  window._tt=setTimeout(()=>el.classList.remove('show'),3200);
-}
-function setStep(id,st){const el=document.getElementById(id);if(!el)return;el.classList.remove('active','done');if(st)el.classList.add(st)}
-function setProg(txt,pct){const t=document.getElementById('sMsg'),b=document.getElementById('sBar');if(t)t.textContent=txt;if(b)b.style.width=pct+'%'}
-function clrProg(){document.getElementById('genCard').classList.remove('show');document.getElementById('forgeBtn').disabled=false;['ss1','ss2','ss3','ss4'].forEach(id=>setStep(id,null));setProg('',0)}
-function showEstimate(secs){
-  const el=document.getElementById('progEst');
-  if(!el)return;
-  const mins=Math.floor(secs/60),s=secs%60;
-  el.textContent='Est. wait: ~'+(mins?mins+'m ':'')+s+'s';
-}
-function showErr(msg){
-  // Friendlier message for network errors
-  if(msg==='Failed to fetch')msg='Could not reach Replicate servers. Make sure you are connected to the internet and your key starts with r8_. Also check replicate.com/account/billing — new accounts need prepaid credit added.';
-  const old=document.getElementById('__null_errB');if(old)old.remove();
-  const d=document.createElement('div');d.id='errBanner';d.className='err-banner';
-  d.innerHTML=`<div style="font-size:18px;flex-shrink:0">⚠️<\/div><div class="err-body"><div class="err-title">Generation failed<\/div><div class="err-msg">${msg}<\/div><div class="err-tip">💡 Check your key at <strong>replicate.com/account/api-tokens<\/strong>. Must start with <strong>r8_<\/strong>. Add billing at replicate.com/account/billing — free credits available on sign-up.<\/div><\/div><button class="err-x" onclick="this.parentElement.remove()">×<\/button>`;
-  const gs=document.getElementById('genCard');if(gs)gs.after(d);
-  d.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-
-function onPI(){const cl=document.getElementById('__null_charLen');if(cl)cl.textContent=document.getElementById('promptInput').value.length+'/500';}
-function onGenreChange(genre){
-  const sel=document.getElementById('substyleSelect');
-  const styles=GENRE_STYLES[genre]||[];
-  sel.innerHTML='<option value="">— Any —</option>'+
-    styles.map(s=>`<option value="${s}">${s}</option>`).join('');
-}
-function updateStyles(genre){
-  const sel=document.getElementById('genreSelect');
-  const styles=GENRE_STYLES[genre]||[];
-  sel.innerHTML='<option value="">— Any Style —</option>';
-  styles.forEach(s=>{
-    const o=document.createElement('option');
-    o.value=s; o.textContent=s;
-    sel.appendChild(o);
-  });
-}
-
-function setLang(l,btn){
-  window._curLang=l;
-  document.querySelectorAll('.lbtn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  // Show/hide lyrics area language hint
-  const hint=document.getElementById('langHint');
-  const names={en:'English',es:'Spanish',pt:'Portuguese',fr:'French',zh:'Mandarin Chinese',
-    ja:'Japanese',ko:'Korean',ar:'Arabic',hi:'Hindi',de:'German',it:'Italian',ru:'Russian'};
-  if(hint)hint.textContent='Lyrics should be in '+names[l];
-}
-function setTimbre(t,btn){
-  window._curTimbre=t;
-  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-}
-function setVoice(v,btn){
-  window._curVoice=v;
-  document.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-}
-function setMode(m,btn){
-  curMode=m;
-  document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  const li=document.getElementById('lyricsInput');if(li)li.style.display=m==='lyrics'||m==='custom'?'block':'none';
-  const mb=document.getElementById('mtagPanel');if(mb)mb.style.display=m==='custom'?'block':'none';
-  const sw=document.getElementById('customFields');if(sw)sw.style.display=m==='custom'?'block':'none';
-}
-function setDur(btn,d){
-  curDur=d;
-  document.querySelectorAll('.dur-pills .dpill').forEach(c=>c.classList.remove('on'));
-  btn.classList.add('on');
-  const est={'0:15':'~20s','0:30':'~25s','1:00':'~35s','1:30':'~50s','2:00':'~60s','3:00':'~90s','4:00':'~2min','5:00':'~3min'};
-  const note=document.getElementById('durNote');
-  if(note)note.textContent='wait: '+est[d];
-}
-function chipTog(el,w){el.classList.toggle('on');const ta=document.getElementById('promptInput');if(el.classList.contains('on')){ta.value=(ta.value+' '+w).trim()}else{ta.value=ta.value.replace(new RegExp('\\b'+w+'\\b','gi'),'').replace(/\s+/g,' ').trim()}onPI()}
-
-const TW={Electronic:['Neon','Circuit','Pulse','Voltage','Static'],'Lo-fi Hip-Hop':['Dusk','Haze','Rain','Amber','Drift'],Cinematic:['Horizon','Zenith','Requiem','Ascent','Elegy'],Pop:['Glow','Rush','Spark','Echo','Shine'],Jazz:['Velvet','Smoke','Indigo','Ember','Dusk'],Ambient:['Mist','Ether','Bloom','Halo','Drift'],Metal:['Iron','Rage','Storm','Fury','Wraith'],'R&B':['Silk','Honey','Velvet','Night','Pulse'],Classical:['Nocturne','Étude','Aria','Sonata','Prelude'],'Indie Rock':['Rust','Hollow','Dust','Flicker','Salt']};
-const TS=['Protocol','Cascade','Phase','Resonance','Frequency','Depth','Sequence','Current'];
-const TG={Melancholic:['Late night thoughts in sound','Echoes of something lost'],Energetic:['Full throttle from the first bar','Pure kinetic energy'],Peaceful:['A breath of still air','Gentle as the morning'],'Dark & Intense':['Tension without release','Where light fears to go'],Uplifting:['Rise above the noise','A sonic sunrise'],Mysterious:['Something stirs beneath','Questions without answers'],Romantic:["Soft and close and warm","The feeling you can't name"],Aggressive:['No mercy, just rhythm','Pure sonic force']};
-
-function buildMeta(p,g,m,b){
-  const w=TW[g]||TW.Electronic;
-  const title=w[Math.random()*w.length|0]+' '+TS[Math.random()*TS.length|0];
-  const tg=TG[m]||TG.Melancholic;
-  return{title,tagline:tg[Math.random()*tg.length|0],tags:[g,m,b+' BPM'],lyrics:makeLyrics(g,m,window._curSecs||60)};
-}
 function makeLyrics(g,m,lang,secs){
   secs=secs||60; lang=lang||'en';
   const gL=g.toLowerCase(),mL=m.toLowerCase();
@@ -1414,8 +1278,13 @@ function makeLyrics(g,m,lang,secs){
   else{parts.push('[outro]\n*fade out*');}
   return parts.join('\n\n');
 }
-async function doGenLyrics(){const g=document.getElementById('genreSelect').value,m=document.getElementById('moodSelect').value,lang=window._curLang||'en',d=DS[curDur]||60;document.getElementById('lyricsInput').value=makeLyrics(g,m,lang,d);toast('Lyrics generated!','✍️');}
 
+function buildMeta(p,g,m,b){
+  const w=TW[g]||TW.Electronic;
+  const title=w[Math.random()*w.length|0]+' '+TS[Math.random()*TS.length|0];
+  const tg=TG[m]||TG.Melancholic;
+  return{title,tagline:tg[Math.random()*tg.length|0],tags:[g,m,b+' BPM'],lyrics:makeLyrics(g,m,window._curSecs||60)};
+}
 
 async function callReplicate(prompt,secs,lyrics){
   const genUrl=PROXY_URL+'/api/generate';
@@ -1471,205 +1340,6 @@ async function callReplicate(prompt,secs,lyrics){
   }
   throw new Error('Timed out after '+Math.round(elapsed)+'s \u2014 try a shorter duration');
 }
-
-async function startGen(){
-  const promptDesc=(document.getElementById('promptInput').value||'').trim();
-  if(!promptDesc&&curMode!=='custom'){toast('Add a song description first ✍️','⚠️');return;}
-  if(!REP_KEY&&!IS_DEMO){openModal();return;}
-  const errEl=document.getElementById('__null_errB');if(errEl)errEl.remove();
-  cancelFlag=false;
-  document.getElementById('forgeBtn').disabled=true;
-  document.getElementById('genCard').classList.add('show');
-  document.getElementById('resultCard').classList.remove('show');
-
-  const genre=(document.getElementById('genreSelect')||{}).value||'Pop';
-  const substyleSel=document.getElementById('substyleSelect');
-  const substyle=substyleSel?substyleSel.value:'';
-  const genreLabel=substyle||genre;
-  const mood=(document.getElementById('moodSelect')||{}).value||'Happy';
-  const bpm=(document.getElementById('bpmVal')||{}).textContent||'88';
-  const voice=window._curVoice||'female';
-  const timbre=window._curTimbre||'bright';
-  const lang=window._curLang||'en';
-  const secs=DS[curDur]||60;
-  const noVox=voice==='none';
-  const lyricsEl=document.getElementById('lyricsInput');
-  const customLyrics=(curMode==='custom')&&lyricsEl?lyricsEl.value.trim():'';
-  const styleEl=document.getElementById('styleInput');
-  const styleInput=curMode==='custom'&&styleEl?styleEl.value.trim():'';
-  window._curSecs=secs;
-
-  // Build YuE genre tag string
-  let genreTags;
-  if((curMode==='custom')&&styleInput){
-    genreTags=styleInput;
-  } else {
-    genreTags=buildMusicPrompt(genreLabel,mood,voice,timbre,lang,bpm,promptDesc);
-    const descWords=promptDesc.split(' ').slice(0,6).join(' ');
-    if(descWords)genreTags=genreTags+' '+descWords;
-    if(noVox)genreTags=genreTags.replace('vocal','instrumental no vocal');
-  }
-
-  // Build full structured lyrics scaled to duration
-  const lyricsToSend=noVox
-    ?'[verse]\n*instrumental, no vocals*\n\n[chorus]\n*instrumental break*'
-    :(customLyrics||makeLyrics(genreLabel,mood,lang,secs));
-
-  const meta=buildMeta(promptDesc||genreLabel,genre,mood,bpm);
-  let audioUrl=null;
-
-  try{
-    setStep('ss1','active');setProg('Building song structure\u2026',12);
-    await new Promise(r=>setTimeout(r,400));if(cancelFlag)throw new Error('cancelled');
-    setStep('ss1','done');setStep('ss2','active');setProg('Crafting '+(secs>=120?'full song':'track')+'\u2026',28);
-    await new Promise(r=>setTimeout(r,400));if(cancelFlag)throw new Error('cancelled');
-    setStep('ss2','done');setStep('ss3','active');setProg('Sending to YuE AI\u2026',50);
-
-    if(!IS_DEMO){
-      audioUrl=await callReplicate(genreTags,secs,lyricsToSend);
-    } else {
-      for(let p=52;p<=92;p+=4){
-        if(cancelFlag)throw new Error('cancelled');
-        await new Promise(r=>setTimeout(r,200));
-        document.getElementById('sBar').style.width=p+'%';
-      }
-    }
-
-    if(cancelFlag)throw new Error('cancelled');
-    setStep('ss3','done');setStep('ss4','active');setProg('Mastering audio\u2026',96);
-    await new Promise(r=>setTimeout(r,300));
-    setStep('ss4','done');setProg('Complete!',100);
-    await new Promise(r=>setTimeout(r,200));
-  }catch(err){
-    clrProg();
-    if(err.message!=='cancelled')showErr(err.message);
-    return;
-  }
-
-  clrProg();
-  const emoji=EM[Math.random()*EM.length|0],grad=GR[Math.random()*GR.length|0];
-  const song={...meta,emoji,grad,dur:curDur,genre,mood,bpm,
-    lyrics:customLyrics||lyricsToSend,audioUrl,demo:!audioUrl,lang,voice,timbre};
-  songs.unshift(song);curIdx=0;
-  renderResult(song);renderLib();updateNP(song);
-  toast('"'+meta.title+'" forged!','\uD83C\uDFB5');
-  if(window.innerWidth<768){
-    setTimeout(()=>{
-      const rs=document.getElementById('resultCard');
-      if(rs)rs.scrollIntoView({behavior:'smooth',block:'start'});
-    },100);
-  }
-}
-
-function doCancel(){cancelFlag=true;clrProg();toast('Cancelled','✕')}
-
-function renderResult(song){
-  const rc=document.getElementById('resultCard');
-  rc.classList.add('show');
-  // Art + info
-  const art=document.getElementById('rcArt');
-  art.textContent=song.emoji;art.style.background=song.grad;
-  document.getElementById('rcTitle').textContent=song.title;
-  document.getElementById('rcDesc').textContent=song.tagline;
-  const tags=document.getElementById('rcTags');
-  tags.innerHTML=`<span class="rc-tag">${song.genre}</span><span class="rc-tag">${song.mood}</span><span class="rc-tag">${song.bpm} BPM</span><span class="rc-tag ${song.audioUrl?'real':'demo'}">${song.audioUrl?'✓ Real audio':'Demo'}</span>`;
-  // Waveform
-  const bars=Array.from({length:80},()=>Math.random()*0.7+0.3);
-  document.getElementById('wBars').innerHTML=bars.map(h=>`<div class="wb" style="height:${(h*40)|0}px"><\/div>`).join('');
-  // Audio
-  const audio=document.getElementById('rAudio');
-  if(song.audioUrl){audio.src=song.audioUrl;}
-  // Actions
-  const dl=song.audioUrl?`<a class="pa-btn" href="${song.audioUrl}" download="${song.title}.mp3"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/><\/svg> Download<\/a>`:'';
-  document.getElementById('rcActions').innerHTML=dl;
-  // Lyrics
-  if(song.lyrics){
-    const ls=document.getElementById('lyrSec');
-    document.getElementById('lyrBody').textContent=song.lyrics;
-    ls.style.display='block';
-  }
-  // Bottom bar
-  const bar=document.getElementById('playerBar');
-  bar.classList.add('show');
-  updateNP(song);
-}
-
-function togAudio(){
-  const a=document.getElementById('rAudio');if(!a)return;
-  if(!a.src||a.src===location.href){toast('Add a Replicate key for real audio','⚠️');return}
-  if(a.paused){a.play().then(()=>setPlay(true)).catch(e=>toast('Playback error: '+e.message,'❌'))}
-  else{a.pause();setPlay(false)}
-}
-function globalTogglePlay(){
-  const a=document.getElementById('rAudio');
-  if(a&&a.src&&a.src!==location.href)togAudio();
-  else toast(songs.length?'Tap Play on your track above':'Generate a track first','⚠️');
-}
-function setPlay(st){
-  isPlaying=st;
-  const pi='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/><\/svg>';
-  const pa='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/><\/svg>';
-  const rcb=document.getElementById('wPBtn'),wpb=document.getElementById('wPBtn');
-  if(rcb)rcb.innerHTML=(st?pa:pi)+(st?' Pause':' Play');
-  if(wpb)wpb.innerHTML=st?pa:pi;
-  ['gPlayI','gPauseI','mnPlayI','mnPauseI'].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.style.display=id.includes('Pause')?(st?'':'none'):(st?'none':'')});
-}
-function onEnd(){setPlay(false)}
-function onMeta(){const a=document.getElementById('rAudio');if(!a)return;const m=Math.floor(a.duration/60),s=Math.floor(a.duration%60),el=document.getElementById('wTime');if(el)el.textContent=`0:00 / ${m}:${s.toString().padStart(2,'0')}`}
-function syncW(){
-  const a=document.getElementById('rAudio');if(!a||!a.duration)return;
-  const r=a.currentTime/a.duration,bs=document.querySelectorAll('.wb'),sp=Math.floor(r*bs.length);
-  bs.forEach((b,i)=>{b.classList.toggle('played',i<sp);b.classList.toggle('playing',i===sp)});
-  const fmt=t=>`${Math.floor(t/60)}:${Math.floor(t%60).toString().padStart(2,'0')}`;
-  const el=document.getElementById('wTime');if(el)el.textContent=`${fmt(a.currentTime)} / ${fmt(a.duration)}`;
-}
-function seekA(e){const a=document.getElementById('rAudio');if(!a||!a.duration)return;const rc=e.currentTarget.getBoundingClientRect();a.currentTime=((e.clientX-rc.left)/rc.width)*a.duration}
-function setVol(v){const a=document.getElementById('rAudio');if(a)a.volume=v/100}
-
-function renderLib(){
-  const cnt=songs.length;
-  const badge=document.getElementById('trackBadge');
-  if(badge)badge.textContent=cnt?`(${cnt} song${cnt!==1?'s':''})`:''
-  const empty=document.getElementById('libEmpty');
-  const list=document.getElementById('songList');
-  if(!cnt){if(empty)empty.style.display='flex';if(list)list.innerHTML='';return;}
-  if(empty)empty.style.display='none';
-  if(list)list.innerHTML=songs.map((s,i)=>`
-    <div class="song-item ${i===curIdx?'active':''}" onclick="selTrack(${i})">
-      <div class="si-num">${i===curIdx&&isPlaying?'▶':i+1}</div>
-      <div class="si-art" style="background:${s.grad}">${s.emoji}</div>
-      <div class="si-info">
-        <div class="si-title">${s.title}</div>
-        <div class="si-meta">${s.genre} · ${s.mood} · ${s.bpm} BPM</div>
-      </div>
-      <div class="si-dur">${s.dur}</div>
-    </div>`).join('');
-}
-
-function selTrack(i){curIdx=i;renderLib();updateNP(songs[i]);renderResult(songs[i]);toast(songs[i].title,'▶')}
-function updateNP(s){
-  const pbArt=document.getElementById('pbArt');if(pbArt){pbArt.textContent=s.emoji;pbArt.style.background=s.grad;}
-  const pbTitle=document.getElementById('pbTitle');if(pbTitle)pbTitle.textContent=s.title;
-  const pbSub=document.getElementById('pbSub');if(pbSub)pbSub.textContent=s.genre.toUpperCase()+' · '+s.mood;
-}
-
-function mTab(tab,btn){
-  document.querySelectorAll('.mnbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
-  const sv=document.getElementById('createView');
-  let msv=document.getElementById('libraryView');
-  if(tab==='studio'){sv.style.display='';if(msv)msv.style.display='none'}
-  else{
-    sv.style.display='none';
-    if(!msv){msv=document.createElement('div');msv.id='libraryView';msv.style.cssText='padding:14px 14px 80px;height:calc(100vh - 52px);overflow-y:auto;-webkit-overflow-scrolling:touch';sv.parentNode.insertBefore(msv,sv)}
-    msv.style.display='block';
-    msv.innerHTML=songs.length?`<div style="font-family:var(--fd);font-size:20px;font-weight:800;letter-spacing:2px;margin-bottom:14px">MY SONGS<\/div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${songs.map((s,i)=>`<div onclick="mSelTrack(${i})" style="background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:12px;cursor:pointer;-webkit-tap-highlight-color:transparent"><div style="aspect-ratio:1;border-radius:8px;background:${s.grad};display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:8px">${s.emoji}<\/div><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.title}<\/div><div style="font-size:10px;color:var(--mid);font-family:var(--fm);margin-top:2px">${s.genre} · ${s.dur}<\/div><\/div>`).join('')}<\/div>`:'<div style="text-align:center;padding:60px 0;color:var(--dim);font-size:13px"><div style="font-size:36px;margin-bottom:10px;opacity:0.3">🎵<\/div>Generate a track first<\/div>';
-  }
-}
-function mSelTrack(i){curIdx=i;updateNP(songs[i]);mTab('studio',document.getElementById('mnCreate'));renderResult(songs[i]);toast(songs[i].title,'▶')}
-
-
-
 </script>
-
 </body>
 </html>
