@@ -1253,16 +1253,14 @@ function openModal(){document.getElementById('apiModal').classList.add('open')}
 function saveKey(){
   const k=(document.getElementById('apiKeyInput').value||'').trim();
   const px=(document.getElementById('proxyInput').value||'').trim().replace(/\/$/,'');
-  if(!k){toast('Paste your Replicate key first','⚠️');return}
-  if(!k.startsWith('r8_')){toast('Key must start with r8_','⚠️');return}
-  REP_KEY=k;IS_DEMO=false;
-  if(px){PROXY_URL=px;try{sessionStorage.setItem('sf_proxy',px)}catch(e){}}
-  try{sessionStorage.setItem('sf_rk',k)}catch(e){}
+  if(!k){toast('Paste your Replicate key first','⚠️');return;}
+  if(!k.startsWith('r8_')){toast('Key must start with r8_','⚠️');return;}
+  REP_KEY=k; IS_DEMO=false;
+  if(px){PROXY_URL=px;try{sessionStorage.setItem('sf_proxy',px);}catch(e){}}
+  try{sessionStorage.setItem('sf_rk',k);}catch(e){}
   document.getElementById('apiModal').classList.remove('open');
-  
-  document.getElementById('statusPill').innerHTML='<div class="sdot"><\/div>'+(px?'PROXY READY':'REPLICATE');
-  document.getElementById('statusPill').className='status-pill live';
-  toast(px?'Proxy + Key saved — tap FORGE! 🚀':'Key saved — tap FORGE! 🎛️','✓');
+  toast(px?'Ready to create! 🚀':'Key saved! 🎵','✅');
+  goToApp();
 }
 function enterDemo(){
   IS_DEMO=true;
