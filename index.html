@@ -143,22 +143,22 @@ body::after{
 
 /* DESKTOP LAYOUT */
 @media(min-width:768px){
-  #studioPage{display:grid!important;grid-template-columns:60px 260px 1fr;grid-template-rows:1fr 72px;height:100vh;overflow:hidden;position:fixed;top:0;left:0;width:100%}
-  #studioPage .m-hd{display:none!important}
-  #studioPage .m-nav{display:none!important}
-  #studioPage .icon-nav{display:flex}
-  #studioPage .left-panel{display:flex}
-  #studioPage .bottom-bar{display:grid}
-  #studioPage .main-col{overflow-y:auto;padding:36px 44px}
+  #studioPage{display:grid;grid-template-columns:60px 260px 1fr;grid-template-rows:1fr 72px;height:100vh;overflow:hidden;position:fixed;top:0;left:0;width:100%}
+  #studioPage.visible .m-hd{display:none!important}
+  #studioPage.visible .m-nav{display:none!important}
+  #studioPage.visible .icon-nav{display:flex}
+  #studioPage.visible .left-panel{display:flex}
+  #studioPage.visible .bottom-bar{display:grid}
+  #studioPage.visible .main-col{overflow-y:auto;padding:36px 44px}
 }
 
 /* MOBILE LAYOUT */
 @media(max-width:767px){
-  #studioPage{display:block;height:100vh;overflow:hidden;position:fixed;top:0;left:0;right:0;bottom:0;width:100%}
-  #studioPage .icon-nav,#studioPage .left-panel,#studioPage .bottom-bar{display:none!important}
-  #studioPage .m-hd{display:flex!important;position:sticky;top:0;z-index:50}
-  #studioPage .m-nav{display:flex!important;position:fixed;bottom:0;left:0;right:0;z-index:50}
-  #studioPage .main-col{padding:14px 14px 80px;height:calc(100vh - 52px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #studioPage.visible{display:block;height:100vh;overflow:hidden;position:fixed;top:0;left:0;right:0;bottom:0;width:100%}
+  #studioPage.visible .icon-nav,#studioPage.visible .left-panel,#studioPage.visible .bottom-bar{display:none!important}
+  #studioPage.visible .m-hd{display:flex!important;position:sticky;top:0;z-index:50}
+  #studioPage.visible .m-nav{display:flex!important;position:fixed;bottom:0;left:0;right:0;z-index:50}
+  #studioPage.visible .main-col{padding:14px 14px 80px;height:calc(100vh - 52px);overflow-y:auto;-webkit-overflow-scrolling:touch}
   .studio-title{font-size:38px!important;letter-spacing:3px!important}
   .ctrl-row{grid-template-columns:1fr 1fr!important}
   .forge{grid-column:1/-1!important;height:52px!important;font-size:22px!important}
@@ -398,8 +398,7 @@ body::after{
 .mnote{margin-top:10px;font-size:10px;color:var(--dim);text-align:center}
 
 /* pages */
-#landingPage{display:block;overflow-x:hidden;width:100%;max-width:100vw}
-#studioPage{display:none}#studioPage.active{display:block}
+#landingPage{display:block;overflow-x:hidden;width:100%;max-width:100vw}#studioPage.active{display:block}
 /* studio back btn in mobile header */
 .m-back{display:none;background:none;border:none;color:var(--mid);font-family:var(--fm);font-size:10px;letter-spacing:0.08em;cursor:pointer;align-items:center;gap:5px}
 @media(max-width:767px){.m-back{display:flex}}
@@ -428,6 +427,7 @@ body::after{
 @media(max-width:767px){.mtag-builder{overflow-x:auto}}
 .mtag-row{flex-wrap:wrap}
 
+#studioPage{display:none}#studioPage.visible{display:block}
 </style>
 </head>
 <body>
@@ -595,7 +595,7 @@ Through the fire and the rain</span><br><br>
 
 
 <!-- ═══════════════════════════════ STUDIO PAGE ═══════════════════════════════ -->
-<div id="studioPage">
+<div id="studioPage" style="display:none">
 
 
 <!-- MOBILE HEADER -->
@@ -1050,21 +1050,15 @@ const GR=[
 
 function goToStudio(){
   document.getElementById('landingPage').style.display='none';
-  const sp=document.getElementById('studioPage');
-  sp.style.display='block';
-  // Reset body for studio layout
-  document.body.style.overflow='';
-  document.body.style.position='';
-  document.body.style.height='';
-  document.body.style.width='';
+  document.getElementById('studioPage').classList.add('visible');
   window.scrollTo(0,0);
-  // Show modal if no key
   if(!REP_KEY&&!IS_DEMO){
-    setTimeout(()=>{ document.getElementById('apiModal').style.display='flex'; },300);
+    setTimeout(()=>{document.getElementById('apiModal').style.display='flex';},300);
   }
 }
+
 function goToLanding(){
-  document.getElementById('studioPage').style.display='none';
+  document.getElementById('studioPage').classList.remove('visible');
   document.getElementById('landingPage').style.display='block';
   window.scrollTo(0,0);
 }
