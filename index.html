@@ -1208,7 +1208,7 @@ try{
   if(sp){PROXY_URL=sp;}
 }catch(e){}
 let cancelFlag=false, curDur='1:00', isPlaying=false, curIdx=0;
-let curMode='simple';
+let curMode='song';
 let songs=[];
 
 // Duration map
@@ -1291,8 +1291,7 @@ function enterDemo(){
   IS_DEMO=true;
   document.getElementById('apiModal').classList.remove('open');
   
-  document.getElementById('__null_statusPill').innerHTML='<div class="sdot" style="background:var(--amber)"><\/div>DEMO';
-  document.getElementById('__null_statusPill').className='status-pill';
+  // statusPill removed in new UI
   toast('Demo mode active 🎭','🎭');
 }
 
@@ -1322,7 +1321,7 @@ function showErr(msg){
   d.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-function onPI(){document.getElementById('__null_charLen').textContent=document.getElementById('promptInput').value.length+'/500'}
+function onPI(){const cl=document.getElementById('__null_charLen');if(cl)cl.textContent=document.getElementById('promptInput').value.length+'/500';}
 function onGenreChange(genre){
   const sel=document.getElementById('substyleSelect');
   const styles=GENRE_STYLES[genre]||[];
@@ -1364,7 +1363,7 @@ function setMode(m,btn){
   curMode=m;
   document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  document.getElementById('lyricsInput').style.display=m==='lyrics'||m==='custom'?'block':'none';
+  const li=document.getElementById('lyricsInput');if(li)li.style.display=m==='lyrics'||m==='custom'?'block':'none';
   const mb=document.getElementById('mtagPanel');if(mb)mb.style.display=m==='custom'?'block':'none';
   const sw=document.getElementById('customFields');if(sw)sw.style.display=m==='custom'?'block':'none';
 }
@@ -1475,7 +1474,7 @@ async function callReplicate(prompt,secs,lyrics){
 
 async function startGen(){
   const promptDesc=(document.getElementById('promptInput').value||'').trim();
-  if(!promptDesc&&curMode==='simple'){toast('Add a description first','⚠️');return;}
+  if(!promptDesc&&curMode!=='custom'){toast('Add a song description first ✍️','⚠️');return;}
   if(!REP_KEY&&!IS_DEMO){openModal();return;}
   const errEl=document.getElementById('__null_errB');if(errEl)errEl.remove();
   cancelFlag=false;
@@ -1495,14 +1494,14 @@ async function startGen(){
   const secs=DS[curDur]||60;
   const noVox=voice==='none';
   const lyricsEl=document.getElementById('lyricsInput');
-  const customLyrics=(curMode==='custom'||curMode==='lyrics')&&lyricsEl?lyricsEl.value.trim():'';
+  const customLyrics=(curMode==='custom')&&lyricsEl?lyricsEl.value.trim():'';
   const styleEl=document.getElementById('styleInput');
   const styleInput=curMode==='custom'&&styleEl?styleEl.value.trim():'';
   window._curSecs=secs;
 
   // Build YuE genre tag string
   let genreTags;
-  if(curMode==='custom'&&styleInput){
+  if((curMode==='custom')&&styleInput){
     genreTags=styleInput;
   } else {
     genreTags=buildMusicPrompt(genreLabel,mood,voice,timbre,lang,bpm,promptDesc);
