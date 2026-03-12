@@ -2345,6 +2345,147 @@ function makeLyrics(g,m,lang,secs){
 function doGenLyrics(){const g=document.getElementById('genreSelect').value,m=document.getElementById('moodSelect').value,lang=window._curLang||'en',d=DS[curDur]||60;document.getElementById('lyricsInput').value=makeLyrics(g,m,lang,d);toast('Lyrics generated!','✍️');}
 
 
+async function callReplicate(prompt,secs,lyrics){
+  const genUrl=PROXY_URL+'/api/generate';
+  const pollUrl=PROXY_URL+'/api/poll';
+  const estSecs=secs<=30?25:secs<=60?45:secs<=90?70:secs<=120?100:secs<=180?140:200;
+  setProg('Sending to AI model\u2026',48);
+  showEstimate(estSecs);
+
+  let r;
+  try{
+    r=await fetch(genUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({repKey:REP_KEY,prompt,duration:secs,lyrics:lyrics||''})});
+  }catch(e){throw new Error('Cannot reach proxy at '+PROXY_URL+'. Check URL is correct.');}
+
+  if(!r.ok){
+    const e=await r.json().catch(()=>({}));
+    if(r.status===401)throw new Error('Invalid API key \u2014 get one at replicate.com/account/api-tokens');
+    if(r.status===402)throw new Error('Billing required \u2014 add credit at replicate.com/account/billing');
+    throw new Error('Error '+r.status+': '+(e.detail||e.error||JSON.stringify(e)));
+  }
+
+  const pred=await r.json();
+  if(pred.status==='succeeded'&&pred.url)return pred.url;
+  if(pred.status==='succeeded'){const u=Array.isArray(pred.output)?pred.output[0]:pred.output;if(u)return u;}
+  if(pred.status==='failed')throw new Error('Generation failed: '+(pred.error||'unknown'));
+  if(!pred.id)throw new Error('No prediction ID \u2014 try again');
+
+  // Smart polling with backoff
+  let tries=0,pollInterval=2000,elapsed=0;
+  const t0=Date.now();
+  while(tries<200){
+    if(cancelFlag)throw new Error('cancelled');
+    await new Promise(res=>setTimeout(res,pollInterval));
+    elapsed=(Date.now()-t0)/1000;
+    if(elapsed>30&&pollInterval===2000)pollInterval=3000;
+    if(elapsed>90&&pollInterval===3000)pollInterval=4000;
+    tries++;
+    const pct=Math.min(50+(elapsed/estSecs)*42,92);
+    const rem=Math.max(0,Math.round(estSecs-elapsed));
+    document.getElementById('sBar').style.width=pct+'%';
+    setProg(rem>5?'Generating\u2026 ~'+rem+'s remaining':elapsed<estSecs?'Almost done\u2026':'Finalizing track\u2026',pct);
+    let poll;
+    try{
+      const pr=await fetch(pollUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({repKey:REP_KEY,id:pred.id})});
+      poll=await pr.json();
+    }catch(e){continue;}
+    if(poll.status==='succeeded'&&poll.url)return poll.url;
+    if(poll.status==='failed')throw new Error('Generation failed: '+(poll.error||'unknown'));
+  }
+  throw new Error('Timed out after '+Math.round(elapsed)+'s \u2014 try a shorter duration');
+}
+
+async function startGen(){
+  const promptDesc=(document.getElementById('promptInput').value||'').trim();
+  if(!promptDesc&&curMode==='simple'){toast('Add a description first','⚠️');return;}
+  if(!REP_KEY&&!IS_DEMO){openModal();return;}
+  const errEl=document.getElementById('errB');if(errEl)errEl.remove();
+  cancelFlag=false;
+  document.getElementById('forgeBtn').disabled=true;
+  document.getElementById('genStatus').classList.add('show');
+  document.getElementById('resultSec').classList.remove('show');
+
+  const genre=(document.getElementById('genreSelect')||{}).value||'Pop';
+  const substyleSel=document.getElementById('substyleSelect');
+  const substyle=substyleSel?substyleSel.value:'';
+  const genreLabel=substyle||genre;
+  const mood=(document.getElementById('moodSelect')||{}).value||'Happy';
+  const bpm=(document.getElementById('bpmVal')||{}).textContent||'88';
+  const voice=window._curVoice||'female';
+  const timbre=window._curTimbre||'bright';
+  const lang=window._curLang||'en';
+  const secs=DS[curDur]||60;
+  const noVox=voice==='none';
+  const lyricsEl=document.getElementById('lyricsInput');
+  const customLyrics=(curMode==='custom'||curMode==='lyrics')&&lyricsEl?lyricsEl.value.trim():'';
+  const styleEl=document.getElementById('styleInput');
+  const styleInput=curMode==='custom'&&styleEl?styleEl.value.trim():'';
+  window._curSecs=secs;
+
+  // Build YuE genre tag string
+  let genreTags;
+  if(curMode==='custom'&&styleInput){
+    genreTags=styleInput;
+  } else {
+    genreTags=buildYuEGenreTags(genreLabel,mood,voice,timbre,lang);
+    const descWords=promptDesc.split(' ').slice(0,6).join(' ');
+    if(descWords)genreTags=genreTags+' '+descWords;
+    if(noVox)genreTags=genreTags.replace('vocal','instrumental no vocal');
+  }
+
+  // Build full structured lyrics scaled to duration
+  const lyricsToSend=noVox
+    ?'[verse]\n*instrumental, no vocals*\n\n[chorus]\n*instrumental break*'
+    :(customLyrics||makeLyrics(genreLabel,mood,lang,secs));
+
+  const meta=buildMeta(promptDesc||genreLabel,genre,mood,bpm);
+  let audioUrl=null;
+
+  try{
+    setStep('ss1','active');setProg('Building song structure\u2026',12);
+    await new Promise(r=>setTimeout(r,400));if(cancelFlag)throw new Error('cancelled');
+    setStep('ss1','done');setStep('ss2','active');setProg('Crafting '+(secs>=120?'full song':'track')+'\u2026',28);
+    await new Promise(r=>setTimeout(r,400));if(cancelFlag)throw new Error('cancelled');
+    setStep('ss2','done');setStep('ss3','active');setProg('Sending to YuE AI\u2026',50);
+
+    if(!IS_DEMO){
+      audioUrl=await callReplicate(genreTags,secs,lyricsToSend);
+    } else {
+      for(let p=52;p<=92;p+=4){
+        if(cancelFlag)throw new Error('cancelled');
+        await new Promise(r=>setTimeout(r,200));
+        document.getElementById('sBar').style.width=p+'%';
+      }
+    }
+
+    if(cancelFlag)throw new Error('cancelled');
+    setStep('ss3','done');setStep('ss4','active');setProg('Mastering audio\u2026',96);
+    await new Promise(r=>setTimeout(r,300));
+    setStep('ss4','done');setProg('Complete!',100);
+    await new Promise(r=>setTimeout(r,200));
+  }catch(err){
+    clrProg();
+    if(err.message!=='cancelled')showErr(err.message);
+    return;
+  }
+
+  clrProg();
+  const emoji=EM[Math.random()*EM.length|0],grad=GR[Math.random()*GR.length|0];
+  const song={...meta,emoji,grad,dur:curDur,genre,mood,bpm,
+    lyrics:customLyrics||lyricsToSend,audioUrl,demo:!audioUrl,lang,voice,timbre};
+  songs.unshift(song);curIdx=0;
+  renderResult(song);renderLib();updateNP(song);
+  toast('"'+meta.title+'" forged!','\uD83C\uDFB5');
+  if(window.innerWidth<768){
+    setTimeout(()=>{
+      const rs=document.getElementById('resultSec');
+      if(rs)rs.scrollIntoView({behavior:'smooth',block:'start'});
+    },100);
+  }
+}
+
 function doCancel(){cancelFlag=true;clrProg();toast('Cancelled','✕')}
 
 function renderResult(song){
