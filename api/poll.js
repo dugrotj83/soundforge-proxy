@@ -17,18 +17,17 @@ export default async function handler(req, res) {
 
     let url = null;
     if (data.status === 'succeeded') {
-      // YuE returns output object with mixed_audio, vocal_audio, instrumental_audio
-      const out = data.output || {};
-      url = out.mixed_audio || out.vocal_audio ||
-            (Array.isArray(data.output) ? data.output[0] : null);
+      const out = data.output;
+      // MiniMax Music 2.5 returns a plain string URL or array
+      if (typeof out === 'string') url = out;
+      else if (Array.isArray(out)) url = out[0];
+      else if (out && typeof out === 'object') {
+        // Fallback for any model that returns an object
+        url = out.audio || out.url || out.mixed_audio || out.vocal_audio || null;
+      }
     }
 
-    return res.status(200).json({ 
-      status: data.status, 
-      url, 
-      error: data.error,
-      logs: data.logs  // useful for debugging
-    });
+    return res.status(200).json({ status: data.status, url, error: data.error });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
