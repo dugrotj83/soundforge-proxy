@@ -1259,6 +1259,58 @@ body::after{
   margin-left:8px;
 }
 
+
+/* ── Language Row ── */
+.lang-row {
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:4px;
+}
+.lbtn {
+  font-family:var(--fb);
+  font-size:11px;
+  font-weight:600;
+  padding:6px 10px;
+  border-radius:7px;
+  border:1px solid var(--b2);
+  background:var(--s1);
+  color:var(--mid);
+  cursor:pointer;
+  transition:all 0.18s;
+  -webkit-tap-highlight-color:transparent;
+  white-space:nowrap;
+}
+.lbtn:hover { border-color:var(--b3); color:var(--txt); }
+.lbtn.on { border-color:var(--neon); color:var(--neon); background:rgba(0,245,200,0.08); }
+
+/* ── Timbre Row ── */
+.timbre-row {
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:4px;
+}
+.tbtn {
+  font-family:var(--fb);
+  font-size:11px;
+  font-weight:600;
+  padding:6px 12px;
+  border-radius:7px;
+  border:1px solid var(--b2);
+  background:var(--s1);
+  color:var(--mid);
+  cursor:pointer;
+  transition:all 0.18s;
+  -webkit-tap-highlight-color:transparent;
+}
+.tbtn:hover { border-color:var(--blue); color:var(--blue); }
+.tbtn.on { border-color:var(--blue); color:var(--blue); background:rgba(100,180,255,0.08); }
+
+/* ── Voice row 5-col responsive ── */
+@media(max-width:500px) {
+  .voice-row[style] { grid-template-columns:1fr 1fr 1fr !important; }
+}
 </style>
 </head>
 <body>
@@ -1472,9 +1524,8 @@ Through the fire and the rain</span><br><br>
   </div>
 
   <div class="mode-tabs">
-    <button class="mtab on" onclick="setMode('simple',this)">Simple</button>
-    <button class="mtab" onclick="setMode('custom',this)">Custom</button>
-    <button class="mtab" onclick="setMode('instrumental',this)">Instrumental</button>
+    <button class="mtab on" onclick="setMode('simple',this)">✦ Simple</button>
+    <button class="mtab" onclick="setMode('custom',this)">✦ Custom</button>
   </div>
 
   <div class="prompt-wrap">
@@ -1498,7 +1549,8 @@ Through the fire and the rain</span><br><br>
   <div class="lyrics-area" id="lyricsArea">
     <div class="prompt-wrap">
       <div class="plbl">Custom Lyrics <span style="color:var(--blue);font-size:9px;margin-left:4px">AI ASSISTED</span></div>
-      <textarea class="pta" id="lyricsInput" rows="5" placeholder="Write lyrics or tap Generate Lyrics…"></textarea>
+      <textarea class="pta" id="lyricsInput" rows="5" placeholder="Write lyrics or tap Generate Lyrics… Write in any language!"></textarea>
+      <div id="langHint" style="font-family:var(--fm);font-size:9px;color:var(--neon);margin-top:6px;opacity:0.7">Lyrics should be in English</div>
       <div class="prompt-foot">
         <button class="abtn" onclick="doGenLyrics()" style="font-size:11px;padding:6px 12px">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
@@ -1779,12 +1831,41 @@ Through the fire and the rain</span><br><br>
     <button class="forge" id="forgeBtn" onclick="startGen()">FORGE</button>
   </div>
 
-  <div class="clbl" style="margin-bottom:6px">Voice</div>
-  <div class="voice-row" id="voiceRow">
-    <button class="vbtn on" onclick="setVoice('female',this)">🎙 Female</button>
-    <button class="vbtn" onclick="setVoice('male',this)">🎤 Male</button>
-    <button class="vbtn" onclick="setVoice('duet',this)">🎵 Duet</button>
-    <button class="vbtn" onclick="setVoice('none',this)">🎹 Instrumental</button>
+  <div class="clbl" style="margin-bottom:6px">Voice & Style</div>
+  <div class="voice-row" id="voiceRow" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr">
+    <button class="vbtn on" onclick="setVoice('female',this)" title="Clear, bright female vocals">🎙 Female</button>
+    <button class="vbtn" onclick="setVoice('male',this)" title="Warm, powerful male vocals">🎤 Male</button>
+    <button class="vbtn" onclick="setVoice('duet',this)" title="Male + female harmony">🎵 Duet</button>
+    <button class="vbtn" onclick="setVoice('choir',this)" title="Full ensemble choir vocals">🎼 Choir</button>
+    <button class="vbtn" onclick="setVoice('none',this)" title="Pure instrumental, no vocals">🎹 Instrumental</button>
+  </div>
+
+  <div class="clbl" style="margin:10px 0 6px">Language</div>
+  <div class="lang-row" id="langRow">
+    <button class="lbtn on" onclick="setLang('en',this)">🇺🇸 English</button>
+    <button class="lbtn" onclick="setLang('es',this)">🇪🇸 Español</button>
+    <button class="lbtn" onclick="setLang('pt',this)">🇧🇷 Português</button>
+    <button class="lbtn" onclick="setLang('fr',this)">🇫🇷 Français</button>
+    <button class="lbtn" onclick="setLang('zh',this)">🇨🇳 Mandarin</button>
+    <button class="lbtn" onclick="setLang('ja',this)">🇯🇵 Japanese</button>
+    <button class="lbtn" onclick="setLang('ko',this)">🇰🇷 Korean</button>
+    <button class="lbtn" onclick="setLang('ar',this)">🇸🇦 Arabic</button>
+    <button class="lbtn" onclick="setLang('hi',this)">🇮🇳 Hindi</button>
+    <button class="lbtn" onclick="setLang('de',this)">🇩🇪 Deutsch</button>
+    <button class="lbtn" onclick="setLang('it',this)">🇮🇹 Italiano</button>
+    <button class="lbtn" onclick="setLang('ru',this)">🇷🇺 Russian</button>
+  </div>
+
+  <div class="clbl" style="margin:10px 0 6px">Vocal Timbre</div>
+  <div class="timbre-row" id="timbreRow">
+    <button class="tbtn on" onclick="setTimbre('airy',this)" title="Light, breathy tone">Airy</button>
+    <button class="tbtn" onclick="setTimbre('bright',this)" title="Clear, radio-ready tone">Bright</button>
+    <button class="tbtn" onclick="setTimbre('warm',this)" title="Rich, full-bodied tone">Warm</button>
+    <button class="tbtn" onclick="setTimbre('powerful',this)" title="Strong, stadium-filling tone">Powerful</button>
+    <button class="tbtn" onclick="setTimbre('raspy',this)" title="Gritty, textured tone">Raspy</button>
+    <button class="tbtn" onclick="setTimbre('smooth',this)" title="Silky, polished tone">Smooth</button>
+    <button class="tbtn" onclick="setTimbre('soulful',this)" title="Deep emotion and runs">Soulful</button>
+    <button class="tbtn" onclick="setTimbre('falsetto',this)" title="High, delicate upper range">Falsetto</button>
   </div>
 
   <div class="dur-row">
@@ -1909,6 +1990,138 @@ Through the fire and the rain</span><br><br>
 </div>
 
 <script>
+
+const YUE_GENRE_MAP={
+  'Hip-Hop':'hip hop trap',
+  'Trap':'trap hip hop dark',
+  'Pop':'pop dance',
+  'R&B / Soul':'r&b soul',
+  'Electronic':'electronic synth',
+  'House':'house electronic dance',
+  'Lo-fi':'lo-fi chill',
+  'Ambient':'ambient atmospheric',
+  'Rock':'rock guitar',
+  'Indie Rock':'indie rock guitar',
+  'Alternative Rock':'alternative rock',
+  'Metal':'metal heavy guitar',
+  'Jazz':'jazz swing',
+  'Blues':'blues guitar',
+  'Country':'country acoustic guitar',
+  'Reggae':'reggae bass',
+  'Latin':'latin salsa',
+  'Reggaeton':'reggaeton latin urban',
+  'Salsa':'salsa latin',
+  'Merengue':'merengue latin',
+  'Bachata':'bachata latin romantic',
+  'Cumbia':'cumbia latin',
+  'Afrobeats':'afrobeats african',
+  'Classical':'classical orchestral',
+  'Cinematic / Soundtrack':'cinematic orchestral',
+  'K-Pop':'k-pop pop dance',
+  'Drill':'drill rap hip hop',
+  'Funk':'funk groove bass',
+  'Gospel':'gospel soul choir',
+  'Folk':'folk acoustic',
+  'Punk':'punk rock guitar',
+  'Dancehall':'dancehall reggae',
+  'Phonk':'phonk trap dark',
+  'Drum and Bass':'drum and bass electronic',
+  'Techno':'techno electronic dance',
+  'Trance':'trance electronic synth',
+  'Future Bass':'future bass electronic',
+  'Vaporwave':'vaporwave synth lo-fi',
+  'Hyperpop':'hyperpop pop electronic',
+  'Bossa Nova':'bossa nova jazz acoustic',
+  'Samba':'samba latin percussion',
+  'Flamenco':'flamenco spanish guitar',
+  'Bollywood / Bhangra':'bollywood indian',
+  'Anime OST':'anime j-pop orchestral',
+  'Video Game Music':'video game electronic',
+  'Experimental':'experimental avant-garde',
+};
+
+const YUE_INSTR_MAP={
+  'Hip-Hop':'808 bass hi-hat sample',
+  'Trap':'808 bass trap hi-hat',
+  'Pop':'synthesizer piano guitar',
+  'R&B / Soul':'piano bass guitar',
+  'Electronic':'synthesizer electronic bass',
+  'House':'synthesizer bass drum',
+  'Lo-fi':'piano guitar vinyl',
+  'Ambient':'synthesizer pad texture',
+  'Rock':'electric guitar bass drums',
+  'Indie Rock':'guitar bass drums',
+  'Alternative Rock':'electric guitar bass drums',
+  'Metal':'heavy guitar bass drums',
+  'Jazz':'piano trumpet saxophone bass',
+  'Blues':'guitar harmonica piano',
+  'Country':'acoustic guitar fiddle steel guitar',
+  'Reggae':'bass guitar organ drums',
+  'Latin':'salsa brass percussion piano',
+  'Reggaeton':'dembow bass synthesizer',
+  'Salsa':'trumpet conga piano bass',
+  'Merengue':'accordion saxophone percussion',
+  'Bachata':'guitar bass bongo',
+  'Cumbia':'accordion cumbia percussion',
+  'Afrobeats':'percussion bass afrobeats',
+  'Classical':'strings piano orchestra',
+  'Cinematic / Soundtrack':'orchestra strings brass',
+  'K-Pop':'synthesizer pop production',
+  'Drill':'trap 808 dark melody',
+  'Funk':'bass guitar horn',
+  'Gospel':'piano choir organ',
+  'Folk':'acoustic guitar banjo fiddle',
+  'Punk':'electric guitar bass drums',
+  'Dancehall':'bass drum synth',
+  'Phonk':'cowbell 808 memphis bass',
+  'Drum and Bass':'bass breakbeat electronic',
+  'Techno':'kick synthesizer pad',
+  'Trance':'synthesizer arpeggio pad',
+  'Future Bass':'synth bass lead',
+  'Vaporwave':'pad synthesizer sample',
+  'Hyperpop':'synthesizer glitch pop',
+  'Bossa Nova':'acoustic guitar piano bass',
+  'Samba':'percussion guitar brass',
+  'Flamenco':'classical guitar cajon',
+  'Bollywood / Bhangra':'dhol strings sitar',
+  'Anime OST':'orchestra piano synthesizer',
+  'Video Game Music':'synthesizer chiptune',
+  'Experimental':'synthesizer noise',
+};
+
+const YUE_MOOD_MAP={
+  'Happy':'uplifting bright energetic','Joyful':'happy cheerful bright',
+  'Euphoric':'euphoric ecstatic high energy','Excited':'energetic upbeat driving',
+  'Confident':'powerful bold strong','Empowered':'empowering triumphant bold',
+  'Chill':'chill laid-back mellow','Peaceful':'peaceful calm serene',
+  'Dreamy':'dreamy ethereal atmospheric','Nostalgic':'nostalgic bittersweet mellow',
+  'Melancholic':'melancholic sad emotional','Heartbroken':'heartbroken sorrowful dark',
+  'Dark':'dark ominous intense','Ominous':'ominous dark tense',
+  'Energetic':'energetic driving powerful','Aggressive':'aggressive intense raw',
+  'Romantic':'romantic tender passionate','Passionate':'passionate intense romantic',
+  'Mysterious':'mysterious atmospheric dark','Cinematic':'cinematic dramatic epic',
+  'Spiritual':'spiritual sacred uplifting','Groovy':'groovy funky rhythmic',
+  'Rebellious':'rebellious raw fierce','Epic':'epic powerful triumphant',
+  'Soulful':'soulful emotional deep','Trippy':'psychedelic trippy experimental',
+};
+
+const LANG_TAGS={
+  'en':'english','es':'spanish','pt':'portuguese','fr':'french',
+  'zh':'Mandarin','ja':'japanese','ko':'korean',
+  'ar':'arabic','hi':'hindi','de':'german','it':'italian','ru':'russian'
+};
+
+function buildYuEGenreTags(genre,mood,voice,timbre,lang){
+  const g=YUE_GENRE_MAP[genre]||genre.toLowerCase();
+  const instr=YUE_INSTR_MAP[genre]||'piano guitar bass drums';
+  const m=YUE_MOOD_MAP[mood]||mood.toLowerCase();
+  const genderTag=voice==='female'?'female vocal':voice==='male'?'male vocal':
+    voice==='duet'?'male female duet':voice==='choir'?'choir vocal':'instrumental';
+  const timbTag=timbre||'bright';
+  const langTag=lang&&lang!=='en'?LANG_TAGS[lang]||lang:'';
+  // YuE format: genre instrument mood gender timbre [language]
+  return [g,instr,m,genderTag,timbTag,'vocal',langTag].filter(Boolean).join(' ');
+}
 const GENRE_STYLES={"Hip-Hop": ["Boom Bap", "Trap", "Drill", "Cloud Rap", "Lo-fi Hip-Hop", "Conscious Rap", "East Coast", "West Coast", "Southern Rap", "Mumble Rap", "Jazz Rap", "Emo Rap", "Phonk", "Gangsta Rap", "Underground"], "Trap": ["Dark Trap", "Melodic Trap", "Trap Soul", "Latin Trap", "UK Trap", "Memphis Trap", "SoundCloud Trap", "Pluggnb", "Rage Trap", "Drill"], "Pop": ["Dance-Pop", "Electropop", "Synth-Pop", "Indie Pop", "Art Pop", "Dream Pop", "Bubblegum Pop", "Power Pop", "Chamber Pop", "Bedroom Pop", "Teen Pop", "K-Pop", "J-Pop", "City Pop"], "R&B / Soul": ["Neo-Soul", "Contemporary R&B", "Quiet Storm", "Funk", "Motown", "Philly Soul", "Gospel Soul", "Alternative R&B", "New Jack Swing", "Trap Soul", "Smooth R&B", "Old School Soul"], "Electronic": ["House", "Deep House", "Tech House", "Progressive House", "Techno", "Trance", "Dubstep", "Drum and Bass", "Jungle", "Breakbeat", "Ambient", "IDM", "Electro", "Garage", "UK Garage", "Acid House", "Industrial", "EBM"], "House": ["Deep House", "Tech House", "Progressive House", "Acid House", "Afro House", "Vocal House", "Chicago House", "Detroit House", "Nu-Disco", "Soulful House", "Tribal House", "Electro House"], "Lo-fi": ["Lo-fi Hip-Hop", "Lo-fi Jazz", "Lo-fi Soul", "Chillhop", "Jazzhop", "Bedroom Pop", "Rainy Day", "Study Beats", "Lo-fi Bossa Nova", "Cassette Tape Lo-fi"], "Ambient": ["Dark Ambient", "Space Ambient", "Nature Sounds", "Drone", "New Age", "Meditation", "Sleep Music", "Cinematic Ambient", "Ethereal Ambient", "Atmospheric"], "Rock": ["Classic Rock", "Hard Rock", "Soft Rock", "Garage Rock", "Surf Rock", "Psychedelic Rock", "Arena Rock", "Southern Rock", "Blues Rock", "Glam Rock", "Art Rock", "Progressive Rock", "Indie Rock"], "Indie Rock": ["Dream Pop", "Shoegaze", "Slowcore", "Post-Punk Revival", "Math Rock", "Noise Rock", "Lo-fi Rock", "Emo", "Midwest Emo", "Alternative", "College Rock"], "Alternative Rock": ["Grunge", "Post-Grunge", "Indie Rock", "Emo", "Post-Rock", "Art Rock", "Britpop", "Shoegaze", "College Rock", "Alternative Metal"], "Metal": ["Heavy Metal", "Thrash Metal", "Death Metal", "Black Metal", "Doom Metal", "Power Metal", "Progressive Metal", "Metalcore", "Deathcore", "Symphonic Metal", "Groove Metal", "Nu Metal", "Folk Metal", "Industrial Metal", "Speed Metal", "Glam Metal", "Sludge Metal", "Viking Metal"], "Jazz": ["Bebop", "Cool Jazz", "Hard Bop", "Free Jazz", "Swing", "Big Band", "Latin Jazz", "Smooth Jazz", "Gypsy Jazz", "Modal Jazz", "Acid Jazz", "Vocal Jazz", "Jazz Fusion", "Dixieland", "Contemporary Jazz", "Bossa Nova Jazz"], "Blues": ["Delta Blues", "Chicago Blues", "Electric Blues", "Country Blues", "Soul Blues", "Blues Rock", "Swamp Blues", "Piano Blues", "Texas Blues", "Piedmont Blues", "Jump Blues"], "Country": ["Traditional Country", "Outlaw Country", "Country Pop", "Country Rock", "Bluegrass", "Honky-Tonk", "Americana", "Alt-Country", "Western Swing", "Nashville Sound", "Contemporary Country", "Country Rap", "Bro-Country"], "Reggae": ["Roots Reggae", "Dancehall", "Dub", "Ska", "Rocksteady", "Reggae Fusion", "Lovers Rock", "Ragga", "Digital Reggae", "One Drop"], "Latin": ["Salsa", "Merengue", "Bachata", "Cumbia", "Reggaeton", "Latin Pop", "Bossa Nova", "Samba", "Tango", "Mambo", "Cha-Cha", "Bolero", "Dembow", "Corridos", "Norteño", "Banda", "Mariachi", "Vallenato", "Son Cubano", "Timba", "Guaracha", "Plena", "Bomba"], "Afrobeats": ["Afropop", "Amapiano", "Highlife", "Afro-Fusion", "Afroswing", "Gqom", "Afrohouse", "Jùjú", "Fuji", "Makossa", "Soukous", "Ndombolo", "Kizomba", "Zouk"], "Classical": ["Baroque", "Romantic", "Contemporary Classical", "Opera", "Symphony", "Chamber Music", "Concerto", "Minimalist", "Sacred Choral", "Early Music", "Renaissance", "Avant-Garde Classical"], "Cinematic / Soundtrack": ["Orchestral Epic", "Dark Cinematic", "Emotional Score", "Action Score", "Horror Score", "Adventure Theme", "Sci-Fi Score", "Romantic Score", "Western Score", "Anime OST", "Video Game Music", "Documentary Score"], "K-Pop": ["BG (Boy Group)", "GG (Girl Group)", "Solo", "K-R&B", "K-Hip-Hop", "K-Ballad", "K-Trot", "K-Dance", "K-Indie", "Idol Pop"], "Drill": ["UK Drill", "NY Drill", "Chicago Drill", "Brooklyn Drill", "Australian Drill", "Melodic Drill", "Pop Drill"], "Funk": ["P-Funk", "Funk Rock", "Electro-Funk", "Go-Go", "New Orleans Funk", "Minneapolis Sound", "Nu-Funk", "Afrofunk"], "Gospel": ["Traditional Gospel", "Contemporary Gospel", "Southern Gospel", "Urban Gospel", "Praise & Worship", "Gospel Rap", "Gospel R&B", "Mass Choir"], "Folk": ["Traditional Folk", "Contemporary Folk", "Indie Folk", "Folk Rock", "Celtic Folk", "Appalachian Folk", "Protest Folk", "Singer-Songwriter", "Folk Pop", "Neo-Folk"], "Punk": ["Classic Punk", "Hardcore Punk", "Post-Punk", "Pop Punk", "Skate Punk", "Anarcho-Punk", "Horror Punk", "Crust Punk", "Folk Punk", "Emo", "Screamo", "Post-Hardcore"], "Dancehall": ["Digital Dancehall", "Ragga", "Bashment", "Jungle", "UK Dancehall", "Reggaeton", "Afrobeats-Dancehall"], "Phonk": ["Memphis Phonk", "Drift Phonk", "Brazilian Phonk", "Dark Phonk", "Hyperpop Phonk", "Hard Phonk", "Electro Phonk"], "Drum and Bass": ["Liquid DnB", "Neurofunk", "Jump Up", "Dark DnB", "Jungle", "Techstep", "Drumstep", "Intelligent DnB", "Ragga DnB"], "Techno": ["Detroit Techno", "Industrial Techno", "Minimal Techno", "Hard Techno", "Acid Techno", "Berlin Techno", "Melodic Techno", "Tech House", "Dark Techno"], "Trance": ["Progressive Trance", "Uplifting Trance", "Psytrance", "Goa Trance", "Tech Trance", "Vocal Trance", "Hard Trance", "Dream Trance", "Melodic Trance"], "Future Bass": ["Melodic Future Bass", "Dark Future Bass", "Chill Future Bass", "Electro Future Bass", "Future Pop", "Kawaii Future Bass"], "Vaporwave": ["Classic Vaporwave", "Future Funk", "Mallsoft", "Hardvapour", "Dreampunk", "Chillwave", "Synthwave", "Retrowave", "Outrun"], "Hyperpop": ["Digicore", "Glitchcore", "UK Hyperpop", "Bubblegum Bass", "Electropop Hyperpop", "Emo Hyperpop", "Trap Hyperpop"], "Bossa Nova": ["Classic Bossa Nova", "Jazz Bossa Nova", "Contemporary Bossa Nova", "Samba-Jazz", "Choro", "MPB", "Brazilian Jazz"], "Samba": ["Samba Enredo", "Pagode", "Axé", "Forró", "Baião", "Maracatu", "Samba-Rock", "Samba Reggae"], "Flamenco": ["Classic Flamenco", "Flamenco Fusion", "Rumba Flamenca", "Nuevo Flamenco", "Flamenco Jazz", "Flamenco Pop"], "Bollywood / Bhangra": ["Classic Bollywood", "Item Song", "Sufi Bollywood", "Punjabi Bhangra", "Filmi", "Ghazal", "Qawwali", "Indi-Pop", "Fusion Bhangra"], "Anime OST": ["Shonen Battle", "Shojo Romance", "Isekai Adventure", "Horror Anime", "Mecha", "Slice of Life", "Opening Theme", "Ending Theme", "Insert Song"], "Video Game Music": ["8-bit Chiptune", "16-bit SNES", "RPG Battle Theme", "Boss Fight", "Exploration Theme", "Puzzle Game", "Racing Game", "Horror Game", "Open World"], "Experimental": ["Noise", "Drone", "Musique Concrète", "Sound Art", "Glitch", "Avant-Garde", "Dark Ambient", "Microtonal", "Free Improvisation"]};
 
 const ALL_GENRES=['Blues', 'Delta Blues', 'Chicago Blues', 'Electric Blues', 'Country Blues', 'Soul Blues', 'Blues Rock', 'Swamp Blues', 'Piano Blues', 'Classical', 'Baroque', 'Chamber Music', 'Choral', 'Concerto', 'Contemporary Classical', 'Early Music', 'Opera', 'Orchestral', 'Renaissance', 'Romantic', 'Symphony', 'Avant-Garde Classical', 'Minimalist Classical', 'Sacred Music', 'Country', 'Traditional Country', 'Outlaw Country', 'Country Pop', 'Country Rock', 'Bluegrass', 'Honky-Tonk', 'Americana', 'Alt-Country', 'Western Swing', 'Nashville Sound', 'Bakersfield Sound', 'Contemporary Country', 'Electronic', 'House', 'Techno', 'Trance', 'Drum and Bass', 'Dubstep', 'Ambient', 'EDM', 'Electro', 'Industrial', 'Synth-Pop', 'Trip-Hop', 'IDM', 'Downtempo', 'Chillout', 'Hardstyle', 'Jungle', 'Garage', 'Breakbeat', 'Acid House', 'Progressive House', 'Deep House', 'Tech House', 'Future Bass', 'Lo-fi', 'Vaporwave', 'Hyperpop', 'Chillwave', 'Witch House', 'Nightcore', 'Phonk', 'Digicore', 'Glitchcore', 'Future Funk', 'Electro Swing', 'Folk', 'Traditional Folk', 'Contemporary Folk', 'Indie Folk', 'Folk Rock', 'Neo-Folk', 'Celtic Folk', 'Singer-Songwriter', 'Protest Folk', 'Appalachian Folk', 'World Folk', 'Folk Punk', 'Folk Metal', 'Hip-Hop', 'Rap', 'Old School Hip-Hop', 'Boom Bap', 'Trap', 'Conscious Hip-Hop', 'Gangsta Rap', 'Drill', 'UK Drill', 'Alternative Hip-Hop', 'Underground Hip-Hop', 'East Coast Rap', 'West Coast Rap', 'Southern Rap', 'Latin Trap', 'Jazz Rap', 'Horrorcore', 'Emo Rap', 'Cloud Rap', 'Experimental Hip-Hop', 'Rap Rock', 'Country Rap', 'Gospel Rap', 'Trap Soul', 'Comedy Rap', 'Jazz', 'Swing', 'Bebop', 'Cool Jazz', 'Hard Bop', 'Free Jazz', 'Jazz Fusion', 'Latin Jazz', 'Smooth Jazz', 'Gypsy Jazz', 'Big Band', 'Modal Jazz', 'Acid Jazz', 'Vocal Jazz', 'Contemporary Jazz', 'Dixieland', 'Latin', 'Salsa', 'Reggaeton', 'Bachata', 'Merengue', 'Cumbia', 'Son Cubano', 'Bolero', 'Mambo', 'Cha-Cha-Chá', 'Timba', 'Latin Pop', 'Corridos', 'Norteño', 'Banda', 'Mariachi', 'Tejano', 'Vallenato', 'Rumba', 'Plena', 'Bomba', 'Dembow', 'Tango', 'Samba', 'Bossa Nova', 'Forró', 'Pagode', 'Sertanejo', 'Salsa Choke', 'Reggaeton Pop', 'Son Jarocho', 'Zouk', 'Metal', 'Heavy Metal', 'Thrash Metal', 'Death Metal', 'Black Metal', 'Doom Metal', 'Power Metal', 'Progressive Metal', 'Metalcore', 'Deathcore', 'Symphonic Metal', 'Groove Metal', 'Nu Metal', 'Industrial Metal', 'Speed Metal', 'Glam Metal', 'Sludge Metal', 'Symphonic Rock', 'Pop', 'Dance-Pop', 'Indie Pop', 'Electropop', 'Teen Pop', 'Art Pop', 'Chamber Pop', 'Dream Pop', 'K-Pop', 'J-Pop', 'Mandopop', 'Baroque Pop', 'Pop Rock', 'Bedroom Pop', 'City Pop', 'Anime OST', 'Punk', 'Classic Punk', 'Punk Rock', 'Hardcore Punk', 'Post-Punk', 'Pop Punk', 'Skate Punk', 'Anarcho-Punk', 'Horror Punk', 'Crust Punk', 'Emo', 'Screamo', 'Post-Punk Revival', 'Noise Rock', 'R&B', 'Soul', 'Neo-Soul', 'Funk', 'Motown', 'Quiet Storm', 'Philly Soul', 'Gospel Soul', 'Alternative R&B', 'Contemporary R&B', 'P-Funk', 'Funk Rock', 'Electro-Funk', 'Go-Go', 'Reggae', 'Roots Reggae', 'Dancehall', 'Dub', 'Ska', 'Rocksteady', 'Reggae Fusion', 'Lovers Rock', 'Rock', 'Classic Rock', 'Hard Rock', 'Alternative Rock', 'Indie Rock', 'Progressive Rock', 'Psychedelic Rock', 'Garage Rock', 'Soft Rock', 'Glam Rock', 'Grunge', 'Post-Rock', 'Southern Rock', 'Surf Rock', 'Arena Rock', 'Art Rock', 'Shoegaze', 'Slowcore', 'Math Rock', 'Gospel', 'Traditional Gospel', 'Contemporary Gospel', 'Southern Gospel', 'Urban Gospel', 'Christian', 'Worship', 'Islamic Nasheed', 'Hindu Devotional', 'Buddhist Chant', 'Jewish Liturgical', 'Sacred Choral', 'Afrobeat', 'Afropop', 'Afro-Fusion', 'Highlife', 'Rai', 'Qawwali', 'Flamenco', 'Fado', 'Bhangra', 'Enka', 'Soukous', 'Amapiano', 'Gqom', 'Mbalax', 'Gnawa', 'Zouglou', 'Taarab', 'Sevdah', 'Gamelan', 'Cajun', 'Zydeco', 'Celtic', 'Experimental', 'Drone', 'Sound Art', 'Dark Ambient', 'Glitch', 'Avant-Garde', 'Noise', 'Musique Concrète', 'Disco', 'Eurodance', 'Freestyle', 'Ballroom', 'Waltz', 'Soundtrack', 'Film Score', 'Musical Theater', 'Video Game Music', "Children's Music", 'Lullabies', 'Nursery Rhymes', 'Parody', 'Novelty'];
@@ -2060,6 +2273,22 @@ function updateStyles(genre){
     sel.appendChild(o);
   });
 }
+
+function setLang(l,btn){
+  window._curLang=l;
+  document.querySelectorAll('.lbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  // Show/hide lyrics area language hint
+  const hint=document.getElementById('langHint');
+  const names={en:'English',es:'Spanish',pt:'Portuguese',fr:'French',zh:'Mandarin Chinese',
+    ja:'Japanese',ko:'Korean',ar:'Arabic',hi:'Hindi',de:'German',it:'Italian',ru:'Russian'};
+  if(hint)hint.textContent='Lyrics should be in '+names[l];
+}
+function setTimbre(t,btn){
+  window._curTimbre=t;
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
 function setVoice(v,btn){
   window._curVoice=v;
   document.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('on'));
@@ -2086,247 +2315,35 @@ function buildMeta(p,g,m,b){
   const tg=TG[m]||TG.Melancholic;
   return{title,tagline:tg[Math.random()*tg.length|0],tags:[g,m,b+' BPM'],lyrics:makeLyrics(g,m,window._curSecs||60)};
 }
-function makeLyrics(g,m,secs){
-  secs=secs||60;
+function makeLyrics(g,m,lang,secs){
+  secs=secs||60; lang=lang||'en';
   const gL=g.toLowerCase(),mL=m.toLowerCase();
-
-  // Lyric pools — varied lines so repeated sections feel natural
-  const V1=[
-    `In the ${mL} hours before the dawn\\nSomething in the melody carries on\\nEvery note a colour, every beat a breath\\nWe were made for this, born into the rest`,
-    `Walking through the city in the ${mL} rain\\nEvery street a memory, every wall a stain\\nBut there's something calling from the other side\\nA ${gL} feeling I just can't hide`,
-    `Started from nothing, now the world can see\\nEvery ${mL} night shaped who I'd be\\nThe rhythm in my chest won't let me fall\\nI hear it louder every time I call`,
-    `Woke up in the middle of a ${mL} dream\\nNothing's ever quite as good as what it seems\\nBut I keep chasing what I can't explain\\nThis ${gL} melody running through my veins`
-  ];
-  const V2=[
-    `Time moves different when the music plays\\nLost inside these ${mL} endless days\\nFingers on the keys, the whole world goes still\\nSomething in this sound, something in the thrill`,
-    `The second time around hits different, yeah\\nI know the words but feel them differently\\nEvery verse a chapter, every chord a scar\\nThis ${gL} sound reminds me who we are`,
-    `Deeper in the pocket, deeper in the feel\\nEvery ${mL} moment suddenly more real\\nI've been building something since before I knew\\nAll of this was always leading me to you`,
-    `Somewhere in the silence between the bars\\nI found myself reaching for the stars\\nThe ${gL} beat beneath me like a heartbeat true\\nEvery single measure bringing me back to you`
-  ];
-  const V3=[
-    `I remember every word you never said\\nEvery ${mL} night replaying in my head\\nBut the music always catches what I missed\\nA ${gL} truth delivered with a twist`,
-    `Third time through and now I finally see\\nEvery note was always meant for me\\nThe crowd is gone, it's just the sound and I\\nA ${mL} feeling reaching for the sky`,
-    `Late nights, early mornings, still the same\\nThis ${gL} fire burning just the same\\nI've given everything and I'd give more\\nI never knew what music was before`
-  ];
-  const CH=[
-    `Let it carry you somewhere far away\\nLet the ${gL} wash the night to day\\nFeel it in your chest, feel it in your bones\\nYou were never, ever really all alone`,
-    `This is what it feels like to be free\\nLost inside the sound of what we could be\\nEvery ${mL} moment, every beat and bar\\nThis is who we are, this is who we are`,
-    `Rise up, let the music take control\\nFeel the ${gL} rhythm in your soul\\nWe were made to feel this, made to sing\\nFly above the world on a ${mL} wing`,
-    `And we keep going, keep moving on\\nEvery night we play, every day a song\\nThe ${gL} never stops, the feeling never ends\\nThis is where the melody begins`
-  ];
-  const BR=[
-    `[Bridge]\\nMaybe it's the sound\\nMaybe it's the feeling\\nMaybe it's the way\\nThe music keeps revealing\\nSomething deep inside\\nWe never thought we'd find\\nLeave it all behind`,
-    `[Bridge]\\nI don't need the words\\nJust give me the music\\nI don't need the world\\nJust give me this feeling\\nEvery note a prayer\\nEvery beat a healing\\nThis is what we share`,
-    `[Bridge]\\nStrip it back to nothing\\nJust the beat and bass\\nFind yourself in something\\nIn this ${mL} space\\nLet the ${gL} take you\\nTo a different place`
-  ];
-  const PRE=[
-    `[Pre-Chorus]\\nAnd here we go again\\nFalling into the sound\\nHere we go again\\nLetting go, letting down`,
-    `[Pre-Chorus]\\nBuilding, building higher\\nCan you feel the fire\\nWaiting for the moment\\nWhen the beat drops lower`,
-    `[Pre-Chorus]\\nSomething's breaking open\\nWords are left unspoken\\nEverything is rising\\nThis was not surprising`
-  ];
-  const r=n=>Math.random()*n|0;
-  const pick=(arr,i)=>arr[i%arr.length];
-
-  // Build song structure based on duration
-  // Each section ~20-30 seconds; we target secs/25 sections
-  const targetSections=Math.max(4,Math.round(secs/22));
+  const FL={en:{oh:'Oh yeah',go:'Here we go',feel:'Feel it now'},es:{oh:'Oh sí',go:'Vamos ya',feel:'Siéntelo'},pt:{oh:'Oh sim',go:'Vamos lá',feel:'Sinto tudo'},fr:{oh:'Oh oui',go:'Allez',feel:"C'est ça"},zh:{oh:'哦yeah',go:'来吧',feel:'感受它'},ja:{oh:'オーイエ',go:'さあいくぞ',feel:'感じて'},ko:{oh:'오 예',go:'가자',feel:'느껴봐'},ar:{oh:'أوه نعم',go:'هيا',feel:'أشعر بها'},hi:{oh:'ओह हाँ',go:'चलो',feel:'महसूस करो'},de:{oh:'Oh ja',go:"Los geht's",feel:'Fühl es'},it:{oh:'Oh sì',go:'Andiamo',feel:'Sentilo'},ru:{oh:'О да',go:'Поехали',feel:'Почувствуй'}};
+  const F=FL[lang]||FL.en;
+  const r=n=>Math.floor(Math.random()*n);
+  const V1=[`In the ${mL} hours before the dawn\nSomething in the melody carries on\nEvery note a colour, every beat a breath\nWe were made for this, born into the rest`,`Walking through the city in the ${mL} rain\nEvery street a memory, every wall a stain\nSomething calling from the other side\nA ${gL} feeling I just can't hide`,`I've been carrying this feeling all along\nSomething in the rhythm makes me strong\nEvery ${mL} night I hear this sound\nA ${gL} frequency that lifts me off the ground`];
+  const V2=[`Time moves different when the music plays\nLost inside these ${mL} endless days\nFingers on the keys, the whole world goes still\nSomething in this sound, something in the thrill`,`Deeper in the groove now, deeper in the feel\nEvery ${mL} moment suddenly more real\nBuilding something beautiful inside\nThis ${gL} wave won't let me run and hide`,`Light breaks through the morning slowly now\nI found the strength to take a vow\nThis ${gL} sound will carry me above\nA ${mL} melody, a ${gL} kind of love`];
+  const V3=[`I remember every word you never said\nEvery ${mL} night replaying in my head\nBut the music catches what I missed\nA ${gL} truth I can't resist`,`Late nights and early mornings, still the same flame\nThis ${gL} passion burning in my name\nGiven everything and I'd give more\nNever knew what music felt like before`];
+  const CH=[`Let it carry you somewhere far away\nLet the ${gL} wash the night to day\nFeel it in your chest, feel it in your bones\nYou were never, ever really all alone`,`This is what it feels like to be free\nLost inside the sound of you and me\nEvery ${mL} moment, every beat and bar\nThis is who we are, this is who we are`,`Rise up let the music take control\nFeel the ${gL} rhythm in your soul\nWe were made to feel this, made to sing\n${F.oh} — ${F.go} let the chorus ring`,`${F.oh} — ${F.feel} in everything\nEvery note we play every song we sing\nThe ${gL} never stops the feeling never ends\nThis is where the melody begins again`];
+  const BR=[`[bridge]\nMaybe it's the sound\nMaybe it's the feeling\nThe music keeps revealing\nSomething deep inside\nWe never thought we'd find`,`[bridge]\nStrip it back to nothing\nJust the beat and the bass\n${F.oh} let the ${gL} take you\nTo a different place`,`[bridge]\n${F.feel} — ${F.go}\nThis is what we're building`];
+  const PRE=[`[pre-chorus]\nAnd here we go again\nFalling into the sound\nLetting go letting it all down`,`[pre-chorus]\nBuilding higher and higher\nCan you feel the fire\nWaiting for the moment when the beat drops`,`[pre-chorus]\nSomething's breaking open now\nEverything is rising\nThis is what we came here for`];
+  const v1=V1[r(V1.length)],v2=V2[r(V2.length)],v3=V3[r(V3.length)];
   const parts=[];
-
-  if(secs>=30) parts.push('[Intro]\\n*instrumental opening, set the mood*');
-
-  // Always: V1 + Pre + Chorus
-  parts.push('[Verse 1]\\n'+pick(V1,r(V1.length)));
-  if(secs>=90) parts.push(pick(PRE,0));
-  parts.push('[Chorus]\\n'+pick(CH,0));
-
-  if(secs>=60){
-    parts.push('[Verse 2]\\n'+pick(V2,r(V2.length)));
-    if(secs>=90) parts.push(pick(PRE,1));
-    parts.push('[Chorus]\\n'+pick(CH,1));
-  }
-  if(secs>=120){
-    parts.push(pick(BR,0));
-    parts.push('[Chorus]\\n'+pick(CH,2));
-  }
-  if(secs>=150){
-    parts.push('[Verse 3]\\n'+pick(V3,r(V3.length)));
-    if(secs>=180) parts.push(pick(PRE,2));
-    parts.push('[Chorus]\\n'+pick(CH,r(CH.length)));
-  }
-  if(secs>=200){
-    parts.push(pick(BR,1));
-    parts.push('[Chorus]\\n'+pick(CH,r(CH.length)));
-  }
-  if(secs>=240){
-    parts.push('[Verse 4]\\n'+pick(V1,r(V1.length)));
-    parts.push(pick(PRE,r(PRE.length)));
-    parts.push('[Chorus]\\n'+pick(CH,3));
-    parts.push(pick(BR,2));
-    parts.push('[Chorus]\\n'+pick(CH,r(CH.length)));
-  }
-  if(secs>=270){
-    parts.push('[Outro]\\n*fade out with the main melody, ${mL} and ${gL}*');
-  } else {
-    parts.push('[Outro]\\n*instrumental outro*');
-  }
-
-  return parts.join('\\n\\n');
+  parts.push('[verse]\n'+v1);
+  if(secs>=60){parts.push(PRE[0]);parts.push('[chorus]\n'+CH[0]);}
+  if(secs>=90){parts.push('[verse]\n'+v2);}
+  if(secs>=120){parts.push(PRE[1]);parts.push('[chorus]\n'+CH[1]);}
+  if(secs>=150){parts.push(BR[0]);parts.push('[chorus]\n'+CH[2]);}
+  if(secs>=180){parts.push('[verse]\n'+v3);parts.push(PRE[2]);parts.push('[chorus]\n'+CH[3]);}
+  if(secs>=210){parts.push(BR[1]);parts.push('[chorus]\n'+CH[0]);}
+  if(secs>=240){parts.push('[verse]\n'+v1);parts.push(PRE[0]);parts.push('[chorus]\n'+CH[1]);parts.push('[chorus]\n'+CH[2]);}
+  if(secs>=270){parts.push(BR[2]);parts.push('[chorus]\n'+CH[3]);}
+  if(secs>=300){parts.push('[outro]\n'+F.oh+' yeah\n'+F.feel+'\nFade into the sound');}
+  else{parts.push('[outro]\n*fade out*');}
+  return parts.join('\n\n');
 }
-function doGenLyrics(){const g=document.getElementById('genreSelect').value,m=document.getElementById('moodSelect').value,d=DS[curDur]||60;document.getElementById('lyricsInput').value=makeLyrics(g,m,d);toast('Lyrics generated!','✍️')}
+function doGenLyrics(){const g=document.getElementById('genreSelect').value,m=document.getElementById('moodSelect').value,lang=window._curLang||'en',d=DS[curDur]||60;document.getElementById('lyricsInput').value=makeLyrics(g,m,lang,d);toast('Lyrics generated!','✍️');}
 
-// PROXY_URL declared at top of script
-
-async function callReplicate(prompt,secs,lyrics){
-  const genUrl = PROXY_URL+'/api/generate';
-  const pollUrl = PROXY_URL+'/api/poll';
-
-  // Estimate wait time based on duration
-  const estSecs = secs <= 30 ? 20 : secs <= 60 ? 35 : secs <= 90 ? 55 : secs <= 120 ? 80 : 120;
-
-  setProg('Sending to AI model\u2026',48);
-  showEstimate(estSecs);
-
-  let r;
-  try {
-    r = await fetch(genUrl, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({repKey:REP_KEY, prompt, duration:secs, lyrics:lyrics||''})
-    });
-  } catch(e) {
-    throw new Error('Cannot reach proxy at '+PROXY_URL+'. Check URL is correct and Vercel is deployed.');
-  }
-
-  if(!r.ok){
-    const e = await r.json().catch(()=>({}));
-    if(r.status===401) throw new Error('Invalid API key \u2014 get one at replicate.com/account/api-tokens');
-    if(r.status===402) throw new Error('Billing required \u2014 add credit at replicate.com/account/billing');
-    throw new Error(`Error ${r.status}: ${e.detail||e.error||JSON.stringify(e)}`);
-  }
-
-  const pred = await r.json();
-
-  // Returned immediately (sync) - great!
-  if(pred.status==='succeeded' && pred.url) return pred.url;
-  if(pred.status==='succeeded'){
-    const u = Array.isArray(pred.output)?pred.output[0]:pred.output;
-    if(u) return u;
-  }
-  if(pred.status==='failed') throw new Error('Generation failed: '+(pred.error||'unknown error'));
-  if(!pred.id) throw new Error('No prediction ID returned \u2014 try again');
-
-  // ── SMART POLLING ──
-  // Short songs: poll every 2s. Long songs: start at 2s, back off to 4s after 30s
-  let tries = 0;
-  let pollInterval = 2000;
-  let elapsed = 0;
-  const startTime = Date.now();
-
-  while(tries < 200){
-    if(cancelFlag) throw new Error('cancelled');
-
-    await new Promise(res=>setTimeout(res, pollInterval));
-    elapsed = (Date.now()-startTime)/1000;
-
-    // Back off polling after 30s to reduce load
-    if(elapsed > 30 && pollInterval === 2000) pollInterval = 3000;
-    if(elapsed > 90 && pollInterval === 3000) pollInterval = 4000;
-
-    tries++;
-
-    // Progress: smooth fill from 50% to 92% over estimated time
-    const pct = Math.min(50 + (elapsed/estSecs)*42, 92);
-    const remaining = Math.max(0, Math.round(estSecs - elapsed));
-    document.getElementById('sBar').style.width = pct+'%';
-    setProg(
-      remaining > 5
-        ? `Generating\u2026 ~${remaining}s remaining`
-        : elapsed < estSecs
-          ? 'Almost done\u2026'
-          : 'Finalizing track\u2026',
-      pct
-    );
-
-    let poll;
-    try {
-      const pr = await fetch(pollUrl, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({repKey:REP_KEY, id:pred.id})
-      });
-      poll = await pr.json();
-    } catch(e) { continue; }
-
-    if(poll.status==='succeeded' && poll.url) return poll.url;
-    if(poll.status==='failed') throw new Error('Generation failed: '+(poll.error||'unknown'));
-  }
-  throw new Error('Timed out after '+Math.round(elapsed)+'s \u2014 try a shorter duration');
-}
-
-
-async function startGen(){
-  const prompt=document.getElementById('promptInput').value.trim();
-  if(!prompt){toast('Add a description first','⚠️');return}
-  if(!REP_KEY&&!IS_DEMO){openModal();return}
-  const old=document.getElementById('errB');if(old)old.remove();
-  cancelFlag=false;
-  document.getElementById('forgeBtn').disabled=true;
-  document.getElementById('genStatus').classList.add('show');
-  document.getElementById('resultSec').classList.remove('show');
-
-  const genre=document.getElementById('genreSelect').value;
-  const substyle=document.getElementById('substyleSelect')?document.getElementById('substyleSelect').value:'';
-  const genreLabel=substyle?`${substyle} (${genre})`:genre;
-  const mood=document.getElementById('moodSelect').value;
-  const bpm=document.getElementById('bpmVal').textContent;
-  const voice=window._curVoice||'female';
-  const secs=DS[curDur]||60;
-  const noVox=curMode==='instrumental'||voice==='none';
-  const customLyrics=(curMode==='lyrics'||curMode==='custom')?(document.getElementById('lyricsInput').value.trim()):'';
-  const styleInput=curMode==='custom'?(document.getElementById('styleInput')?document.getElementById('styleInput').value.trim():''):'';
-  const voiceDesc=voice==='female'?'female vocalist, female singing voice':voice==='male'?'male vocalist, male singing voice':voice==='duet'?'male and female duet, two singers':noVox?'instrumental, no vocals':'';
-  window._curSecs=secs;
-
-  const meta=buildMeta(prompt,genre,mood,bpm);
-  let audioUrl=null;
-  try{
-    setStep('ss1','active');setProg('Analyzing description\u2026',12);
-    await new Promise(r=>setTimeout(r,400));if(cancelFlag)throw new Error('cancelled');
-    setStep('ss1','done');setStep('ss2','active');setProg('Building song structure\u2026',28);
-    await new Promise(r=>setTimeout(r,400));if(cancelFlag)throw new Error('cancelled');
-    setStep('ss2','done');setStep('ss3','active');setProg('Queuing with AI model\u2026',50);
-
-    const voicePart=voiceDesc?voiceDesc+', ':'';
-    let mp, lyricsToSend;
-    if(curMode==='custom'&&styleInput){
-      mp=voicePart+styleInput;
-      lyricsToSend=customLyrics||makeLyrics(genre,mood,secs);
-    } else {
-      mp=[voicePart+genreLabel,mood,`${bpm} BPM`,prompt,noVox?'instrumental no vocals':''].filter(Boolean).join(', ');
-      lyricsToSend=noVox?'[Instrumental]\n*no vocals, pure instrumentation*':(customLyrics||makeLyrics(genre,mood,secs));
-    }
-
-    if(!IS_DEMO){audioUrl=await callReplicate(mp,secs,lyricsToSend)}
-    else{for(let p=52;p<=92;p+=4){if(cancelFlag)throw new Error('cancelled');await new Promise(r=>setTimeout(r,200));document.getElementById('sBar').style.width=p+'%'}}
-
-    if(cancelFlag)throw new Error('cancelled');
-    setStep('ss3','done');setStep('ss4','active');setProg('Mastering\u2026',96);
-    await new Promise(r=>setTimeout(r,300));
-    setStep('ss4','done');setProg('Complete!',100);
-    await new Promise(r=>setTimeout(r,200));
-  }catch(err){
-    clrProg();
-    if(err.message!=='cancelled')showErr(err.message);
-    return;
-  }
-  clrProg();
-  const emoji=EM[Math.random()*EM.length|0],grad=GR[Math.random()*GR.length|0];
-  const song={...meta,emoji,grad,dur:curDur,genre,mood,bpm,lyrics:customLyrics||meta.lyrics,audioUrl,demo:!audioUrl};
-  songs.unshift(song);curIdx=0;
-  renderResult(song);renderLib();updateNP(song);
-  toast(`"${meta.title}" forged!`,'\uD83C\uDFB5');
-  if(window.innerWidth<768)setTimeout(()=>document.getElementById('resultSec').scrollIntoView({behavior:'smooth',block:'start'}),100);
-}
 
 function doCancel(){cancelFlag=true;clrProg();toast('Cancelled','✕')}
 
