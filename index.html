@@ -1415,7 +1415,7 @@ function makeLyrics(g,m,lang,secs){
   else{parts.push('[outro]\n*fade out*');}
   return parts.join('\n\n');
 }
-function doGenLyrics(){const g=document.getElementById('genreSelect').value,m=document.getElementById('moodSelect').value,lang=window._curLang||'en',d=DS[curDur]||60;document.getElementById('lyricsInput').value=makeLyrics(g,m,lang,d);toast('Lyrics generated!','✍️');}
+async function doGenLyrics(){const g=document.getElementById('genreSelect').value,m=document.getElementById('moodSelect').value,lang=window._curLang||'en',d=DS[curDur]||60;document.getElementById('lyricsInput').value=makeLyrics(g,m,lang,d);toast('Lyrics generated!','✍️');}
 
 
 async function callReplicate(prompt,secs,lyrics){
