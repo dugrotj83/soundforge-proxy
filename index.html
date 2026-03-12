@@ -1023,9 +1023,10 @@ Through the fire and the rain</span><br><br>
 const ALL_GENRES=['Blues', 'Delta Blues', 'Chicago Blues', 'Electric Blues', 'Country Blues', 'Soul Blues', 'Blues Rock', 'Swamp Blues', 'Piano Blues', 'Classical', 'Baroque', 'Chamber Music', 'Choral', 'Concerto', 'Contemporary Classical', 'Early Music', 'Opera', 'Orchestral', 'Renaissance', 'Romantic', 'Symphony', 'Avant-Garde Classical', 'Minimalist Classical', 'Sacred Music', 'Country', 'Traditional Country', 'Outlaw Country', 'Country Pop', 'Country Rock', 'Bluegrass', 'Honky-Tonk', 'Americana', 'Alt-Country', 'Western Swing', 'Nashville Sound', 'Bakersfield Sound', 'Contemporary Country', 'Electronic', 'House', 'Techno', 'Trance', 'Drum and Bass', 'Dubstep', 'Ambient', 'EDM', 'Electro', 'Industrial', 'Synth-Pop', 'Trip-Hop', 'IDM', 'Downtempo', 'Chillout', 'Hardstyle', 'Jungle', 'Garage', 'Breakbeat', 'Acid House', 'Progressive House', 'Deep House', 'Tech House', 'Future Bass', 'Lo-fi', 'Vaporwave', 'Hyperpop', 'Chillwave', 'Witch House', 'Nightcore', 'Phonk', 'Digicore', 'Glitchcore', 'Future Funk', 'Electro Swing', 'Folk', 'Traditional Folk', 'Contemporary Folk', 'Indie Folk', 'Folk Rock', 'Neo-Folk', 'Celtic Folk', 'Singer-Songwriter', 'Protest Folk', 'Appalachian Folk', 'World Folk', 'Folk Punk', 'Folk Metal', 'Hip-Hop', 'Rap', 'Old School Hip-Hop', 'Boom Bap', 'Trap', 'Conscious Hip-Hop', 'Gangsta Rap', 'Drill', 'UK Drill', 'Alternative Hip-Hop', 'Underground Hip-Hop', 'East Coast Rap', 'West Coast Rap', 'Southern Rap', 'Latin Trap', 'Jazz Rap', 'Horrorcore', 'Emo Rap', 'Cloud Rap', 'Experimental Hip-Hop', 'Rap Rock', 'Country Rap', 'Gospel Rap', 'Trap Soul', 'Comedy Rap', 'Jazz', 'Swing', 'Bebop', 'Cool Jazz', 'Hard Bop', 'Free Jazz', 'Jazz Fusion', 'Latin Jazz', 'Smooth Jazz', 'Gypsy Jazz', 'Big Band', 'Modal Jazz', 'Acid Jazz', 'Vocal Jazz', 'Contemporary Jazz', 'Dixieland', 'Latin', 'Salsa', 'Reggaeton', 'Bachata', 'Merengue', 'Cumbia', 'Son Cubano', 'Bolero', 'Mambo', 'Cha-Cha-Chá', 'Timba', 'Latin Pop', 'Corridos', 'Norteño', 'Banda', 'Mariachi', 'Tejano', 'Vallenato', 'Rumba', 'Plena', 'Bomba', 'Dembow', 'Tango', 'Samba', 'Bossa Nova', 'Forró', 'Pagode', 'Sertanejo', 'Salsa Choke', 'Reggaeton Pop', 'Son Jarocho', 'Zouk', 'Metal', 'Heavy Metal', 'Thrash Metal', 'Death Metal', 'Black Metal', 'Doom Metal', 'Power Metal', 'Progressive Metal', 'Metalcore', 'Deathcore', 'Symphonic Metal', 'Groove Metal', 'Nu Metal', 'Industrial Metal', 'Speed Metal', 'Glam Metal', 'Sludge Metal', 'Symphonic Rock', 'Pop', 'Dance-Pop', 'Indie Pop', 'Electropop', 'Teen Pop', 'Art Pop', 'Chamber Pop', 'Dream Pop', 'K-Pop', 'J-Pop', 'Mandopop', 'Baroque Pop', 'Pop Rock', 'Bedroom Pop', 'City Pop', 'Anime OST', 'Punk', 'Classic Punk', 'Punk Rock', 'Hardcore Punk', 'Post-Punk', 'Pop Punk', 'Skate Punk', 'Anarcho-Punk', 'Horror Punk', 'Crust Punk', 'Emo', 'Screamo', 'Post-Punk Revival', 'Noise Rock', 'R&B', 'Soul', 'Neo-Soul', 'Funk', 'Motown', 'Quiet Storm', 'Philly Soul', 'Gospel Soul', 'Alternative R&B', 'Contemporary R&B', 'P-Funk', 'Funk Rock', 'Electro-Funk', 'Go-Go', 'Reggae', 'Roots Reggae', 'Dancehall', 'Dub', 'Ska', 'Rocksteady', 'Reggae Fusion', 'Lovers Rock', 'Rock', 'Classic Rock', 'Hard Rock', 'Alternative Rock', 'Indie Rock', 'Progressive Rock', 'Psychedelic Rock', 'Garage Rock', 'Soft Rock', 'Glam Rock', 'Grunge', 'Post-Rock', 'Southern Rock', 'Surf Rock', 'Arena Rock', 'Art Rock', 'Shoegaze', 'Slowcore', 'Math Rock', 'Gospel', 'Traditional Gospel', 'Contemporary Gospel', 'Southern Gospel', 'Urban Gospel', 'Christian', 'Worship', 'Islamic Nasheed', 'Hindu Devotional', 'Buddhist Chant', 'Jewish Liturgical', 'Sacred Choral', 'Afrobeat', 'Afropop', 'Afro-Fusion', 'Highlife', 'Rai', 'Qawwali', 'Flamenco', 'Fado', 'Bhangra', 'Enka', 'Soukous', 'Amapiano', 'Gqom', 'Mbalax', 'Gnawa', 'Zouglou', 'Taarab', 'Sevdah', 'Gamelan', 'Cajun', 'Zydeco', 'Celtic', 'Experimental', 'Drone', 'Sound Art', 'Dark Ambient', 'Glitch', 'Avant-Garde', 'Noise', 'Musique Concrète', 'Disco', 'Eurodance', 'Freestyle', 'Ballroom', 'Waltz', 'Soundtrack', 'Film Score', 'Musical Theater', 'Video Game Music', "Children's Music", 'Lullabies', 'Nursery Rhymes', 'Parody', 'Novelty'];
 
 // ── STATE ──
-let REP_KEY='', PROXY_URL='', IS_DEMO=false;let IS_DEMO=false;let cancelFlag=false;let curDur='1:00';let isPlaying=false;let curIdx=0;
-let curMode='simple', curDur='1:00', cancelFlag=false;
-let songs=[], curIdx=0, isPlaying=false;
+let REP_KEY='', PROXY_URL='', IS_DEMO=false;
+let cancelFlag=false, curDur='1:00', isPlaying=false, curIdx=0;
+let curMode='simple';
+let songs=[];
 
 // Duration map
 const DS={'0:30':15,'1:00':30,'2:00':60,'3:00':90,'4:00':120};
@@ -1048,7 +1049,7 @@ const GR=[
 ];
 
 
-function goToStudio(){
+window.goToStudio=function(){
   document.getElementById('landingPage').style.display='none';
   document.getElementById('studioPage').classList.add('visible');
   window.scrollTo(0,0);
@@ -1057,11 +1058,21 @@ function goToStudio(){
   }
 }
 
-function goToLanding(){
+window.goToLanding=function(){
   document.getElementById('studioPage').classList.remove('visible');
   document.getElementById('landingPage').style.display='block';
   window.scrollTo(0,0);
 }
+
+
+window.insertTag=function(tag){
+  const ta=document.getElementById('lyricsInput');
+  if(!ta)return;
+  const pos=ta.selectionStart,val=ta.value;
+  ta.value=val.slice(0,pos)+tag+'\n'+val.slice(pos);
+  ta.selectionStart=ta.selectionEnd=pos+tag.length+1;
+  ta.focus();
+};
 
 window.addEventListener('DOMContentLoaded',()=>{
   // Populate genre cloud
@@ -1078,8 +1089,8 @@ window.addEventListener('DOMContentLoaded',()=>{
   renderLib();
 });
 
-function openModal(){document.getElementById('apiModal').style.display='flex'}
-function saveKey(){
+window.openModal=function(){document.getElementById('apiModal').style.display='flex'}
+window.saveKey=function(){
   const k=(document.getElementById('repKeyInput').value||'').trim();
   const px=(document.getElementById('proxyInput').value||'').trim().replace(/\/$/,'');
   if(!k){toast('Paste your Replicate key first','⚠️');return}
@@ -1092,7 +1103,7 @@ function saveKey(){
   document.getElementById('statusPill').className='status-pill live';
   toast(px?'Proxy + Key saved — tap FORGE! 🚀':'Key saved — tap FORGE! 🎛️','✓');
 }
-function enterDemo(){
+window.enterDemo=function(){
   IS_DEMO=true;
   document.getElementById('apiModal').style.display='none';
   document.getElementById('statusPill').innerHTML='<div class="sdot" style="background:var(--amber)"></div>DEMO';
@@ -1100,7 +1111,7 @@ function enterDemo(){
   toast('Demo mode active 🎭','🎭');
 }
 
-function toast(msg,icon='✓'){
+window.toast=function(msg,icon='✓'){
   const el=document.getElementById('toast');
   el.innerHTML=`<span style="color:var(--neon)">${icon}</span> ${msg}`;
   el.classList.add('show');clearTimeout(window._tt);
@@ -1120,7 +1131,7 @@ function showErr(msg){
 }
 
 function onPI(){document.getElementById('charLen').textContent=document.getElementById('promptInput').value.length+'/500'}
-function setMode(m,btn){
+window.setMode=function(m,btn){
   curMode=m;
   document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
@@ -1128,8 +1139,8 @@ function setMode(m,btn){
   const mb=document.getElementById('mtagBuilder');if(mb)mb.style.display=m==='custom'?'block':'none';
   const sw=document.getElementById('styleInputWrap');if(sw)sw.style.display=m==='custom'?'block':'none';
 }
-function setDur(btn,d){curDur=d;document.querySelectorAll('.dur-row .chip').forEach(c=>c.classList.remove('on'));btn.classList.add('on')}
-function chipTog(el,w){el.classList.toggle('on');const ta=document.getElementById('promptInput');if(el.classList.contains('on')){ta.value=(ta.value+' '+w).trim()}else{ta.value=ta.value.replace(new RegExp('\\b'+w+'\\b','gi'),'').replace(/\s+/g,' ').trim()}onPI()}
+window.setDur=function(btn,d){curDur=d;document.querySelectorAll('.dur-row .chip').forEach(c=>c.classList.remove('on'));btn.classList.add('on')}
+window.chipTog=function(el,w){el.classList.toggle('on');const ta=document.getElementById('promptInput');if(el.classList.contains('on')){ta.value=(ta.value+' '+w).trim()}else{ta.value=ta.value.replace(new RegExp('\\b'+w+'\\b','gi'),'').replace(/\s+/g,' ').trim()}onPI()}
 
 const TW={Electronic:['Neon','Circuit','Pulse','Voltage','Static'],'Lo-fi Hip-Hop':['Dusk','Haze','Rain','Amber','Drift'],Cinematic:['Horizon','Zenith','Requiem','Ascent','Elegy'],Pop:['Glow','Rush','Spark','Echo','Shine'],Jazz:['Velvet','Smoke','Indigo','Ember','Dusk'],Ambient:['Mist','Ether','Bloom','Halo','Drift'],Metal:['Iron','Rage','Storm','Fury','Wraith'],'R&B':['Silk','Honey','Velvet','Night','Pulse'],Classical:['Nocturne','Étude','Aria','Sonata','Prelude'],'Indie Rock':['Rust','Hollow','Dust','Flicker','Salt']};
 const TS=['Protocol','Cascade','Phase','Resonance','Frequency','Depth','Sequence','Current'];
@@ -1142,11 +1153,9 @@ function buildMeta(p,g,m,b){
   return{title,tagline:tg[Math.random()*tg.length|0],tags:[g,m,b+' BPM'],lyrics:makeLyrics(g,m)};
 }
 function makeLyrics(g,m){return`[Verse 1]\nIn the ${m.toLowerCase()} hours before the dawn\nSomething in the melody carries on\nEvery note a colour, every beat a breath\nWe were made for this, born into the rest\n\n[Chorus]\nLet it carry you somewhere far away\nLet the ${g.toLowerCase()} wash the night to day\nFeel it in your chest, feel it in your bones\nYou were never, ever really all alone\n\n[Verse 2]\nTime moves different when the music plays\nLost inside these ${m.toLowerCase()} endless days\nFingers on the keys, the whole world goes still\nSomething in this sound, something in the thrill\n\n[Chorus]\nLet it carry you somewhere far away\nLet the ${g.toLowerCase()} wash the night to day\nFeel it in your chest, feel it in your bones\nYou were never, ever really all alone`}
-function doGenLyrics(){const g=document.getElementById('genreSelect').value,m=document.getElementById('moodSelect').value;document.getElementById('lyricsInput').value=makeLyrics(g,m);toast('Lyrics generated!','✍️')}
+window.doGenLyrics=function(){const g=document.getElementById('genreSelect').value,m=document.getElementById('moodSelect').value;document.getElementById('lyricsInput').value=makeLyrics(g,m);toast('Lyrics generated!','✍️')}
 
-// Set this to your Vercel proxy URL after deploying
-// e.g. 'https://soundforge-proxy.vercel.app'
-let PROXY_URL = '';
+// PROXY_URL declared at top of script
 
 async function callReplicate(prompt,secs,lyrics){
   // If no proxy set, try direct (works on some networks)
@@ -1199,7 +1208,7 @@ async function callReplicate(prompt,secs,lyrics){
   throw new Error('Timed out — try a shorter duration');
 }
 
-async function startGen(){
+async window.startGen=async function(){
   const prompt=document.getElementById('promptInput').value.trim();
   if(!prompt){toast('Add a description first','⚠️');return}
   if(!REP_KEY&&!IS_DEMO){openModal();return}
@@ -1244,7 +1253,7 @@ async function startGen(){
   toast(`"${meta.title}" created!`,'🎵');
   if(window.innerWidth<768)setTimeout(()=>document.getElementById('resultSec').scrollIntoView({behavior:'smooth',block:'start'}),100);
 }
-function doCancel(){cancelFlag=true;clrProg();toast('Cancelled','✕')}
+window.doCancel=function(){cancelFlag=true;clrProg();toast('Cancelled','✕')}
 
 function renderResult(song){
   document.getElementById('resultSec').classList.add('show');
@@ -1276,13 +1285,13 @@ function renderResult(song){
   document.getElementById('varsGrid').innerHTML=vd.map(([e,l],i)=>`<div class="vcard" onclick="toast('Tweak prompt and forge again for variations 🎛️','💡')"><div class="vart" style="background:${GR[(i+3)%GR.length]}">${e}</div><div><div class="vlbl">Variation ${i+1}</div><div class="vname">${song.title} — ${l}</div></div><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2" style="margin-left:auto"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>`).join('');
 }
 
-function togAudio(){
+window.togAudio=function(){
   const a=document.getElementById('rAudio');if(!a)return;
   if(!a.src||a.src===location.href){toast('Add a Replicate key for real audio','⚠️');return}
   if(a.paused){a.play().then(()=>setPlay(true)).catch(e=>toast('Playback error: '+e.message,'❌'))}
   else{a.pause();setPlay(false)}
 }
-function globalTogglePlay(){
+window.globalTogglePlay=function(){
   const a=document.getElementById('rAudio');
   if(a&&a.src&&a.src!==location.href)togAudio();
   else toast(songs.length?'Tap Play on your track above':'Generate a track first','⚠️');
@@ -1305,22 +1314,22 @@ function syncW(){
   const fmt=t=>`${Math.floor(t/60)}:${Math.floor(t%60).toString().padStart(2,'0')}`;
   const el=document.getElementById('wTime');if(el)el.textContent=`${fmt(a.currentTime)} / ${fmt(a.duration)}`;
 }
-function seekA(e){const a=document.getElementById('rAudio');if(!a||!a.duration)return;const rc=e.currentTarget.getBoundingClientRect();a.currentTime=((e.clientX-rc.left)/rc.width)*a.duration}
-function setVol(v){const a=document.getElementById('rAudio');if(a)a.volume=v/100}
+window.seekA=function(e){const a=document.getElementById('rAudio');if(!a||!a.duration)return;const rc=e.currentTarget.getBoundingClientRect();a.currentTime=((e.clientX-rc.left)/rc.width)*a.duration}
+window.setVol=function(v){const a=document.getElementById('rAudio');if(a)a.volume=v/100}
 
 function renderLib(){
   const cnt=songs.length;
   document.getElementById('trackBadge').textContent=cnt+' track'+(cnt!==1?'s':'');
   document.getElementById('trackList').innerHTML=cnt?songs.map((s,i)=>`<div class="track-item ${i===curIdx?'active':''}" onclick="selTrack(${i})"><div class="track-art" style="background:${s.grad}">${s.emoji}</div><div class="track-info"><div class="track-name">${s.title}</div><div class="track-meta">${s.genre} · ${s.audioUrl?'🎵':'🎭'}</div></div><div class="track-dur">${s.dur}</div></div>`).join(''):'<div class="empty-lib"><div>🎵</div>Tracks appear here</div>';
 }
-function selTrack(i){curIdx=i;renderLib();updateNP(songs[i]);renderResult(songs[i]);toast(songs[i].title,'▶')}
+window.selTrack=function(i){curIdx=i;renderLib();updateNP(songs[i]);renderResult(songs[i]);toast(songs[i].title,'▶')}
 function updateNP(s){
   const na=document.getElementById('npArt');if(na){na.textContent=s.emoji;na.style.background=s.grad}
   const nt=document.getElementById('npTitle');if(nt)nt.textContent=s.title;
   const naa=document.getElementById('npArtist');if(naa)naa.textContent=s.genre.toUpperCase()+' · '+s.mood;
 }
 
-function mTab(tab,btn){
+window.mTab=function(tab,btn){
   document.querySelectorAll('.mnbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
   const sv=document.getElementById('studioView');
   let msv=document.getElementById('mSongsView');
@@ -1332,7 +1341,7 @@ function mTab(tab,btn){
     msv.innerHTML=songs.length?`<div style="font-family:var(--fd);font-size:20px;font-weight:800;letter-spacing:2px;margin-bottom:14px">MY SONGS</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${songs.map((s,i)=>`<div onclick="mSelTrack(${i})" style="background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:12px;cursor:pointer;-webkit-tap-highlight-color:transparent"><div style="aspect-ratio:1;border-radius:8px;background:${s.grad};display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:8px">${s.emoji}</div><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.title}</div><div style="font-size:10px;color:var(--mid);font-family:var(--fm);margin-top:2px">${s.genre} · ${s.dur}</div></div>`).join('')}</div>`:'<div style="text-align:center;padding:60px 0;color:var(--dim);font-size:13px"><div style="font-size:36px;margin-bottom:10px;opacity:0.3">🎵</div>Generate a track first</div>';
   }
 }
-function mSelTrack(i){curIdx=i;updateNP(songs[i]);mTab('studio',document.getElementById('mnStudio'));renderResult(songs[i]);toast(songs[i].title,'▶')}
+window.mSelTrack=function(i){curIdx=i;updateNP(songs[i]);mTab('studio',document.getElementById('mnStudio'));renderResult(songs[i]);toast(songs[i].title,'▶')}
 
 </script>
 </body>
