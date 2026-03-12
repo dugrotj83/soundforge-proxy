@@ -1066,6 +1066,7 @@ function doCancel() {
   toast('Cancelled', '✗');
 }
 
+function showEstimate(s){const e=document.getElementById('pEst');if(e)e.textContent='Est. wait: ~'+s+'s';}
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 // ══════════════════════════════════════
@@ -1287,11 +1288,12 @@ function buildMeta(p,g,m,b){
 }
 
 async function callReplicate(prompt,secs,lyrics){
+  if(!PROXY_URL){throw new Error('No proxy URL set — open API Key settings and enter your Vercel proxy URL');}
   const genUrl=PROXY_URL+'/api/generate';
   const pollUrl=PROXY_URL+'/api/poll';
   const estSecs=secs<=10?20:secs<=15?22:secs<=30?28:secs<=60?45:secs<=90?75:secs<=120?105:secs<=180?150:200;
   setProg('Sending to AI model\u2026',48);
-  showEstimate(estSecs);
+  const _pe=document.getElementById('pEst');if(_pe)_pe.textContent='Est. wait: ~'+estSecs+'s';
 
   let r;
   try{
@@ -1324,7 +1326,7 @@ async function callReplicate(prompt,secs,lyrics){
     tries++;
     const pct=Math.min(50+(elapsed/estSecs)*42,92);
     const rem=Math.max(0,Math.round(estSecs-elapsed));
-    document.getElementById('sBar').style.width=pct+'%';
+    const _pb=document.getElementById('pBar');if(_pb)_pb.style.width=pct+'%';
     setProg(rem>5?'Generating\u2026 ~'+rem+'s remaining':elapsed<estSecs?'Almost done\u2026':'Finalizing track\u2026',pct);
     let poll;
     try{
