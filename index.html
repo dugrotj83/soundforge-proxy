@@ -173,9 +173,10 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font
 
 /* ─── MAIN AREA ─── */
 .app-main{
-  flex:1;height:100vh;overflow-y:auto;
-  display:flex;flex-direction:column;min-width:0;
-  background:var(--bg);
+  flex:1;min-width:0;background:var(--bg);
+  display:flex;flex-direction:column;
+  overflow-y:auto;overflow-x:hidden;
+  height:100vh;
 }
 
 /* ─── VIEWS ─── */
@@ -419,8 +420,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font
 }
 
 /* ─── LIBRARY VIEW ─── */
-.library-view{padding:32px 24px;flex:1;display:none;flex-direction:column}
-.library-view.active{display:flex}
+.library-view{padding:32px 24px;flex:1;display:flex;flex-direction:column}
 .lib-heading{font-size:22px;font-weight:800;margin-bottom:20px;letter-spacing:-.3px}
 .lib-empty{
   flex:1;display:flex;flex-direction:column;align-items:center;
@@ -992,6 +992,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font
 <div class="toast" id="toastEl"></div>
 
 <script>
+
 // Null-safety shim for removed elements
 const _origGEBI = document.getElementById.bind(document);
 document.getElementById = function(id){
@@ -1026,9 +1027,17 @@ function goToLanding(){
 }
 function showView(v,btn){
   document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
-  document.getElementById(v+'View').classList.add('active');
+  const target=document.getElementById(v+'View');
+  if(target)target.classList.add('active');
   document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
+  if(btn){btn.classList.add('active');}
+  else{
+    // Auto-highlight correct sidebar button
+    const map={create:'sbCreate',library:'sbLibrary'};
+    const sb=document.getElementById(map[v]);
+    if(sb)sb.classList.add('active');
+  }
+  if(v==='library')renderLib();
 }
 function mTabSwitch(v){
   document.querySelectorAll('.mnbtn').forEach(b=>b.classList.remove('on'));
@@ -1223,23 +1232,9 @@ const GR=[
 ];
 
 
-function goToApp(){
-  document.getElementById('landingPage').style.display='none';
-  document.body.style.overflow='hidden';
-  document.getElementById('appPage').style.display='block';
-  window.scrollTo(0,0);
-  if(!REP_KEY&&!IS_DEMO){
-    setTimeout(()=>{document.getElementById('apiModal').classList.add('open');},300);
-  }
-}
+/* goToApp defined above */
 
-function goToLanding(){
-  document.getElementById('appPage').style.display='none';
-  document.body.style.overflow='';
-  document.body.style.position='';
-  document.getElementById('landingPage').style.display='block';
-  window.scrollTo(0,0);
-}
+/* goToLanding defined above */
 
 
 function insertTag(tag){
@@ -1274,8 +1269,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     if(k){REP_KEY=k;const el=document.getElementById('apiKeyInput');if(el)el.value=k;}
     const px=sessionStorage.getItem('sf_proxy');
     if(px){PROXY_URL=px;const el=document.getElementById('proxyInput');if(el)el.value=px;}
-    if(k){document.getElementById('apiModal').classList.remove('open');
-  }
+    if(k){const am=document.getElementById('apiModal');if(am)am.classList.remove('open');}
   }catch(e){}
   renderLib();
 });
@@ -1304,7 +1298,8 @@ function enterDemo(){
 
 function toast(msg,icon='✓'){
   const el=document.getElementById('toastEl');
-  el.innerHTML=`<span style="color:var(--neon)">${icon}<\/span> ${msg}`;
+  if(!el)return;
+  el.textContent=icon+' '+msg;
   el.classList.add('show');clearTimeout(window._tt);
   window._tt=setTimeout(()=>el.classList.remove('show'),3200);
 }
@@ -1672,6 +1667,7 @@ function mTab(tab,btn){
   }
 }
 function mSelTrack(i){curIdx=i;updateNP(songs[i]);mTab('studio',document.getElementById('mnCreate'));renderResult(songs[i]);toast(songs[i].title,'▶')}
+
 
 
 </script>
