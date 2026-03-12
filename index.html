@@ -119,6 +119,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font
 /* ─── APP LAYOUT ─── */
 #appPage{
   display:none;position:fixed;inset:0;
+  background:var(--bg);overflow:hidden;
 }
 /* Desktop: sidebar + main */
 @media(min-width:768px){
@@ -133,7 +134,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font
   .sidebar{display:none!important}
   .mob-header{display:flex!important}
   .mob-bottom{display:flex!important}
-  .app-main{padding-bottom:70px;padding-top:0}
+  .app-main{height:calc(100vh - 52px - 56px)!important;padding-bottom:0;padding-top:0;margin-top:52px}
 }
 
 /* ─── SIDEBAR ─── */
@@ -171,6 +172,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font
 .app-main{
   flex:1;height:100vh;overflow-y:auto;
   display:flex;flex-direction:column;min-width:0;
+  background:var(--bg);
 }
 
 /* ─── VIEWS ─── */
@@ -989,15 +991,23 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font
 <script>
 
 function goToApp(){
-  document.getElementById('landingPage').style.display='none';
+  const lp=document.getElementById('landingPage');
+  lp.style.display='none';
   const ap=document.getElementById('appPage');
-  ap.style.display='flex';ap.classList.add('open');
-  if(!REP_KEY&&!IS_DEMO)setTimeout(()=>openModal(),300);
+  ap.classList.add('open');
+  // Let CSS handle display via .open class, but set inline too as fallback
+  if(window.innerWidth>=768){ap.style.display='flex';}
+  else{ap.style.display='block';}
+  ap.style.visibility='visible';
+  window.scrollTo(0,0);
+  if(!REP_KEY&&!IS_DEMO)setTimeout(()=>openModal(),400);
 }
 function goToLanding(){
-  document.getElementById('appPage').classList.remove('open');
-  document.getElementById('appPage').style.display='none';
+  const ap=document.getElementById('appPage');
+  ap.classList.remove('open');
+  ap.style.display='none';
   document.getElementById('landingPage').style.display='flex';
+  window.scrollTo(0,0);
 }
 function showView(v,btn){
   document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
@@ -1167,6 +1177,12 @@ const ALL_GENRES=['Blues', 'Delta Blues', 'Chicago Blues', 'Electric Blues', 'Co
 
 // ── STATE ──
 let REP_KEY='', PROXY_URL='', IS_DEMO=false;
+try{
+  const sk=sessionStorage.getItem('sf_rk');
+  const sp=sessionStorage.getItem('sf_proxy');
+  if(sk&&sk.startsWith('r8_')){REP_KEY=sk;}
+  if(sp){PROXY_URL=sp;}
+}catch(e){}
 let cancelFlag=false, curDur='1:00', isPlaying=false, curIdx=0;
 let curMode='simple';
 let songs=[];
