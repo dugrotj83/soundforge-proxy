@@ -2415,7 +2415,10 @@ async function callReplicate(prompt,secs,lyrics){
         body:JSON.stringify({repKey:REP_KEY,id:pred.id})});
       poll=await pr.json();
     }catch(e){continue;}
-    if(poll.status==='succeeded'&&poll.url)return poll.url;
+    if(poll.status==='succeeded'){
+      if(poll.url)return poll.url;
+      throw new Error('Generation succeeded but no audio URL returned — try again');
+    }
     if(poll.status==='failed')throw new Error('Generation failed: '+(poll.error||'unknown'));
   }
   throw new Error('Timed out after '+Math.round(elapsed)+'s \u2014 try a shorter duration');
