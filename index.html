@@ -118,23 +118,26 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font
 
 /* ─── APP LAYOUT ─── */
 #appPage{
-  display:none;position:fixed;inset:0;
-  background:var(--bg);overflow:hidden;
+  display:none;
+  position:fixed;inset:0;
+  background:var(--bg);
+  overflow:hidden;
+  flex-direction:row;
 }
-/* Desktop: sidebar + main */
+/* Sidebar hidden by default, JS shows/hides based on screen */
+.sidebar{ display:none; }
+.mob-header{ display:none; }
+.mob-bottom{ display:none; }
+/* Desktop overrides */
 @media(min-width:768px){
-  #appPage{display:none;} /* shown via JS */
-  #appPage.open{display:flex!important;flex-direction:row;}
-  .mob-header,.mob-bottom{display:none!important}
-  .sidebar{display:flex!important}
-  .app-main{padding-bottom:80px}
+  .app-main{ padding-bottom:80px; }
 }
 @media(max-width:767px){
-  #appPage.open{display:block!important;}
-  .sidebar{display:none!important}
-  .mob-header{display:flex!important}
-  .mob-bottom{display:flex!important}
-  .app-main{height:calc(100vh - 52px - 56px)!important;padding-bottom:0;padding-top:0;margin-top:52px}
+  .app-main{
+    height:100%;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
 }
 
 /* ─── SIDEBAR ─── */
@@ -991,21 +994,25 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font
 <script>
 
 function goToApp(){
-  const lp=document.getElementById('landingPage');
-  lp.style.display='none';
+  // Hide landing
+  document.getElementById('landingPage').style.display='none';
+  // Show app
   const ap=document.getElementById('appPage');
-  ap.classList.add('open');
-  // Let CSS handle display via .open class, but set inline too as fallback
-  if(window.innerWidth>=768){ap.style.display='flex';}
-  else{ap.style.display='block';}
-  ap.style.visibility='visible';
+  const isMob=window.innerWidth<768;
+  ap.style.display=isMob?'block':'flex';
+  ap.style.flexDirection='row';
+  // Show/hide responsive elements
+  document.querySelector('.sidebar').style.display=isMob?'none':'flex';
+  document.querySelector('.mob-header').style.display=isMob?'flex':'none';
+  document.querySelector('.mob-bottom').style.display=isMob?'flex':'none';
+  // Ensure create view is active
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('createView').classList.add('active');
   window.scrollTo(0,0);
   if(!REP_KEY&&!IS_DEMO)setTimeout(()=>openModal(),400);
 }
 function goToLanding(){
-  const ap=document.getElementById('appPage');
-  ap.classList.remove('open');
-  ap.style.display='none';
+  document.getElementById('appPage').style.display='none';
   document.getElementById('landingPage').style.display='flex';
   window.scrollTo(0,0);
 }
