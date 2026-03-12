@@ -2027,6 +2027,12 @@ function toast(msg,icon='✓'){
 function setStep(id,st){const el=document.getElementById(id);if(!el)return;el.classList.remove('active','done');if(st)el.classList.add(st)}
 function setProg(txt,pct){const t=document.getElementById('sTxt'),b=document.getElementById('sBar');if(t)t.textContent=txt;if(b)b.style.width=pct+'%'}
 function clrProg(){document.getElementById('genStatus').classList.remove('show');document.getElementById('forgeBtn').disabled=false;['ss1','ss2','ss3','ss4'].forEach(id=>setStep(id,null));setProg('',0)}
+function showEstimate(secs){
+  const el=document.getElementById('progEst');
+  if(!el)return;
+  const mins=Math.floor(secs/60),s=secs%60;
+  el.textContent='Est. wait: ~'+(mins?mins+'m ':'')+s+'s';
+}
 function showErr(msg){
   // Friendlier message for network errors
   if(msg==='Failed to fetch')msg='Could not reach Replicate servers. Make sure you are connected to the internet and your key starts with r8_. Also check replicate.com/account/billing — new accounts need prepaid credit added.';
@@ -2078,63 +2084,185 @@ function buildMeta(p,g,m,b){
   const w=TW[g]||TW.Electronic;
   const title=w[Math.random()*w.length|0]+' '+TS[Math.random()*TS.length|0];
   const tg=TG[m]||TG.Melancholic;
-  return{title,tagline:tg[Math.random()*tg.length|0],tags:[g,m,b+' BPM'],lyrics:makeLyrics(g,m)};
+  return{title,tagline:tg[Math.random()*tg.length|0],tags:[g,m,b+' BPM'],lyrics:makeLyrics(g,m,window._curSecs||60)};
 }
-function makeLyrics(g,m){return`[Verse 1]\nIn the ${m.toLowerCase()} hours before the dawn\nSomething in the melody carries on\nEvery note a colour, every beat a breath\nWe were made for this, born into the rest\n\n[Chorus]\nLet it carry you somewhere far away\nLet the ${g.toLowerCase()} wash the night to day\nFeel it in your chest, feel it in your bones\nYou were never, ever really all alone\n\n[Verse 2]\nTime moves different when the music plays\nLost inside these ${m.toLowerCase()} endless days\nFingers on the keys, the whole world goes still\nSomething in this sound, something in the thrill\n\n[Chorus]\nLet it carry you somewhere far away\nLet the ${g.toLowerCase()} wash the night to day\nFeel it in your chest, feel it in your bones\nYou were never, ever really all alone`}
-function doGenLyrics(){const g=document.getElementById('genreSelect').value,m=document.getElementById('moodSelect').value;document.getElementById('lyricsInput').value=makeLyrics(g,m);toast('Lyrics generated!','✍️')}
+function makeLyrics(g,m,secs){
+  secs=secs||60;
+  const gL=g.toLowerCase(),mL=m.toLowerCase();
+
+  // Lyric pools — varied lines so repeated sections feel natural
+  const V1=[
+    `In the ${mL} hours before the dawn\\nSomething in the melody carries on\\nEvery note a colour, every beat a breath\\nWe were made for this, born into the rest`,
+    `Walking through the city in the ${mL} rain\\nEvery street a memory, every wall a stain\\nBut there's something calling from the other side\\nA ${gL} feeling I just can't hide`,
+    `Started from nothing, now the world can see\\nEvery ${mL} night shaped who I'd be\\nThe rhythm in my chest won't let me fall\\nI hear it louder every time I call`,
+    `Woke up in the middle of a ${mL} dream\\nNothing's ever quite as good as what it seems\\nBut I keep chasing what I can't explain\\nThis ${gL} melody running through my veins`
+  ];
+  const V2=[
+    `Time moves different when the music plays\\nLost inside these ${mL} endless days\\nFingers on the keys, the whole world goes still\\nSomething in this sound, something in the thrill`,
+    `The second time around hits different, yeah\\nI know the words but feel them differently\\nEvery verse a chapter, every chord a scar\\nThis ${gL} sound reminds me who we are`,
+    `Deeper in the pocket, deeper in the feel\\nEvery ${mL} moment suddenly more real\\nI've been building something since before I knew\\nAll of this was always leading me to you`,
+    `Somewhere in the silence between the bars\\nI found myself reaching for the stars\\nThe ${gL} beat beneath me like a heartbeat true\\nEvery single measure bringing me back to you`
+  ];
+  const V3=[
+    `I remember every word you never said\\nEvery ${mL} night replaying in my head\\nBut the music always catches what I missed\\nA ${gL} truth delivered with a twist`,
+    `Third time through and now I finally see\\nEvery note was always meant for me\\nThe crowd is gone, it's just the sound and I\\nA ${mL} feeling reaching for the sky`,
+    `Late nights, early mornings, still the same\\nThis ${gL} fire burning just the same\\nI've given everything and I'd give more\\nI never knew what music was before`
+  ];
+  const CH=[
+    `Let it carry you somewhere far away\\nLet the ${gL} wash the night to day\\nFeel it in your chest, feel it in your bones\\nYou were never, ever really all alone`,
+    `This is what it feels like to be free\\nLost inside the sound of what we could be\\nEvery ${mL} moment, every beat and bar\\nThis is who we are, this is who we are`,
+    `Rise up, let the music take control\\nFeel the ${gL} rhythm in your soul\\nWe were made to feel this, made to sing\\nFly above the world on a ${mL} wing`,
+    `And we keep going, keep moving on\\nEvery night we play, every day a song\\nThe ${gL} never stops, the feeling never ends\\nThis is where the melody begins`
+  ];
+  const BR=[
+    `[Bridge]\\nMaybe it's the sound\\nMaybe it's the feeling\\nMaybe it's the way\\nThe music keeps revealing\\nSomething deep inside\\nWe never thought we'd find\\nLeave it all behind`,
+    `[Bridge]\\nI don't need the words\\nJust give me the music\\nI don't need the world\\nJust give me this feeling\\nEvery note a prayer\\nEvery beat a healing\\nThis is what we share`,
+    `[Bridge]\\nStrip it back to nothing\\nJust the beat and bass\\nFind yourself in something\\nIn this ${mL} space\\nLet the ${gL} take you\\nTo a different place`
+  ];
+  const PRE=[
+    `[Pre-Chorus]\\nAnd here we go again\\nFalling into the sound\\nHere we go again\\nLetting go, letting down`,
+    `[Pre-Chorus]\\nBuilding, building higher\\nCan you feel the fire\\nWaiting for the moment\\nWhen the beat drops lower`,
+    `[Pre-Chorus]\\nSomething's breaking open\\nWords are left unspoken\\nEverything is rising\\nThis was not surprising`
+  ];
+  const r=n=>Math.random()*n|0;
+  const pick=(arr,i)=>arr[i%arr.length];
+
+  // Build song structure based on duration
+  // Each section ~20-30 seconds; we target secs/25 sections
+  const targetSections=Math.max(4,Math.round(secs/22));
+  const parts=[];
+
+  if(secs>=30) parts.push('[Intro]\\n*instrumental opening, set the mood*');
+
+  // Always: V1 + Pre + Chorus
+  parts.push('[Verse 1]\\n'+pick(V1,r(V1.length)));
+  if(secs>=90) parts.push(pick(PRE,0));
+  parts.push('[Chorus]\\n'+pick(CH,0));
+
+  if(secs>=60){
+    parts.push('[Verse 2]\\n'+pick(V2,r(V2.length)));
+    if(secs>=90) parts.push(pick(PRE,1));
+    parts.push('[Chorus]\\n'+pick(CH,1));
+  }
+  if(secs>=120){
+    parts.push(pick(BR,0));
+    parts.push('[Chorus]\\n'+pick(CH,2));
+  }
+  if(secs>=150){
+    parts.push('[Verse 3]\\n'+pick(V3,r(V3.length)));
+    if(secs>=180) parts.push(pick(PRE,2));
+    parts.push('[Chorus]\\n'+pick(CH,r(CH.length)));
+  }
+  if(secs>=200){
+    parts.push(pick(BR,1));
+    parts.push('[Chorus]\\n'+pick(CH,r(CH.length)));
+  }
+  if(secs>=240){
+    parts.push('[Verse 4]\\n'+pick(V1,r(V1.length)));
+    parts.push(pick(PRE,r(PRE.length)));
+    parts.push('[Chorus]\\n'+pick(CH,3));
+    parts.push(pick(BR,2));
+    parts.push('[Chorus]\\n'+pick(CH,r(CH.length)));
+  }
+  if(secs>=270){
+    parts.push('[Outro]\\n*fade out with the main melody, ${mL} and ${gL}*');
+  } else {
+    parts.push('[Outro]\\n*instrumental outro*');
+  }
+
+  return parts.join('\\n\\n');
+}
+function doGenLyrics(){const g=document.getElementById('genreSelect').value,m=document.getElementById('moodSelect').value,d=DS[curDur]||60;document.getElementById('lyricsInput').value=makeLyrics(g,m,d);toast('Lyrics generated!','✍️')}
 
 // PROXY_URL declared at top of script
 
 async function callReplicate(prompt,secs,lyrics){
-  // If no proxy set, try direct (works on some networks)
-  const base = PROXY_URL || 'https://api.replicate.com';
-  const genUrl = PROXY_URL ? PROXY_URL+'/api/generate' : 'https://api.replicate.com/v1/models/meta/musicgen/predictions';
-  const pollBase = PROXY_URL ? PROXY_URL+'/api/poll' : null;
+  const genUrl = PROXY_URL+'/api/generate';
+  const pollUrl = PROXY_URL+'/api/poll';
 
-  setProg('Sending to Replicate…',52);
+  // Estimate wait time based on duration
+  const estSecs = secs <= 30 ? 20 : secs <= 60 ? 35 : secs <= 90 ? 55 : secs <= 120 ? 80 : 120;
+
+  setProg('Sending to AI model\u2026',48);
+  showEstimate(estSecs);
 
   let r;
   try {
-    if(PROXY_URL){
-      r=await fetch(genUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({repKey:REP_KEY,prompt,duration:secs,lyrics:lyrics||''})});
-    } else {
-      r=await fetch(genUrl,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${REP_KEY}`,'Prefer':'wait=20'},body:JSON.stringify({input:{prompt,model_version:'stereo-large',duration:secs,output_format:'mp3',normalization_strategy:'loudness'}})});
-    }
+    r = await fetch(genUrl, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({repKey:REP_KEY, prompt, duration:secs, lyrics:lyrics||''})
+    });
   } catch(e) {
-    if(!PROXY_URL) throw new Error('CORS blocked — you need to deploy the Vercel proxy. See instructions below.');
-    throw new Error('Could not reach proxy at '+PROXY_URL+'. Check the URL is correct.');
+    throw new Error('Cannot reach proxy at '+PROXY_URL+'. Check URL is correct and Vercel is deployed.');
   }
 
   if(!r.ok){
-    const e=await r.json().catch(()=>({}));
-    if(r.status===401)throw new Error('Invalid API key — get a fresh one at replicate.com/account/api-tokens');
-    if(r.status===402)throw new Error('Prepaid credit needed — add credit at replicate.com/account/billing');
+    const e = await r.json().catch(()=>({}));
+    if(r.status===401) throw new Error('Invalid API key \u2014 get one at replicate.com/account/api-tokens');
+    if(r.status===402) throw new Error('Billing required \u2014 add credit at replicate.com/account/billing');
     throw new Error(`Error ${r.status}: ${e.detail||e.error||JSON.stringify(e)}`);
   }
 
-  const pred=await r.json();
-  if(pred.status==='succeeded'&&pred.url)return pred.url;
-  if(pred.status==='succeeded'){const u=Array.isArray(pred.output)?pred.output[0]:pred.output;if(u)return u}
-  if(!pred.id)throw new Error('No prediction ID — try again');
+  const pred = await r.json();
 
-  // Poll
-  let tries=0;
-  while(tries<180){
-    if(cancelFlag)throw new Error('cancelled');
-    await new Promise(r=>setTimeout(r,2000));tries++;
-    document.getElementById('sBar').style.width=Math.min(55+(tries/90)*36,92)+'%';
-    let poll;
-    if(pollBase){
-      const pr=await fetch(pollBase,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({repKey:REP_KEY,id:pred.id})});
-      poll=await pr.json();
-    } else {
-      poll=await(await fetch(`https://api.replicate.com/v1/predictions/${pred.id}`,{headers:{'Authorization':`Bearer ${REP_KEY}`}})).json();
-    }
-    if(poll.status==='succeeded'){const u=poll.url||(Array.isArray(poll.output)?poll.output[0]:poll.output);if(!u)throw new Error('No audio URL');return u}
-    if(poll.status==='failed')throw new Error('Generation failed: '+(poll.error||'unknown'));
+  // Returned immediately (sync) - great!
+  if(pred.status==='succeeded' && pred.url) return pred.url;
+  if(pred.status==='succeeded'){
+    const u = Array.isArray(pred.output)?pred.output[0]:pred.output;
+    if(u) return u;
   }
-  throw new Error('Timed out — try a shorter duration');
+  if(pred.status==='failed') throw new Error('Generation failed: '+(pred.error||'unknown error'));
+  if(!pred.id) throw new Error('No prediction ID returned \u2014 try again');
+
+  // ── SMART POLLING ──
+  // Short songs: poll every 2s. Long songs: start at 2s, back off to 4s after 30s
+  let tries = 0;
+  let pollInterval = 2000;
+  let elapsed = 0;
+  const startTime = Date.now();
+
+  while(tries < 200){
+    if(cancelFlag) throw new Error('cancelled');
+
+    await new Promise(res=>setTimeout(res, pollInterval));
+    elapsed = (Date.now()-startTime)/1000;
+
+    // Back off polling after 30s to reduce load
+    if(elapsed > 30 && pollInterval === 2000) pollInterval = 3000;
+    if(elapsed > 90 && pollInterval === 3000) pollInterval = 4000;
+
+    tries++;
+
+    // Progress: smooth fill from 50% to 92% over estimated time
+    const pct = Math.min(50 + (elapsed/estSecs)*42, 92);
+    const remaining = Math.max(0, Math.round(estSecs - elapsed));
+    document.getElementById('sBar').style.width = pct+'%';
+    setProg(
+      remaining > 5
+        ? `Generating\u2026 ~${remaining}s remaining`
+        : elapsed < estSecs
+          ? 'Almost done\u2026'
+          : 'Finalizing track\u2026',
+      pct
+    );
+
+    let poll;
+    try {
+      const pr = await fetch(pollUrl, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({repKey:REP_KEY, id:pred.id})
+      });
+      poll = await pr.json();
+    } catch(e) { continue; }
+
+    if(poll.status==='succeeded' && poll.url) return poll.url;
+    if(poll.status==='failed') throw new Error('Generation failed: '+(poll.error||'unknown'));
+  }
+  throw new Error('Timed out after '+Math.round(elapsed)+'s \u2014 try a shorter duration');
 }
+
 
 async function startGen(){
   const prompt=document.getElementById('promptInput').value.trim();
@@ -2145,51 +2273,61 @@ async function startGen(){
   document.getElementById('forgeBtn').disabled=true;
   document.getElementById('genStatus').classList.add('show');
   document.getElementById('resultSec').classList.remove('show');
+
   const genre=document.getElementById('genreSelect').value;
-  const substyle=document.getElementById('substyleSelect').value;
+  const substyle=document.getElementById('substyleSelect')?document.getElementById('substyleSelect').value:'';
   const genreLabel=substyle?`${substyle} (${genre})`:genre;
-  const mood=document.getElementById('moodSelect').value,bpm=document.getElementById('bpmVal').textContent;
+  const mood=document.getElementById('moodSelect').value;
+  const bpm=document.getElementById('bpmVal').textContent;
   const voice=window._curVoice||'female';
-  const secs=DS[curDur]||15,noVox=curMode==='instrumental'||voice==='none';
-  const customLyrics=curMode==='lyrics'||curMode==='custom'?document.getElementById('lyricsInput').value.trim():'';
-  const styleInput=curMode==='custom'?(document.getElementById('styleInput').value.trim()||''):'';
+  const secs=DS[curDur]||60;
+  const noVox=curMode==='instrumental'||voice==='none';
+  const customLyrics=(curMode==='lyrics'||curMode==='custom')?(document.getElementById('lyricsInput').value.trim()):'';
+  const styleInput=curMode==='custom'?(document.getElementById('styleInput')?document.getElementById('styleInput').value.trim():''):'';
   const voiceDesc=voice==='female'?'female vocalist, female singing voice':voice==='male'?'male vocalist, male singing voice':voice==='duet'?'male and female duet, two singers':noVox?'instrumental, no vocals':'';
-  const meta=buildMeta(prompt,genreLabel,mood,bpm);
+  window._curSecs=secs;
+
+  const meta=buildMeta(prompt,genre,mood,bpm);
   let audioUrl=null;
   try{
-    setStep('ss1','active');setProg('Analyzing description…',12);await new Promise(r=>setTimeout(r,400));if(cancelFlag)throw new Error('cancelled');
-    setStep('ss1','done');setStep('ss2','active');setProg('Building composition…',28);await new Promise(r=>setTimeout(r,500));if(cancelFlag)throw new Error('cancelled');
-    setStep('ss2','done');setStep('ss3','active');setProg('Generating with MusicGen AI…',50);
-    // ── STYLE prompt: genre/mood/BPM/voice only — NO lyric words ──
-    const styleParts=[genreLabel,substyle||'',mood,bpm+' BPM',voiceDesc,noVox?'instrumental, no vocals':'',styleInput||''].filter(Boolean);
-    const mp=styleParts.join(', ');
+    setStep('ss1','active');setProg('Analyzing description\u2026',12);
+    await new Promise(r=>setTimeout(r,400));if(cancelFlag)throw new Error('cancelled');
+    setStep('ss1','done');setStep('ss2','active');setProg('Building song structure\u2026',28);
+    await new Promise(r=>setTimeout(r,400));if(cancelFlag)throw new Error('cancelled');
+    setStep('ss2','done');setStep('ss3','active');setProg('Queuing with AI model\u2026',50);
 
-    // ── LYRICS: only what the user typed (or generated). Never mix with style. ──
-    // If user wrote custom lyrics use those; otherwise send empty so the model
-    // improvises vocals that match the style prompt without repeating prompt text.
-    let lyricsToSend='';
-    if(customLyrics){
-      lyricsToSend=customLyrics;
-    } else if(!noVox){
-      // Auto-generate a simple lyric scaffold so model sings real words,
-      // not the style description
-      lyricsToSend=`[Verse]\nOooh yeah\nFeel the rhythm take control\nLet the music touch your soul\nDancing through the night\n\n[Chorus]\nLet it go, let it flow\nLet the beat take over slow\nFeel it in your bones\nYou're never, never alone\n\n[Verse 2]\nEvery note a memory\nEvery drop sets you free\nClose your eyes and feel the sound\n\n[Chorus]\nLet it go, let it flow\nLet the beat take over slow\nFeel it in your bones\nYou're never, never alone\n\n[Outro]\nFade away, fade away`;
+    const voicePart=voiceDesc?voiceDesc+', ':'';
+    let mp, lyricsToSend;
+    if(curMode==='custom'&&styleInput){
+      mp=voicePart+styleInput;
+      lyricsToSend=customLyrics||makeLyrics(genre,mood,secs);
+    } else {
+      mp=[voicePart+genreLabel,mood,`${bpm} BPM`,prompt,noVox?'instrumental no vocals':''].filter(Boolean).join(', ');
+      lyricsToSend=noVox?'[Instrumental]\n*no vocals, pure instrumentation*':(customLyrics||makeLyrics(genre,mood,secs));
     }
 
     if(!IS_DEMO){audioUrl=await callReplicate(mp,secs,lyricsToSend)}
-    else{for(let p=52;p<=92;p+=4){if(cancelFlag)throw new Error('cancelled');await new Promise(r=>setTimeout(r,250));document.getElementById('sBar').style.width=p+'%'}}
+    else{for(let p=52;p<=92;p+=4){if(cancelFlag)throw new Error('cancelled');await new Promise(r=>setTimeout(r,200));document.getElementById('sBar').style.width=p+'%'}}
+
     if(cancelFlag)throw new Error('cancelled');
-    setStep('ss3','done');setStep('ss4','active');setProg('Mastering…',96);await new Promise(r=>setTimeout(r,350));
-    setStep('ss4','done');setProg('Complete!',100);await new Promise(r=>setTimeout(r,200));
-  }catch(err){clrProg();if(err.message!=='cancelled')showErr(err.message);return}
+    setStep('ss3','done');setStep('ss4','active');setProg('Mastering\u2026',96);
+    await new Promise(r=>setTimeout(r,300));
+    setStep('ss4','done');setProg('Complete!',100);
+    await new Promise(r=>setTimeout(r,200));
+  }catch(err){
+    clrProg();
+    if(err.message!=='cancelled')showErr(err.message);
+    return;
+  }
   clrProg();
   const emoji=EM[Math.random()*EM.length|0],grad=GR[Math.random()*GR.length|0];
   const song={...meta,emoji,grad,dur:curDur,genre,mood,bpm,lyrics:customLyrics||meta.lyrics,audioUrl,demo:!audioUrl};
   songs.unshift(song);curIdx=0;
   renderResult(song);renderLib();updateNP(song);
-  toast(`"${meta.title}" created!`,'🎵');
+  toast(`"${meta.title}" forged!`,'\uD83C\uDFB5');
   if(window.innerWidth<768)setTimeout(()=>document.getElementById('resultSec').scrollIntoView({behavior:'smooth',block:'start'}),100);
 }
+
 function doCancel(){cancelFlag=true;clrProg();toast('Cancelled','✕')}
 
 function renderResult(song){
