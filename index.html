@@ -1562,48 +1562,99 @@ Through the fire and the rain</span><br><br>
   <div class="ctrl-grid">
     <div class="cg">
       <div class="clbl">Genre</div>
-      <select class="csel" id="genreSelect">
-        <option>Hip-Hop</option>
-        <option>Trap</option>
-        <option>Pop</option>
-        <option>R&B / Soul</option>
-        <option>Electronic</option>
-        <option>House</option>
-        <option>Lo-fi</option>
-        <option>Ambient</option>
-        <option>Rock</option>
-        <option>Indie Rock</option>
-        <option>Alternative Rock</option>
-        <option>Metal</option>
-        <option>Jazz</option>
-        <option>Blues</option>
-        <option>Country</option>
-        <option>Reggae</option>
-        <option>Latin</option>
+      <select class="csel" id="genreSelect" onchange="onGenreChange(this.value)">
+        <option>Acoustic</option>
+        <option>Afro-Cuban</option>
         <option>Afrobeats</option>
-        <option>Classical</option>
+        <option>Alternative Rock</option>
+        <option>Ambient</option>
+        <option>Anime OST</option>
+        <option>Bachata</option>
+        <option>Baile Funk</option>
+        <option>Blues</option>
+        <option>Bollywood / Bhangra</option>
+        <option>Bossa Nova</option>
+        <option>Celtic</option>
+        <option>Chillout</option>
         <option>Cinematic / Soundtrack</option>
-        <option>K-Pop</option>
-        <option>Drill</option>
-        <option>Funk</option>
-        <option>Gospel</option>
-        <option>Folk</option>
-        <option>Punk</option>
+        <option>Classical</option>
+        <option>Corridos</option>
+        <option>Country</option>
+        <option>Cumbia</option>
         <option>Dancehall</option>
-        <option>Phonk</option>
+        <option>Disco</option>
+        <option>Drill</option>
         <option>Drum and Bass</option>
+        <option>Electronic</option>
+        <option>Emo</option>
+        <option>Eurodance</option>
+        <option>Experimental</option>
+        <option>Fado</option>
+        <option>Film Score</option>
+        <option>Flamenco</option>
+        <option>Folk</option>
+        <option>Funk</option>
+        <option>Future Bass</option>
+        <option>Gospel</option>
+        <option>Gospel Rap</option>
+        <option>Grime</option>
+        <option>Grunge</option>
+        <option>Hip-Hop</option>
+        <option>House</option>
+        <option>Hyperpop</option>
+        <option>Indie Rock</option>
+        <option>Industrial</option>
+        <option>J-Pop</option>
+        <option>Jazz</option>
+        <option>K-Pop</option>
+        <option>Latin</option>
+        <option>Lo-fi</option>
+        <option>Mandopop</option>
+        <option>Merengue</option>
+        <option>Metal</option>
+        <option>Musical Theater</option>
+        <option>Norteño</option>
+        <option>Phonk</option>
+        <option>Pop</option>
+        <option>Post-Rock</option>
+        <option>Progressive Rock</option>
+        <option>Psychedelic Rock</option>
+        <option>Punk</option>
+        <option>Qawwali</option>
+        <option>R&B / Soul</option>
+        <option>Reggae</option>
+        <option>Reggaeton</option>
+        <option>Rock</option>
+        <option>Salsa</option>
+        <option>Samba</option>
+        <option>Shoegaze</option>
+        <option>Ska</option>
+        <option>Soft Rock</option>
+        <option>Soul</option>
+        <option>Surf Rock</option>
+        <option>Swing</option>
+        <option>Synth-Pop</option>
+        <option>Tango</option>
         <option>Techno</option>
         <option>Trance</option>
-        <option>Future Bass</option>
+        <option>Trap</option>
+        <option>UK Garage</option>
         <option>Vaporwave</option>
-        <option>Hyperpop</option>
-        <option>Bossa Nova</option>
-        <option>Samba</option>
-        <option>Flamenco</option>
-        <option>Bollywood / Bhangra</option>
-        <option>Anime OST</option>
         <option>Video Game Music</option>
-        <option>Experimental</option>
+        <option>Worship</option>
+        <option>Zydeco</option>
+      </select>
+    </div>
+    <div class="cg">
+      <div class="clbl">Sub-Style</div>
+      <select class="csel" id="substyleSelect">
+        <option value="">— Any —</option>
+      </select>
+    </div>
+    <div class="cg">
+      <div class="clbl">Style</div>
+      <select class="csel" id="styleSelect">
+        <option value="">— Any Style —</option>
       </select>
     </div>
     <div class="cg">
@@ -1737,12 +1788,15 @@ Through the fire and the rain</span><br><br>
   </div>
 
   <div class="dur-row">
-    <div class="clbl">Duration</div>
+    <div class="clbl" style="width:100%;margin-bottom:2px">Duration</div>
     <div class="chip on" onclick="setDur(this,'0:30')">0:30</div>
     <div class="chip" onclick="setDur(this,'1:00')">1:00</div>
+    <div class="chip" onclick="setDur(this,'1:30')">1:30</div>
     <div class="chip" onclick="setDur(this,'2:00')">2:00</div>
+    <div class="chip" onclick="setDur(this,'2:30')">2:30</div>
     <div class="chip" onclick="setDur(this,'3:00')">3:00</div>
     <div class="chip" onclick="setDur(this,'4:00')">4:00</div>
+    <div class="chip" onclick="setDur(this,'5:00')">5:00 ✦</div>
   </div>
 
   <div class="gen-status" id="genStatus" class="gen-status" class="gen-status">
@@ -1855,6 +1909,8 @@ Through the fire and the rain</span><br><br>
 </div>
 
 <script>
+const GENRE_STYLES={"Hip-Hop": ["Boom Bap", "Trap", "Drill", "Cloud Rap", "Lo-fi Hip-Hop", "Conscious Rap", "East Coast", "West Coast", "Southern Rap", "Mumble Rap", "Jazz Rap", "Emo Rap", "Phonk", "Gangsta Rap", "Underground"], "Trap": ["Dark Trap", "Melodic Trap", "Trap Soul", "Latin Trap", "UK Trap", "Memphis Trap", "SoundCloud Trap", "Pluggnb", "Rage Trap", "Drill"], "Pop": ["Dance-Pop", "Electropop", "Synth-Pop", "Indie Pop", "Art Pop", "Dream Pop", "Bubblegum Pop", "Power Pop", "Chamber Pop", "Bedroom Pop", "Teen Pop", "K-Pop", "J-Pop", "City Pop"], "R&B / Soul": ["Neo-Soul", "Contemporary R&B", "Quiet Storm", "Funk", "Motown", "Philly Soul", "Gospel Soul", "Alternative R&B", "New Jack Swing", "Trap Soul", "Smooth R&B", "Old School Soul"], "Electronic": ["House", "Deep House", "Tech House", "Progressive House", "Techno", "Trance", "Dubstep", "Drum and Bass", "Jungle", "Breakbeat", "Ambient", "IDM", "Electro", "Garage", "UK Garage", "Acid House", "Industrial", "EBM"], "House": ["Deep House", "Tech House", "Progressive House", "Acid House", "Afro House", "Vocal House", "Chicago House", "Detroit House", "Nu-Disco", "Soulful House", "Tribal House", "Electro House"], "Lo-fi": ["Lo-fi Hip-Hop", "Lo-fi Jazz", "Lo-fi Soul", "Chillhop", "Jazzhop", "Bedroom Pop", "Rainy Day", "Study Beats", "Lo-fi Bossa Nova", "Cassette Tape Lo-fi"], "Ambient": ["Dark Ambient", "Space Ambient", "Nature Sounds", "Drone", "New Age", "Meditation", "Sleep Music", "Cinematic Ambient", "Ethereal Ambient", "Atmospheric"], "Rock": ["Classic Rock", "Hard Rock", "Soft Rock", "Garage Rock", "Surf Rock", "Psychedelic Rock", "Arena Rock", "Southern Rock", "Blues Rock", "Glam Rock", "Art Rock", "Progressive Rock", "Indie Rock"], "Indie Rock": ["Dream Pop", "Shoegaze", "Slowcore", "Post-Punk Revival", "Math Rock", "Noise Rock", "Lo-fi Rock", "Emo", "Midwest Emo", "Alternative", "College Rock"], "Alternative Rock": ["Grunge", "Post-Grunge", "Indie Rock", "Emo", "Post-Rock", "Art Rock", "Britpop", "Shoegaze", "College Rock", "Alternative Metal"], "Metal": ["Heavy Metal", "Thrash Metal", "Death Metal", "Black Metal", "Doom Metal", "Power Metal", "Progressive Metal", "Metalcore", "Deathcore", "Symphonic Metal", "Groove Metal", "Nu Metal", "Folk Metal", "Industrial Metal", "Speed Metal", "Glam Metal", "Sludge Metal", "Viking Metal"], "Jazz": ["Bebop", "Cool Jazz", "Hard Bop", "Free Jazz", "Swing", "Big Band", "Latin Jazz", "Smooth Jazz", "Gypsy Jazz", "Modal Jazz", "Acid Jazz", "Vocal Jazz", "Jazz Fusion", "Dixieland", "Contemporary Jazz", "Bossa Nova Jazz"], "Blues": ["Delta Blues", "Chicago Blues", "Electric Blues", "Country Blues", "Soul Blues", "Blues Rock", "Swamp Blues", "Piano Blues", "Texas Blues", "Piedmont Blues", "Jump Blues"], "Country": ["Traditional Country", "Outlaw Country", "Country Pop", "Country Rock", "Bluegrass", "Honky-Tonk", "Americana", "Alt-Country", "Western Swing", "Nashville Sound", "Contemporary Country", "Country Rap", "Bro-Country"], "Reggae": ["Roots Reggae", "Dancehall", "Dub", "Ska", "Rocksteady", "Reggae Fusion", "Lovers Rock", "Ragga", "Digital Reggae", "One Drop"], "Latin": ["Salsa", "Merengue", "Bachata", "Cumbia", "Reggaeton", "Latin Pop", "Bossa Nova", "Samba", "Tango", "Mambo", "Cha-Cha", "Bolero", "Dembow", "Corridos", "Norteño", "Banda", "Mariachi", "Vallenato", "Son Cubano", "Timba", "Guaracha", "Plena", "Bomba"], "Afrobeats": ["Afropop", "Amapiano", "Highlife", "Afro-Fusion", "Afroswing", "Gqom", "Afrohouse", "Jùjú", "Fuji", "Makossa", "Soukous", "Ndombolo", "Kizomba", "Zouk"], "Classical": ["Baroque", "Romantic", "Contemporary Classical", "Opera", "Symphony", "Chamber Music", "Concerto", "Minimalist", "Sacred Choral", "Early Music", "Renaissance", "Avant-Garde Classical"], "Cinematic / Soundtrack": ["Orchestral Epic", "Dark Cinematic", "Emotional Score", "Action Score", "Horror Score", "Adventure Theme", "Sci-Fi Score", "Romantic Score", "Western Score", "Anime OST", "Video Game Music", "Documentary Score"], "K-Pop": ["BG (Boy Group)", "GG (Girl Group)", "Solo", "K-R&B", "K-Hip-Hop", "K-Ballad", "K-Trot", "K-Dance", "K-Indie", "Idol Pop"], "Drill": ["UK Drill", "NY Drill", "Chicago Drill", "Brooklyn Drill", "Australian Drill", "Melodic Drill", "Pop Drill"], "Funk": ["P-Funk", "Funk Rock", "Electro-Funk", "Go-Go", "New Orleans Funk", "Minneapolis Sound", "Nu-Funk", "Afrofunk"], "Gospel": ["Traditional Gospel", "Contemporary Gospel", "Southern Gospel", "Urban Gospel", "Praise & Worship", "Gospel Rap", "Gospel R&B", "Mass Choir"], "Folk": ["Traditional Folk", "Contemporary Folk", "Indie Folk", "Folk Rock", "Celtic Folk", "Appalachian Folk", "Protest Folk", "Singer-Songwriter", "Folk Pop", "Neo-Folk"], "Punk": ["Classic Punk", "Hardcore Punk", "Post-Punk", "Pop Punk", "Skate Punk", "Anarcho-Punk", "Horror Punk", "Crust Punk", "Folk Punk", "Emo", "Screamo", "Post-Hardcore"], "Dancehall": ["Digital Dancehall", "Ragga", "Bashment", "Jungle", "UK Dancehall", "Reggaeton", "Afrobeats-Dancehall"], "Phonk": ["Memphis Phonk", "Drift Phonk", "Brazilian Phonk", "Dark Phonk", "Hyperpop Phonk", "Hard Phonk", "Electro Phonk"], "Drum and Bass": ["Liquid DnB", "Neurofunk", "Jump Up", "Dark DnB", "Jungle", "Techstep", "Drumstep", "Intelligent DnB", "Ragga DnB"], "Techno": ["Detroit Techno", "Industrial Techno", "Minimal Techno", "Hard Techno", "Acid Techno", "Berlin Techno", "Melodic Techno", "Tech House", "Dark Techno"], "Trance": ["Progressive Trance", "Uplifting Trance", "Psytrance", "Goa Trance", "Tech Trance", "Vocal Trance", "Hard Trance", "Dream Trance", "Melodic Trance"], "Future Bass": ["Melodic Future Bass", "Dark Future Bass", "Chill Future Bass", "Electro Future Bass", "Future Pop", "Kawaii Future Bass"], "Vaporwave": ["Classic Vaporwave", "Future Funk", "Mallsoft", "Hardvapour", "Dreampunk", "Chillwave", "Synthwave", "Retrowave", "Outrun"], "Hyperpop": ["Digicore", "Glitchcore", "UK Hyperpop", "Bubblegum Bass", "Electropop Hyperpop", "Emo Hyperpop", "Trap Hyperpop"], "Bossa Nova": ["Classic Bossa Nova", "Jazz Bossa Nova", "Contemporary Bossa Nova", "Samba-Jazz", "Choro", "MPB", "Brazilian Jazz"], "Samba": ["Samba Enredo", "Pagode", "Axé", "Forró", "Baião", "Maracatu", "Samba-Rock", "Samba Reggae"], "Flamenco": ["Classic Flamenco", "Flamenco Fusion", "Rumba Flamenca", "Nuevo Flamenco", "Flamenco Jazz", "Flamenco Pop"], "Bollywood / Bhangra": ["Classic Bollywood", "Item Song", "Sufi Bollywood", "Punjabi Bhangra", "Filmi", "Ghazal", "Qawwali", "Indi-Pop", "Fusion Bhangra"], "Anime OST": ["Shonen Battle", "Shojo Romance", "Isekai Adventure", "Horror Anime", "Mecha", "Slice of Life", "Opening Theme", "Ending Theme", "Insert Song"], "Video Game Music": ["8-bit Chiptune", "16-bit SNES", "RPG Battle Theme", "Boss Fight", "Exploration Theme", "Puzzle Game", "Racing Game", "Horror Game", "Open World"], "Experimental": ["Noise", "Drone", "Musique Concrète", "Sound Art", "Glitch", "Avant-Garde", "Dark Ambient", "Microtonal", "Free Improvisation"]};
+
 const ALL_GENRES=['Blues', 'Delta Blues', 'Chicago Blues', 'Electric Blues', 'Country Blues', 'Soul Blues', 'Blues Rock', 'Swamp Blues', 'Piano Blues', 'Classical', 'Baroque', 'Chamber Music', 'Choral', 'Concerto', 'Contemporary Classical', 'Early Music', 'Opera', 'Orchestral', 'Renaissance', 'Romantic', 'Symphony', 'Avant-Garde Classical', 'Minimalist Classical', 'Sacred Music', 'Country', 'Traditional Country', 'Outlaw Country', 'Country Pop', 'Country Rock', 'Bluegrass', 'Honky-Tonk', 'Americana', 'Alt-Country', 'Western Swing', 'Nashville Sound', 'Bakersfield Sound', 'Contemporary Country', 'Electronic', 'House', 'Techno', 'Trance', 'Drum and Bass', 'Dubstep', 'Ambient', 'EDM', 'Electro', 'Industrial', 'Synth-Pop', 'Trip-Hop', 'IDM', 'Downtempo', 'Chillout', 'Hardstyle', 'Jungle', 'Garage', 'Breakbeat', 'Acid House', 'Progressive House', 'Deep House', 'Tech House', 'Future Bass', 'Lo-fi', 'Vaporwave', 'Hyperpop', 'Chillwave', 'Witch House', 'Nightcore', 'Phonk', 'Digicore', 'Glitchcore', 'Future Funk', 'Electro Swing', 'Folk', 'Traditional Folk', 'Contemporary Folk', 'Indie Folk', 'Folk Rock', 'Neo-Folk', 'Celtic Folk', 'Singer-Songwriter', 'Protest Folk', 'Appalachian Folk', 'World Folk', 'Folk Punk', 'Folk Metal', 'Hip-Hop', 'Rap', 'Old School Hip-Hop', 'Boom Bap', 'Trap', 'Conscious Hip-Hop', 'Gangsta Rap', 'Drill', 'UK Drill', 'Alternative Hip-Hop', 'Underground Hip-Hop', 'East Coast Rap', 'West Coast Rap', 'Southern Rap', 'Latin Trap', 'Jazz Rap', 'Horrorcore', 'Emo Rap', 'Cloud Rap', 'Experimental Hip-Hop', 'Rap Rock', 'Country Rap', 'Gospel Rap', 'Trap Soul', 'Comedy Rap', 'Jazz', 'Swing', 'Bebop', 'Cool Jazz', 'Hard Bop', 'Free Jazz', 'Jazz Fusion', 'Latin Jazz', 'Smooth Jazz', 'Gypsy Jazz', 'Big Band', 'Modal Jazz', 'Acid Jazz', 'Vocal Jazz', 'Contemporary Jazz', 'Dixieland', 'Latin', 'Salsa', 'Reggaeton', 'Bachata', 'Merengue', 'Cumbia', 'Son Cubano', 'Bolero', 'Mambo', 'Cha-Cha-Chá', 'Timba', 'Latin Pop', 'Corridos', 'Norteño', 'Banda', 'Mariachi', 'Tejano', 'Vallenato', 'Rumba', 'Plena', 'Bomba', 'Dembow', 'Tango', 'Samba', 'Bossa Nova', 'Forró', 'Pagode', 'Sertanejo', 'Salsa Choke', 'Reggaeton Pop', 'Son Jarocho', 'Zouk', 'Metal', 'Heavy Metal', 'Thrash Metal', 'Death Metal', 'Black Metal', 'Doom Metal', 'Power Metal', 'Progressive Metal', 'Metalcore', 'Deathcore', 'Symphonic Metal', 'Groove Metal', 'Nu Metal', 'Industrial Metal', 'Speed Metal', 'Glam Metal', 'Sludge Metal', 'Symphonic Rock', 'Pop', 'Dance-Pop', 'Indie Pop', 'Electropop', 'Teen Pop', 'Art Pop', 'Chamber Pop', 'Dream Pop', 'K-Pop', 'J-Pop', 'Mandopop', 'Baroque Pop', 'Pop Rock', 'Bedroom Pop', 'City Pop', 'Anime OST', 'Punk', 'Classic Punk', 'Punk Rock', 'Hardcore Punk', 'Post-Punk', 'Pop Punk', 'Skate Punk', 'Anarcho-Punk', 'Horror Punk', 'Crust Punk', 'Emo', 'Screamo', 'Post-Punk Revival', 'Noise Rock', 'R&B', 'Soul', 'Neo-Soul', 'Funk', 'Motown', 'Quiet Storm', 'Philly Soul', 'Gospel Soul', 'Alternative R&B', 'Contemporary R&B', 'P-Funk', 'Funk Rock', 'Electro-Funk', 'Go-Go', 'Reggae', 'Roots Reggae', 'Dancehall', 'Dub', 'Ska', 'Rocksteady', 'Reggae Fusion', 'Lovers Rock', 'Rock', 'Classic Rock', 'Hard Rock', 'Alternative Rock', 'Indie Rock', 'Progressive Rock', 'Psychedelic Rock', 'Garage Rock', 'Soft Rock', 'Glam Rock', 'Grunge', 'Post-Rock', 'Southern Rock', 'Surf Rock', 'Arena Rock', 'Art Rock', 'Shoegaze', 'Slowcore', 'Math Rock', 'Gospel', 'Traditional Gospel', 'Contemporary Gospel', 'Southern Gospel', 'Urban Gospel', 'Christian', 'Worship', 'Islamic Nasheed', 'Hindu Devotional', 'Buddhist Chant', 'Jewish Liturgical', 'Sacred Choral', 'Afrobeat', 'Afropop', 'Afro-Fusion', 'Highlife', 'Rai', 'Qawwali', 'Flamenco', 'Fado', 'Bhangra', 'Enka', 'Soukous', 'Amapiano', 'Gqom', 'Mbalax', 'Gnawa', 'Zouglou', 'Taarab', 'Sevdah', 'Gamelan', 'Cajun', 'Zydeco', 'Celtic', 'Experimental', 'Drone', 'Sound Art', 'Dark Ambient', 'Glitch', 'Avant-Garde', 'Noise', 'Musique Concrète', 'Disco', 'Eurodance', 'Freestyle', 'Ballroom', 'Waltz', 'Soundtrack', 'Film Score', 'Musical Theater', 'Video Game Music', "Children's Music", 'Lullabies', 'Nursery Rhymes', 'Parody', 'Novelty'];
 
 // ── STATE ──
@@ -1864,7 +1920,7 @@ let curMode='simple';
 let songs=[];
 
 // Duration map
-const DS={'0:30':15,'1:00':30,'2:00':60,'3:00':90,'4:00':120};
+const DS={'0:30':15,'1:00':30,'1:30':45,'2:00':60,'2:30':75,'3:00':90,'4:00':120,'5:00':180};
 
 // Emoji & gradient pools
 const EM=['🔥','🌊','⚡','🎭','💫','🌙','🎯','🌈','🖤','💎','🌀','🎪'];
@@ -1982,6 +2038,22 @@ function showErr(msg){
 }
 
 function onPI(){document.getElementById('charLen').textContent=document.getElementById('promptInput').value.length+'/500'}
+function onGenreChange(genre){
+  const sel=document.getElementById('substyleSelect');
+  const styles=GENRE_STYLES[genre]||[];
+  sel.innerHTML='<option value="">— Any —</option>'+
+    styles.map(s=>`<option value="${s}">${s}</option>`).join('');
+}
+function updateStyles(genre){
+  const sel=document.getElementById('styleSelect');
+  const styles=GENRE_STYLES[genre]||[];
+  sel.innerHTML='<option value="">— Any Style —</option>';
+  styles.forEach(s=>{
+    const o=document.createElement('option');
+    o.value=s; o.textContent=s;
+    sel.appendChild(o);
+  });
+}
 function setVoice(v,btn){
   window._curVoice=v;
   document.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('on'));
@@ -2073,13 +2145,16 @@ async function startGen(){
   document.getElementById('forgeBtn').disabled=true;
   document.getElementById('genStatus').classList.add('show');
   document.getElementById('resultSec').classList.remove('show');
-  const genre=document.getElementById('genreSelect').value,mood=document.getElementById('moodSelect').value,bpm=document.getElementById('bpmVal').textContent;
+  const genre=document.getElementById('genreSelect').value;
+  const substyle=document.getElementById('substyleSelect').value;
+  const genreLabel=substyle?`${substyle} (${genre})`:genre;
+  const mood=document.getElementById('moodSelect').value,bpm=document.getElementById('bpmVal').textContent;
   const voice=window._curVoice||'female';
   const secs=DS[curDur]||15,noVox=curMode==='instrumental'||voice==='none';
   const customLyrics=curMode==='lyrics'||curMode==='custom'?document.getElementById('lyricsInput').value.trim():'';
   const styleInput=curMode==='custom'?(document.getElementById('styleInput').value.trim()||''):'';
   const voiceDesc=voice==='female'?'female vocalist, female singing voice':voice==='male'?'male vocalist, male singing voice':voice==='duet'?'male and female duet, two singers':noVox?'instrumental, no vocals':'';
-  const meta=buildMeta(prompt,genre,mood,bpm);
+  const meta=buildMeta(prompt,genreLabel,mood,bpm);
   let audioUrl=null;
   try{
     setStep('ss1','active');setProg('Analyzing description…',12);await new Promise(r=>setTimeout(r,400));if(cancelFlag)throw new Error('cancelled');
@@ -2089,10 +2164,10 @@ async function startGen(){
     let mp, lyricsToSend='';
     const voicePart=voiceDesc?voiceDesc+', ':'';
     if(curMode==='custom'&&styleInput){
-      mp=voicePart+styleInput;
+      mp=voicePart+(subStyle?subStyle+', ':'')+styleInput;
       lyricsToSend=customLyrics||'';
     } else {
-      mp=[voicePart+genre,mood,`${bpm} BPM`,prompt,noVox?'instrumental no vocals':''].filter(Boolean).join(', ');
+      mp=[voicePart+genreLabel,mood,`${bpm} BPM`,prompt,noVox?'instrumental no vocals':''].filter(Boolean).join(', ');
       lyricsToSend=customLyrics||'';
     }
     if(!IS_DEMO){audioUrl=await callReplicate(mp,secs,lyricsToSend)}
