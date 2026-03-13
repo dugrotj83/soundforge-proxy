@@ -528,7 +528,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:var(--fon
               </div>
             </div>
             <div class="res-player">
-              <audio id="rAudio" style="display:none" onended="onEnd()" ontimeupdate="syncW()" onloadedmetadata="onMeta()"></audio>
+              <audio id="rAudio" style="display:none" onended="onEnd()" ontimeupdate="syncW()" onloadedmetadata="onMeta()" onerror="onAudioErr()"></audio>
               <div class="waveform" id="waveform" onclick="seekA(event)"></div>
               <div class="prow">
                 <button class="play-btn" id="wPlay" onclick="togAudio()">
@@ -818,9 +818,23 @@ function showErr(msg) {
 // ══════════════════════════════════════
 function togAudio() {
   const a = document.getElementById('rAudio');
-  if (!a || !a.src) return;
-  if (isPlaying) { a.pause(); setPlay(false); }
-  else { a.play(); setPlay(true); }
+  if (!a || !a.src) { toast('No audio loaded yet','⚠️'); return; }
+  if (isPlaying) {
+    a.pause();
+    setPlay(false);
+  } else {
+    const p = a.play();
+    if (p && p.catch) {
+      p.then(() => setPlay(true)).catch(err => {
+        console.warn('Playback error:', err);
+        // Try loading fresh then playing
+        a.load();
+        a.play().then(() => setPlay(true)).catch(e => toast('Playback blocked — try the Download button','⚠️'));
+      });
+    } else {
+      setPlay(true);
+    }
+  }
 }
 function setPlay(playing) {
   isPlaying = playing;
@@ -888,7 +902,11 @@ function renderResult(song) {
 
   // Audio
   const a = document.getElementById('rAudio');
-  if (song.audioUrl) { a.src = song.audioUrl; }
+  if (song.audioUrl) {
+    a.crossOrigin = 'anonymous';
+    a.src = song.audioUrl;
+    a.load();
+  }
   setPlay(false);
 
   // Download button
@@ -1068,6 +1086,12 @@ function doCancel() {
 }
 
 function showEstimate(s){const e=document.getElementById('pEst');if(e)e.textContent='Est. wait: ~'+s+'s';}
+function onAudioErr() {
+  const a = document.getElementById('rAudio');
+  const code = a ? a.error && a.error.code : '?';
+  toast('Audio load error (code ' + code + ') — try Download instead', '⚠️');
+  setPlay(false);
+}
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 // ══════════════════════════════════════
