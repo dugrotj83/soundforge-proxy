@@ -445,53 +445,53 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:var(--fon
           <!-- Voice -->
           <span class="slabel">Voice</span>
           <div class="btn-row" style="margin-bottom:16px">
-            <button class="tbtn on" onclick="setVoice('female',this)">🎙 Female</button>
-            <button class="tbtn" onclick="setVoice('male',this)">🎤 Male</button>
-            <button class="tbtn" onclick="setVoice('duet',this)">🎵 Duet</button>
-            <button class="tbtn" onclick="setVoice('choir',this)">🎼 Choir</button>
-            <button class="tbtn" onclick="setVoice('none',this)">🎹 Instrumental</button>
+            <button class="tbtn on" data-group="voice" onclick="setVoice('female',this)">🎙 Female</button>
+            <button class="tbtn" data-group="voice" onclick="setVoice('male',this)">🎤 Male</button>
+            <button class="tbtn" data-group="voice" onclick="setVoice('duet',this)">🎵 Duet</button>
+            <button class="tbtn" data-group="voice" onclick="setVoice('choir',this)">🎼 Choir</button>
+            <button class="tbtn" data-group="voice" onclick="setVoice('none',this)">🎹 Instrumental</button>
           </div>
 
           <!-- Language -->
           <span class="slabel">Language</span>
           <div class="btn-row" style="margin-bottom:16px">
-            <button class="tbtn on" onclick="setLang('en',this)">🇺🇸 English</button>
-            <button class="tbtn" onclick="setLang('es',this)">🇪🇸 Español</button>
-            <button class="tbtn" onclick="setLang('pt',this)">🇧🇷 Português</button>
-            <button class="tbtn" onclick="setLang('fr',this)">🇫🇷 Français</button>
-            <button class="tbtn" onclick="setLang('zh',this)">🇨🇳 中文</button>
-            <button class="tbtn" onclick="setLang('ja',this)">🇯🇵 日本語</button>
-            <button class="tbtn" onclick="setLang('ko',this)">🇰🇷 한국어</button>
-            <button class="tbtn" onclick="setLang('ar',this)">🇸🇦 عربي</button>
-            <button class="tbtn" onclick="setLang('hi',this)">🇮🇳 हिंदी</button>
-            <button class="tbtn" onclick="setLang('de',this)">🇩🇪 Deutsch</button>
-            <button class="tbtn" onclick="setLang('it',this)">🇮🇹 Italiano</button>
-            <button class="tbtn" onclick="setLang('ru',this)">🇷🇺 Русский</button>
+            <button class="tbtn on" data-group="lang" onclick="setLang('en',this)">🇺🇸 English</button>
+            <button class="tbtn" data-group="lang" onclick="setLang('es',this)">🇪🇸 Español</button>
+            <button class="tbtn" data-group="lang" onclick="setLang('pt',this)">🇧🇷 Português</button>
+            <button class="tbtn" data-group="lang" onclick="setLang('fr',this)">🇫🇷 Français</button>
+            <button class="tbtn" data-group="lang" onclick="setLang('zh',this)">🇨🇳 中文</button>
+            <button class="tbtn" data-group="lang" onclick="setLang('ja',this)">🇯🇵 日本語</button>
+            <button class="tbtn" data-group="lang" onclick="setLang('ko',this)">🇰🇷 한국어</button>
+            <button class="tbtn" data-group="lang" onclick="setLang('ar',this)">🇸🇦 عربي</button>
+            <button class="tbtn" data-group="lang" onclick="setLang('hi',this)">🇮🇳 हिंदी</button>
+            <button class="tbtn" data-group="lang" onclick="setLang('de',this)">🇩🇪 Deutsch</button>
+            <button class="tbtn" data-group="lang" onclick="setLang('it',this)">🇮🇹 Italiano</button>
+            <button class="tbtn" data-group="lang" onclick="setLang('ru',this)">🇷🇺 Русский</button>
           </div>
 
           <!-- Timbre -->
           <span class="slabel">Vocal Timbre</span>
           <div class="btn-row" style="margin-bottom:20px">
-            <button class="tbtn on" onclick="setTimbre('bright',this)">Bright</button>
-            <button class="tbtn" onclick="setTimbre('warm',this)">Warm</button>
-            <button class="tbtn" onclick="setTimbre('airy',this)">Airy</button>
-            <button class="tbtn" onclick="setTimbre('powerful',this)">Powerful</button>
-            <button class="tbtn" onclick="setTimbre('smooth',this)">Smooth</button>
-            <button class="tbtn" onclick="setTimbre('raspy',this)">Raspy</button>
-            <button class="tbtn" onclick="setTimbre('soulful',this)">Soulful</button>
-            <button class="tbtn" onclick="setTimbre('falsetto',this)">Falsetto</button>
+            <button class="tbtn on" data-group="timbre" onclick="setTimbre('bright',this)">Bright</button>
+            <button class="tbtn" data-group="timbre" onclick="setTimbre('warm',this)">Warm</button>
+            <button class="tbtn" data-group="timbre" onclick="setTimbre('airy',this)">Airy</button>
+            <button class="tbtn" data-group="timbre" onclick="setTimbre('powerful',this)">Powerful</button>
+            <button class="tbtn" data-group="timbre" onclick="setTimbre('smooth',this)">Smooth</button>
+            <button class="tbtn" data-group="timbre" onclick="setTimbre('raspy',this)">Raspy</button>
+            <button class="tbtn" data-group="timbre" onclick="setTimbre('soulful',this)">Soulful</button>
+            <button class="tbtn" data-group="timbre" onclick="setTimbre('falsetto',this)">Falsetto</button>
           </div>
 
           <!-- Duration -->
           <span class="slabel">Duration <span id="durNote" style="color:var(--ac3);font-size:10px;margin-left:5px"></span></span>
           <div class="dur-row" style="margin-bottom:24px">
-            <button class="dpill" onclick="setDur(this,'0:15')">0:15 ⚡</button>
-            <button class="dpill on" onclick="setDur(this,'1:00')">1:00</button>
-            <button class="dpill" onclick="setDur(this,'1:30')">1:30</button>
-            <button class="dpill" onclick="setDur(this,'2:00')">2:00</button>
-            <button class="dpill" onclick="setDur(this,'3:00')">3:00</button>
-            <button class="dpill" onclick="setDur(this,'4:00')">4:00</button>
-            <button class="dpill" onclick="setDur(this,'5:00')">5:00</button>
+            <button class="dpill" data-group="dur" onclick="setDur(this,'0:15')">0:15 ⚡</button>
+            <button class="dpill on" data-group="dur" onclick="setDur(this,'1:00')">1:00</button>
+            <button class="dpill" data-group="dur" onclick="setDur(this,'1:30')">1:30</button>
+            <button class="dpill" data-group="dur" onclick="setDur(this,'2:00')">2:00</button>
+            <button class="dpill" data-group="dur" onclick="setDur(this,'3:00')">3:00</button>
+            <button class="dpill" data-group="dur" onclick="setDur(this,'4:00')">4:00</button>
+            <button class="dpill" data-group="dur" onclick="setDur(this,'5:00')">5:00</button>
           </div>
 
           <!-- Error -->
@@ -732,25 +732,25 @@ function setMode(m, btn) {
 }
 function setVoice(v, btn) {
   curVoice = v;
-  document.querySelectorAll('.btn-row .tbtn[onclick*="setVoice"]').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('[data-group="voice"]').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
 }
 function setLang(l, btn) {
   curLang = l;
-  document.querySelectorAll('.btn-row .tbtn[onclick*="setLang"]').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('[data-group="lang"]').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
   const hint = document.getElementById('langHint');
   const names = {en:'English',es:'Spanish',pt:'Portuguese',fr:'French',zh:'Mandarin',ja:'Japanese',ko:'Korean',ar:'Arabic',hi:'Hindi',de:'German',it:'Italian',ru:'Russian'};
-  if (hint) hint.textContent = 'Lyrics: ' + (names[l] || l);
+  if (hint) hint.textContent = 'Lyrics will be in ' + (names[l] || l);
 }
 function setTimbre(t, btn) {
   curTimbre = t;
-  document.querySelectorAll('.btn-row .tbtn[onclick*="setTimbre"]').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('[data-group="timbre"]').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
 }
 function setDur(btn, d) {
   curDur = d;
-  document.querySelectorAll('.dur-row .dpill').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('[data-group="dur"]').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
   const est = {'0:15':'~20s','0:30':'~25s','1:00':'~35s','1:30':'~50s','2:00':'~60s','3:00':'~90s','4:00':'~2min','5:00':'~3min'};
   const n = document.getElementById('durNote');
@@ -968,7 +968,10 @@ async function doGenLyrics() {
   const g = (document.getElementById('genreSelect') || {}).value || 'Pop';
   const m = (document.getElementById('moodSelect') || {}).value || 'Happy';
   const secs = DS[curDur] || 60;
-  const lyrics = makeLyrics(g, m, curLang, secs);
+  setProg('Generating lyrics…', 30);
+  document.getElementById('progCard').classList.add('on');
+  const lyrics = await makeLyricsAI(g, m, curLang, secs, '');
+  document.getElementById('progCard').classList.remove('on');
   const ta = document.getElementById('lyricsInput');
   if (ta) ta.value = lyrics;
   toast('Lyrics generated!', '✍️');
@@ -1019,7 +1022,7 @@ async function startGen() {
 
   const lyrics = noVox
     ? '[verse]\n*instrumental, no vocals*\n\n[chorus]\n*instrumental break*'
-    : (customLyrics || makeLyrics(genreLabel, mood, curLang, secs));
+    : (customLyrics || await makeLyricsAI(genreLabel, mood, curLang, secs, promptDesc));
 
   let audioUrl = null;
   let meta;
@@ -1259,31 +1262,120 @@ const LANG_TAGS={
   'zh':'Mandarin','ja':'japanese','ko':'korean',
   'ar':'arabic','hi':'hindi','de':'german','it':'italian','ru':'russian'
 };
-function buildMusicPrompt(genre,mood,voice,timbre,lang,bpm,promptDesc){
-  // MiniMax Music 2.5 uses natural language prompts
-  const instr=YUE_INSTR_MAP[genre]||'piano guitar bass drums';
-  const moodDesc=YUE_MOOD_MAP[mood]||mood.toLowerCase();
-  const genderDesc=voice==='female'?'female vocalist':
-    voice==='male'?'male vocalist':
-    voice==='duet'?'male and female duet':
-    voice==='choir'?'full choir ensemble':
-    'instrumental, no vocals';
-  const timbDesc=timbre&&timbre!=='bright'?timbre+' vocal tone':'';
-  const langDesc=lang&&lang!=='en'?
-    ({es:'sung in Spanish',pt:'sung in Portuguese',fr:'sung in French',
-      zh:'sung in Mandarin Chinese',ja:'sung in Japanese',ko:'sung in Korean',
-      ar:'sung in Arabic',hi:'sung in Hindi',de:'sung in German',
-      it:'sung in Italian',ru:'sung in Russian'}[lang]||''):'';
-  const parts=[
-    genre, moodDesc, genderDesc,
-    timbDesc, instr, bpm+' BPM',
-    langDesc, promptDesc,
-    'radio quality', 'professional production', 'studio master'
+function buildMusicPrompt(genre, mood, voice, timbre, lang, bpm, promptDesc) {
+  const langNames = {en:'',es:'Spanish language vocals',pt:'Portuguese language vocals',
+    fr:'French language vocals',zh:'Mandarin Chinese vocals',ja:'Japanese vocals',
+    ko:'Korean vocals',ar:'Arabic vocals',hi:'Hindi vocals',
+    de:'German vocals',it:'Italian vocals',ru:'Russian vocals'};
+  const langTag = langNames[lang] || '';
+
+  const voiceTag = voice === 'female' ? 'female vocalist, female voice' :
+    voice === 'male' ? 'male vocalist, male voice' :
+    voice === 'duet' ? 'male and female duet vocals' :
+    voice === 'choir' ? 'choir vocals, harmonized ensemble' :
+    'instrumental, no vocals, no singing';
+
+  const timbreMap = {
+    bright: 'bright clear vocals, crisp tone',
+    warm: 'warm smooth vocals, rich tone',
+    airy: 'breathy airy vocals, soft tone',
+    powerful: 'powerful belting vocals, strong projection',
+    smooth: 'silky smooth vocals, polished delivery',
+    raspy: 'raspy gritty vocals, raw texture',
+    soulful: 'soulful emotive vocals, deep feeling',
+    falsetto: 'high falsetto vocals, ethereal tone'
+  };
+  const timbreTag = timbreMap[timbre] || '';
+
+  const moodMap = {
+    Happy:'uplifting joyful bright energetic',Euphoric:'euphoric ecstatic anthemic',
+    Chill:'chill laid-back relaxed smooth',Dreamy:'dreamy ethereal atmospheric hazy',
+    Nostalgic:'nostalgic bittersweet emotional warm',Melancholic:'melancholic sad longing emotional',
+    Heartbroken:'heartbroken sorrowful tearful raw',Dark:'dark brooding ominous intense',
+    Energetic:'high energy driving powerful punchy',Aggressive:'aggressive intense fierce raw',
+    Romantic:'romantic tender passionate intimate',Mysterious:'mysterious atmospheric haunting',
+    Cinematic:'cinematic epic orchestral dramatic',Groovy:'groovy funky rhythmic infectious',
+    Epic:'epic triumphant powerful soaring',Soulful:'soulful deep emotive expressive',
+    Uplifting:'uplifting inspiring motivational anthemic',Spiritual:'spiritual sacred transcendent'
+  };
+  const moodTag = moodMap[mood] || mood.toLowerCase();
+
+  const instrMap = {
+    'Hip-Hop':'punchy 808 bass, crisp hi-hats, sampled drums, trap snare',
+    'Trap':'rolling hi-hats, 808 sub bass, heavy trap drums, dark melody',
+    'Pop':'catchy synth melody, driving drums, layered production, hook-driven',
+    'R&B / Soul':'smooth R&B production, warm bass, electric piano, silky groove',
+    'Electronic':'synthesizer leads, electronic drums, bass drop, electronic production',
+    'House':'four-on-the-floor kick, house bassline, synth chords, electronic',
+    'Lo-fi':'lo-fi vinyl crackle, mellow piano, dusty drums, warm bass, chill beat',
+    'Ambient':'atmospheric pads, reverb-soaked textures, soft drones, spacious sound',
+    'Rock':'electric guitar riffs, live drums, bass guitar, powerful rock production',
+    'Indie Rock':'indie guitar, jangly chords, live drums, alternative rock',
+    'Metal':'heavy distorted guitar, double kick drums, crushing bass, metal production',
+    'Jazz':'jazz piano, upright bass, brushed drums, trumpet, saxophone',
+    'Blues':'blues guitar licks, Hammond organ, blues harmonica, shuffle rhythm',
+    'Country':'acoustic guitar, steel guitar, fiddle, country production',
+    'Latin':'latin percussion, brass section, piano montuno, congas, timbales',
+    'Reggaeton':'dembow riddim, 808 bass, reggaeton beat, urban latin',
+    'Bachata':'bachata guitar, bongos, bass, romantic latin production',
+    'K-Pop':'K-pop production, bright synths, punchy drums, polished pop sound',
+    'Classical':'orchestral strings, piano, classical composition, rich orchestration',
+    'Cinematic / Soundtrack':'cinematic orchestra, strings, brass, epic production, film score',
+    'Drill':'dark melody, sliding 808s, drill percussion, dark trap production',
+    'Funk':'funky bass guitar, brass horns, wah guitar, funk drums, groove',
+    'Afrobeats':'afrobeats percussion, talking drum, afro bass, vibrant rhythm',
+    'Dancehall':'dancehall riddim, heavy bass, digital drums, caribbean sound',
+    'Phonk':'memphis phonk, cowbell, chopped vocal, dark 808, lo-fi aesthetic',
+  };
+  const instrTag = instrMap[genre] || 'professional production, well-arranged instruments';
+
+  const parts = [
+    genre + ' music',
+    moodTag,
+    instrTag,
+    voiceTag,
+    timbreTag,
+    langTag,
+    bpm + ' BPM',
+    promptDesc,
+    'professional studio recording',
+    'radio quality master',
+    'high fidelity audio'
   ];
   return parts.filter(Boolean).join(', ');
 }
 
-function makeLyrics(g,m,lang,secs){
+
+
+async function makeLyricsAI(genre, mood, lang, secs, description) {
+  const langNames = {en:'English',es:'Spanish',pt:'Portuguese',fr:'French',zh:'Mandarin Chinese',
+    ja:'Japanese',ko:'Korean',ar:'Arabic',hi:'Hindi',de:'German',it:'Italian',ru:'Russian'};
+  const langName = langNames[lang] || 'English';
+  const structureHint = secs <= 30 ? '[verse], [chorus]' :
+    secs <= 90 ? '[verse], [pre-chorus], [chorus], [verse]' :
+    '[verse], [pre-chorus], [chorus], [verse], [bridge], [chorus], [outro]';
+
+  const prompt = `Write song lyrics for a ${genre} song with a ${mood} mood.\n${description ? 'Theme: '+description+'\n' : ''}IMPORTANT: Write ALL lyrics entirely in ${langName}. Not a single word in any other language.\nStructure: ${structureHint}\nFormat each section with its tag like [verse], [chorus], [bridge], [pre-chorus], [outro].\nMake them authentic, emotional, and fitting for ${genre} music. Output only the lyrics, no explanations.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await resp.json();
+    if (data.content && data.content[0] && data.content[0].text) {
+      return data.content[0].text.trim();
+    }
+  } catch(e) { console.warn('AI lyrics failed, using fallback:', e); }
+  return makeLyricsFallback(genre, mood, lang, secs);
+}
+
+function makeLyricsFallback(g,m,lang,secs){
   secs=secs||60; lang=lang||'en';
   const gL=g.toLowerCase(),mL=m.toLowerCase();
   const FL={en:{oh:'Oh yeah',go:'Here we go',feel:'Feel it now'},es:{oh:'Oh sí',go:'Vamos ya',feel:'Siéntelo'},pt:{oh:'Oh sim',go:'Vamos lá',feel:'Sinto tudo'},fr:{oh:'Oh oui',go:'Allez',feel:"C'est ça"},zh:{oh:'哦yeah',go:'来吧',feel:'感受它'},ja:{oh:'オーイエ',go:'さあいくぞ',feel:'感じて'},ko:{oh:'오 예',go:'가자',feel:'느껴봐'},ar:{oh:'أوه نعم',go:'هيا',feel:'أشعر بها'},hi:{oh:'ओह हाँ',go:'चलो',feel:'महसूस करो'},de:{oh:'Oh ja',go:"Los geht's",feel:'Fühl es'},it:{oh:'Oh sì',go:'Andiamo',feel:'Sentilo'},ru:{oh:'О да',go:'Поехали',feel:'Почувствуй'}};
