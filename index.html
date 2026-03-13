@@ -1407,7 +1407,7 @@ function buildMeta(p,g,m,b){
   const w=TW[g]||TW.Electronic;
   const title=w[Math.random()*w.length|0]+' '+TS[Math.random()*TS.length|0];
   const tg=TG[m]||TG.Melancholic;
-  return{title,tagline:tg[Math.random()*tg.length|0],tags:[g,m,b+' BPM'],lyrics:makeLyrics(g,m,window._curSecs||60)};
+  return{title,tagline:tg[Math.random()*tg.length|0],tags:[g,m,b+' BPM'],lyrics:makeLyricsFallback(g,m,window._curSecs||60)};
 }
 
 async function callReplicate(prompt,secs,lyrics){
