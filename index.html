@@ -1004,10 +1004,11 @@ async function startGen() {
     : (customLyrics || makeLyrics(genreLabel, mood, curLang, secs));
 
   let audioUrl = null;
+  let meta;
 
   try {
     setStep('ps1', 'active'); setProg('Building song structure…', 12);
-    const meta = buildMeta(promptDesc || genreLabel, genre, mood, bpm);
+    meta = buildMeta(promptDesc || genreLabel, genre, mood, bpm);
     await sleep(400); if (cancelFlag) throw new Error('cancelled');
 
     setStep('ps1', 'done'); setStep('ps2', 'active'); setProg('Crafting lyrics…', 28);
