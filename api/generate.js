@@ -9,9 +9,14 @@ export default async function handler(req, res) {
   if (!repKey || !repKey.startsWith('r8_'))
     return res.status(401).json({ error: 'Invalid key — must start with r8_' });
 
+  const secs = Math.min(300, Math.max(10, parseInt(duration) || 60));
+
+  // MiniMax Music 2.5 — song length is driven by lyric volume
+  // We send lyrics sections proportional to duration for full-length songs
+  const fallbackLyrics = `[verse]\n${prompt}\n\n[chorus]\n${prompt}`;
   const input = {
     prompt,
-    lyrics: lyrics?.trim() ? lyrics : `[verse]\n${prompt}\n\n[chorus]\n${prompt}`,
+    lyrics: lyrics?.trim() ? lyrics : fallbackLyrics,
   };
 
   try {
@@ -34,14 +39,12 @@ export default async function handler(req, res) {
 
     if (data.status === 'succeeded') {
       const out = data.output;
-      // MiniMax returns plain string URL or array
       const url = typeof out === 'string' ? out
         : Array.isArray(out) ? out[0]
         : (out?.audio || out?.url || null);
       return res.status(200).json({ url, id: data.id, status: 'succeeded' });
     }
 
-    // Still processing — client will poll
     return res.status(200).json({ id: data.id, status: data.status });
 
   } catch (err) {
