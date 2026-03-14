@@ -728,7 +728,10 @@ function setMode(m, btn) {
   curMode = m;
   document.querySelectorAll('.tabs .tab').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
-  document.getElementById('customFields').style.display = m === 'custom' ? 'block' : 'none';
+  const cf = document.getElementById('customFields');
+  const pc = document.querySelector('.pcard');
+  if (cf) cf.style.display = m === 'custom' ? 'block' : 'none';
+  if (pc) pc.style.display = m === 'custom' ? 'none' : 'block';
 }
 function setVoice(v, btn) {
   curVoice = v;
@@ -1263,99 +1266,204 @@ const LANG_TAGS={
   'ar':'arabic','hi':'hindi','de':'german','it':'italian','ru':'russian'
 };
 function buildMusicPrompt(genre, mood, voice, timbre, lang, bpm, promptDesc) {
-  const langNames = {en:'',es:'Spanish language vocals',pt:'Portuguese language vocals',
-    fr:'French language vocals',zh:'Mandarin Chinese vocals',ja:'Japanese vocals',
-    ko:'Korean vocals',ar:'Arabic vocals',hi:'Hindi vocals',
-    de:'German vocals',it:'Italian vocals',ru:'Russian vocals'};
-  const langTag = langNames[lang] || '';
-
-  const voiceTag = voice === 'female' ? 'female vocalist, female voice' :
-    voice === 'male' ? 'male vocalist, male voice' :
-    voice === 'duet' ? 'male and female duet vocals' :
-    voice === 'choir' ? 'choir vocals, harmonized ensemble' :
-    'instrumental, no vocals, no singing';
-
-  const timbreMap = {
-    bright: 'bright clear vocals, crisp tone',
-    warm: 'warm smooth vocals, rich tone',
-    airy: 'breathy airy vocals, soft tone',
-    powerful: 'powerful belting vocals, strong projection',
-    smooth: 'silky smooth vocals, polished delivery',
-    raspy: 'raspy gritty vocals, raw texture',
-    soulful: 'soulful emotive vocals, deep feeling',
-    falsetto: 'high falsetto vocals, ethereal tone'
+  // Modern style references per genre — this is what drives vocal quality
+  const styleRef = {
+    'Hip-Hop':       'in the style of modern hip-hop, Drake and Kendrick Lamar influence, 2024 sound',
+    'Trap':          'modern trap production, Metro Boomin style beats, dark atmospheric trap 2024',
+    'Pop':           'modern pop production, polished 2024 pop, Taylor Swift and Olivia Rodrigo influenced',
+    'R&B / Soul':    'contemporary R&B, SZA and The Weeknd influenced, modern neo-soul 2024',
+    'Electronic':    'modern electronic music, Calvin Harris and Illenium production style',
+    'House':         'modern house music, Fisher and Chris Lake influenced, driving club sound',
+    'Lo-fi':         'lo-fi hip hop, chilled beats, Lofi Girl aesthetic, warm analog sound',
+    'Ambient':       'cinematic ambient, Brian Eno influenced, atmospheric and immersive soundscape',
+    'Rock':          'modern rock, Imagine Dragons and Coldplay influenced, anthemic production',
+    'Indie Rock':    'indie rock, Arctic Monkeys and The Strokes influenced, raw authentic sound',
+    'Alternative Rock':'alternative rock, Twenty One Pilots influenced, emotional alternative sound',
+    'Metal':         'modern metal, Bring Me The Horizon influenced, heavy aggressive production',
+    'Jazz':          'contemporary jazz, smooth and sophisticated, modern jazz composition',
+    'Blues':         'authentic blues, soulful and raw, classic blues guitar tradition',
+    'Country':       'modern country, Morgan Wallen and Luke Combs influenced, Nashville sound 2024',
+    'Reggae':        'authentic reggae, Bob Marley tradition, warm Caribbean roots sound',
+    'Latin':         'modern Latin music, Bad Bunny and J Balvin influenced, urban Latin 2024',
+    'Reggaeton':     'modern reggaeton, Bad Bunny influenced, hard-hitting urban Latin beat',
+    'Salsa':         'authentic salsa, vibrant brass and percussion, tropical Latin energy',
+    'Merengue':      'authentic merengue, fast tropical rhythm, Caribbean dance energy',
+    'Bachata':       'modern bachata, Romeo Santos influenced, romantic Latin guitar',
+    'Cumbia':        'authentic cumbia, tropical rhythm, Latin American dance music',
+    'Afrobeats':     'modern Afrobeats, Burna Boy and Wizkid influenced, groovy African rhythm 2024',
+    'Classical':     'modern classical, Hans Zimmer and Ludovico Einaudi influenced, emotive orchestral',
+    'Cinematic / Soundtrack': 'epic film score, Hans Zimmer influenced, cinematic orchestral production',
+    'K-Pop':         'modern K-Pop, BTS and BLACKPINK influenced, polished high-energy K-Pop 2024',
+    'Drill':         'UK and Chicago drill, dark atmospheric drill beat, hard-hitting 808s',
+    'Funk':          'modern funk, Bruno Mars and Anderson Paak influenced, groovy tight production',
+    'Gospel':        'contemporary gospel, Kirk Franklin influenced, uplifting choir production',
+    'Folk':          'modern folk, Phoebe Bridgers influenced, intimate acoustic storytelling',
+    'Punk':          'punk rock energy, raw and aggressive, three-chord punk production',
+    'Dancehall':     'modern dancehall, Vybz Kartel influenced, hard-hitting Caribbean rhythm',
+    'Phonk':         'dark phonk, drifting phonk aesthetic, Memphis underground 2024',
+    'Drum and Bass': 'liquid drum and bass, fast breakbeats, energetic DnB production',
+    'Techno':        'dark techno, industrial techno, driving repetitive hypnotic beat',
+    'Trance':        'uplifting trance, Armin van Buuren influenced, euphoric melodic trance',
+    'Future Bass':   'future bass, Flume influenced, emotional drops and bright synths',
+    'Vaporwave':     'aesthetic vaporwave, dreamy slowed reverb, nostalgic 80s textures',
+    'Hyperpop':      'hyperpop, 100 Gecs influenced, glitchy distorted maximalist pop',
+    'Bossa Nova':    'authentic bossa nova, João Gilberto tradition, intimate Brazilian jazz',
+    'Samba':         'vibrant samba, Brazilian carnival energy, lively percussion',
+    'Flamenco':      'authentic flamenco, passionate Spanish guitar, raw emotional flamenco',
+    'Bollywood / Bhangra': 'modern Bollywood, AR Rahman influenced, vibrant Indian film music',
+    'Anime OST':     'anime soundtrack, emotional anime music, J-Pop and orchestral blend',
+    'Video Game Music': 'epic video game soundtrack, emotional game OST, dynamic game music',
+    'Experimental':  'experimental avant-garde, boundary-pushing experimental music',
+    'Tango':         'authentic Argentine tango, passionate bandoneón, sensual tango rhythm',
+    'Ska':           'ska music, upbeat offbeat rhythm, brass-heavy ska production',
+    'Swing':         'classic swing, big band jazz, energetic swing dance music',
+    'Synth-Pop':     'modern synth-pop, The 1975 influenced, retro-modern synthesizer pop',
+    'Grunge':        'grunge rock, Nirvana influenced, raw distorted guitar, Seattle sound',
+    'Emo':           'modern emo, emotional raw vocals, emo-pop production',
   };
-  const timbreTag = timbreMap[timbre] || '';
-
-  const moodMap = {
-    Happy:'uplifting joyful bright energetic',Euphoric:'euphoric ecstatic anthemic',
-    Chill:'chill laid-back relaxed smooth',Dreamy:'dreamy ethereal atmospheric hazy',
-    Nostalgic:'nostalgic bittersweet emotional warm',Melancholic:'melancholic sad longing emotional',
-    Heartbroken:'heartbroken sorrowful tearful raw',Dark:'dark brooding ominous intense',
-    Energetic:'high energy driving powerful punchy',Aggressive:'aggressive intense fierce raw',
-    Romantic:'romantic tender passionate intimate',Mysterious:'mysterious atmospheric haunting',
-    Cinematic:'cinematic epic orchestral dramatic',Groovy:'groovy funky rhythmic infectious',
-    Epic:'epic triumphant powerful soaring',Soulful:'soulful deep emotive expressive',
-    Uplifting:'uplifting inspiring motivational anthemic',Spiritual:'spiritual sacred transcendent'
-  };
-  const moodTag = moodMap[mood] || mood.toLowerCase();
 
   const instrMap = {
-    'Hip-Hop':'punchy 808 bass, crisp hi-hats, sampled drums, trap snare',
-    'Trap':'rolling hi-hats, 808 sub bass, heavy trap drums, dark melody',
-    'Pop':'catchy synth melody, driving drums, layered production, hook-driven',
-    'R&B / Soul':'smooth R&B production, warm bass, electric piano, silky groove',
-    'Electronic':'synthesizer leads, electronic drums, bass drop, electronic production',
-    'House':'four-on-the-floor kick, house bassline, synth chords, electronic',
-    'Lo-fi':'lo-fi vinyl crackle, mellow piano, dusty drums, warm bass, chill beat',
-    'Ambient':'atmospheric pads, reverb-soaked textures, soft drones, spacious sound',
-    'Rock':'electric guitar riffs, live drums, bass guitar, powerful rock production',
-    'Indie Rock':'indie guitar, jangly chords, live drums, alternative rock',
-    'Metal':'heavy distorted guitar, double kick drums, crushing bass, metal production',
-    'Jazz':'jazz piano, upright bass, brushed drums, trumpet, saxophone',
-    'Blues':'blues guitar licks, Hammond organ, blues harmonica, shuffle rhythm',
-    'Country':'acoustic guitar, steel guitar, fiddle, country production',
-    'Latin':'latin percussion, brass section, piano montuno, congas, timbales',
-    'Reggaeton':'dembow riddim, 808 bass, reggaeton beat, urban latin',
-    'Bachata':'bachata guitar, bongos, bass, romantic latin production',
-    'K-Pop':'K-pop production, bright synths, punchy drums, polished pop sound',
-    'Classical':'orchestral strings, piano, classical composition, rich orchestration',
-    'Cinematic / Soundtrack':'cinematic orchestra, strings, brass, epic production, film score',
-    'Drill':'dark melody, sliding 808s, drill percussion, dark trap production',
-    'Funk':'funky bass guitar, brass horns, wah guitar, funk drums, groove',
-    'Afrobeats':'afrobeats percussion, talking drum, afro bass, vibrant rhythm',
-    'Dancehall':'dancehall riddim, heavy bass, digital drums, caribbean sound',
-    'Phonk':'memphis phonk, cowbell, chopped vocal, dark 808, lo-fi aesthetic',
+    'Hip-Hop':       '808 bass, trap hi-hats, sampled drums, punchy kick',
+    'Trap':          '808 sub bass, rolling hi-hats, trap snare, dark synth melody',
+    'Pop':           'polished synth, driving pop drums, layered hooks, catchy melody',
+    'R&B / Soul':    'warm bass guitar, electric piano, smooth R&B groove, lush chords',
+    'Electronic':    'synth leads, electronic drums, bass drop, filtered breakdown',
+    'House':         'four-on-the-floor kick drum, house bassline, synth chords, clap',
+    'Lo-fi':         'vinyl crackle, mellow piano, dusty drums, warm bass guitar',
+    'Ambient':       'ambient pads, reverb textures, soft drones, spacious reverb',
+    'Rock':          'electric guitar riffs, live drum kit, bass guitar, power chords',
+    'Indie Rock':    'jangly indie guitar, live drums, clean bass, reverb vocals',
+    'Alternative Rock': 'distorted guitar, dynamic drums, emotional build, anthemic chorus',
+    'Metal':         'heavy downtuned guitar, double kick pedal, crushing bass, breakdowns',
+    'Jazz':          'upright bass, brushed snare, jazz piano, trumpet, saxophone',
+    'Blues':         'blues electric guitar, Hammond organ, harmonica, shuffle groove',
+    'Country':       'acoustic guitar, pedal steel guitar, fiddle, country drum groove',
+    'Reggae':        'reggae rhythm guitar, deep bass, organ skank, reggae drums',
+    'Latin':         'brass section, congas, timbales, piano montuno, bass',
+    'Reggaeton':     'dembow pattern, 808 bass, reggaeton perreo beat, synth stabs',
+    'Bachata':       'nylon string bachata guitar, bongos, bass, guira scraper',
+    'K-Pop':         'punchy synth, K-pop drums, bright lead synth, modern production',
+    'Classical':     'full orchestra, strings, woodwinds, brass, grand piano',
+    'Cinematic / Soundtrack': 'cinematic strings, brass fanfare, percussion, full orchestra',
+    'Drill':         'sliding 808s, eerie melody, rapid hi-hats, drill beat',
+    'Funk':          'slap bass, wah guitar, tight funk drums, brass horns',
+    'Afrobeats':     'afro percussion, talking drum, guitar licks, bass groove',
+    'Dancehall':     'riddim bass, digital drums, synth stabs, Caribbean groove',
+    'Phonk':         'cowbell, chopped samples, 808, distorted bass, Memphis beat',
   };
-  const instrTag = instrMap[genre] || 'professional production, well-arranged instruments';
+
+  const voiceMap = {
+    female:       'female vocalist, clear feminine voice, expressive female singer',
+    male:         'male vocalist, strong masculine voice, expressive male singer',
+    duet:         'male and female duet, harmonizing vocals, call and response',
+    choir:        'full choir, layered harmonies, ensemble vocals, backing choir',
+    none:         'instrumental only, no vocals, no singing, pure music'
+  };
+
+  const timbreMap = {
+    bright:   'bright crisp vocals, clear upper register',
+    warm:     'warm rich vocals, full-bodied tone, resonant',
+    airy:     'breathy airy vocals, soft intimate delivery, whisper-like',
+    powerful: 'powerful projecting vocals, belting, full voice',
+    smooth:   'silky smooth vocals, controlled polished delivery',
+    raspy:    'raspy gritty vocals, husky raw texture, rough edge',
+    soulful:  'deeply soulful vocals, emotive runs, gospel-inflected',
+    falsetto: 'soaring falsetto, high head voice, ethereal upper register'
+  };
+
+  const moodMap = {
+    Happy:       'joyful uplifting feel-good energy',
+    Euphoric:    'euphoric ecstatic peak energy anthemic',
+    Chill:       'relaxed laid-back cool mellow vibe',
+    Dreamy:      'dreamy hazy ethereal floating atmospheric',
+    Nostalgic:   'nostalgic bittersweet warm emotional longing',
+    Melancholic: 'melancholic sad emotional vulnerable introspective',
+    Heartbroken: 'heartbroken raw painful tearful honest',
+    Dark:        'dark brooding ominous tense shadowy',
+    Energetic:   'high energy driving powerful intense momentum',
+    Aggressive:  'aggressive fierce in-your-face intense confrontational',
+    Romantic:    'romantic passionate tender intimate sensual',
+    Mysterious:  'mysterious haunting enigmatic atmospheric suspenseful',
+    Cinematic:   'cinematic dramatic sweeping epic emotional',
+    Groovy:      'groovy funky infectious rhythmic irresistible',
+    Epic:        'epic triumphant soaring powerful larger-than-life',
+    Soulful:     'soulful deeply emotive heartfelt expressive',
+    Uplifting:   'uplifting inspiring hopeful motivational',
+    Spiritual:   'spiritual transcendent sacred meditative peaceful'
+  };
+
+  const langMap = {
+    es: 'sung entirely in Spanish, Spanish lyrics',
+    pt: 'sung entirely in Portuguese, Portuguese lyrics',
+    fr: 'sung entirely in French, French lyrics',
+    zh: 'sung entirely in Mandarin Chinese, Chinese lyrics',
+    ja: 'sung entirely in Japanese, Japanese lyrics',
+    ko: 'sung entirely in Korean, Korean lyrics',
+    ar: 'sung entirely in Arabic, Arabic lyrics',
+    hi: 'sung entirely in Hindi, Hindi lyrics',
+    de: 'sung entirely in German, German lyrics',
+    it: 'sung entirely in Italian, Italian lyrics',
+    ru: 'sung entirely in Russian, Russian lyrics'
+  };
 
   const parts = [
-    genre + ' music',
-    moodTag,
-    instrTag,
-    voiceTag,
-    timbreTag,
-    langTag,
+    styleRef[genre] || (genre + ' music'),
+    instrMap[genre] || 'professional music production',
+    moodMap[mood] || mood,
+    voiceMap[voice] || voiceMap.female,
+    timbreMap[timbre] || '',
+    langMap[lang] || '',
     bpm + ' BPM',
-    promptDesc,
-    'professional studio recording',
-    'radio quality master',
-    'high fidelity audio'
+    promptDesc || '',
+    'professional studio quality recording, mastered for streaming, 2024 production standards'
   ];
   return parts.filter(Boolean).join(', ');
 }
 
 
 
-async function makeLyricsAI(genre, mood, lang, secs, description) {
-  const langNames = {en:'English',es:'Spanish',pt:'Portuguese',fr:'French',zh:'Mandarin Chinese',
-    ja:'Japanese',ko:'Korean',ar:'Arabic',hi:'Hindi',de:'German',it:'Italian',ru:'Russian'};
-  const langName = langNames[lang] || 'English';
-  const structureHint = secs <= 30 ? '[verse], [chorus]' :
-    secs <= 90 ? '[verse], [pre-chorus], [chorus], [verse]' :
-    '[verse], [pre-chorus], [chorus], [verse], [bridge], [chorus], [outro]';
 
-  const prompt = `Write song lyrics for a ${genre} song with a ${mood} mood.\n${description ? 'Theme: '+description+'\n' : ''}IMPORTANT: Write ALL lyrics entirely in ${langName}. Not a single word in any other language.\nStructure: ${structureHint}\nFormat each section with its tag like [verse], [chorus], [bridge], [pre-chorus], [outro].\nMake them authentic, emotional, and fitting for ${genre} music. Output only the lyrics, no explanations.`;
+async function makeLyricsAI(genre, mood, lang, secs, description) {
+  const langNames = {
+    en:'English', es:'Spanish', pt:'Portuguese', fr:'French',
+    zh:'Mandarin Chinese', ja:'Japanese', ko:'Korean',
+    ar:'Arabic', hi:'Hindi', de:'German', it:'Italian', ru:'Russian'
+  };
+  const langName = langNames[lang] || 'English';
+  const isEnglish = lang === 'en';
+
+  // Scale structure to duration for full-length songs
+  let structure;
+  if      (secs <= 20)  structure = '[verse]\n[chorus]';
+  else if (secs <= 40)  structure = '[verse]\n[chorus]\n[verse]\n[chorus]';
+  else if (secs <= 70)  structure = '[verse]\n[pre-chorus]\n[chorus]\n[verse]\n[chorus]';
+  else if (secs <= 100) structure = '[verse]\n[pre-chorus]\n[chorus]\n[verse]\n[pre-chorus]\n[chorus]\n[outro]';
+  else if (secs <= 130) structure = '[intro]\n[verse]\n[pre-chorus]\n[chorus]\n[verse]\n[pre-chorus]\n[chorus]\n[bridge]\n[chorus]\n[outro]';
+  else if (secs <= 200) structure = '[intro]\n[verse]\n[pre-chorus]\n[chorus]\n[verse]\n[pre-chorus]\n[chorus]\n[bridge]\n[chorus]\n[chorus]\n[outro]';
+  else                  structure = '[intro]\n[verse]\n[pre-chorus]\n[chorus]\n[verse]\n[pre-chorus]\n[chorus]\n[bridge]\n[verse]\n[pre-chorus]\n[chorus]\n[chorus]\n[outro]';
+
+  const langInstruction = isEnglish
+    ? 'Write all lyrics in English.'
+    : `CRITICAL: Write every single word of ALL lyrics in ${langName}. Do NOT use any English words anywhere. No code-switching. Pure ${langName} only.`;
+
+  const prompt = `You are a professional ${genre} songwriter. Write complete song lyrics for a ${mood} ${genre} song.
+
+${langInstruction}
+
+Song theme/description: ${description || `A ${mood.toLowerCase()} ${genre} song`}
+
+Use exactly this section structure, writing 4-6 lines per section:
+${structure}
+
+Rules:
+- Write the section tag on its own line (e.g. [verse], [chorus], [bridge])
+- Each section must have 4-6 lines of actual lyrics
+- Make the chorus memorable, catchy, and emotionally resonant
+- Match the ${mood.toLowerCase()} mood throughout
+- Write like a professional hit song, not a generic poem
+${isEnglish ? '' : `- Every word must be in ${langName}. This is non-negotiable.`}
+
+Output ONLY the lyrics with section tags. No explanations, no commentary.`;
 
   try {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -1363,7 +1471,7 @@ async function makeLyricsAI(genre, mood, lang, secs, description) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
+        max_tokens: 1200,
         messages: [{ role: 'user', content: prompt }]
       })
     });
@@ -1374,6 +1482,7 @@ async function makeLyricsAI(genre, mood, lang, secs, description) {
   } catch(e) { console.warn('AI lyrics failed, using fallback:', e); }
   return makeLyricsFallback(genre, mood, lang, secs);
 }
+
 
 function makeLyricsFallback(g,m,lang,secs){
   secs=secs||60; lang=lang||'en';
