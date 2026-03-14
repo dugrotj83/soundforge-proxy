@@ -5,29 +5,33 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
 
-  const { repKey, id } = req.body;
-  if (!repKey || !id) return res.status(400).json({ error: 'Missing repKey or id' });
+  const { apiKey, workId } = req.body;
+  if (!apiKey || !workId) return res.status(400).json({ error: 'Missing apiKey or workId' });
 
   try {
-    const r = await fetch(`https://api.replicate.com/v1/predictions/${id}`, {
-      headers: { 'Authorization': `Bearer ${repKey}` }
+    const r = await fetch(`https://udioapi.pro/api/v2/feed?workId=${workId}`, {
+      headers: { 'Authorization': `Bearer ${apiKey}` }
     });
-    const data = await r.json();
-    if (!r.ok) return res.status(r.status).json(data);
 
-    let url = null;
-    if (data.status === 'succeeded') {
-      const out = data.output;
-      // MiniMax Music 2.5 returns a plain string URL or array
-      if (typeof out === 'string') url = out;
-      else if (Array.isArray(out)) url = out[0];
-      else if (out && typeof out === 'object') {
-        // Fallback for any model that returns an object
-        url = out.audio || out.url || out.mixed_audio || out.vocal_audio || null;
-      }
+    const data = await r.json();
+    if (!r.ok) return res.status(r.status).json({ error: data?.message || 'Poll error' });
+
+    const type = data?.data?.type;
+
+    if (type === 'SUCCESS') {
+      const tracks = data?.data?.response_data || [];
+      const url = tracks[0]?.audio_url || null;
+      if (!url) return res.status(200).json({ status: 'processing' });
+      return res.status(200).json({ status: 'succeeded', url, title: tracks[0]?.title });
     }
 
-    return res.status(200).json({ status: data.status, url, error: data.error });
+    if (type === 'ERROR') {
+      return res.status(200).json({ status: 'failed', error: data?.data?.error_message || 'Generation failed' });
+    }
+
+    // Still processing
+    return res.status(200).json({ status: 'processing' });
+
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
