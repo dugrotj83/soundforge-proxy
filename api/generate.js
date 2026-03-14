@@ -5,33 +5,31 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
 
-  const { repKey, prompt, duration, lyrics } = req.body;
+  const { repKey, tags, lyrics, duration } = req.body;
   if (!repKey || !repKey.startsWith('r8_'))
     return res.status(401).json({ error: 'Invalid key — must start with r8_' });
 
-  const secs = Math.min(300, Math.max(10, parseInt(duration) || 60));
-
-  // MiniMax Music 2.5 — song length is driven by lyric volume
-  // We send lyrics sections proportional to duration for full-length songs
-  const fallbackLyrics = `[verse]\n${prompt}\n\n[chorus]\n${prompt}`;
-  const input = {
-    prompt,
-    lyrics: lyrics?.trim() ? lyrics : fallbackLyrics,
-  };
+  const secs = Math.min(240, Math.max(15, parseInt(duration) || 60));
 
   try {
-    const r = await fetch('https://api.replicate.com/v1/models/minimax/music-2.5/predictions', {
+    // ACE-Step by lucataco — fast (~16s), Suno-grade vocals, tag+lyrics format
+    const r = await fetch('https://api.replicate.com/v1/models/lucataco/ace-step/predictions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${repKey}`,
-        'Prefer': 'wait=55',
+        'Prefer': 'wait=60',
       },
-      body: JSON.stringify({ input })
+      body: JSON.stringify({
+        input: {
+          tags: tags || 'pop, female vocal, modern, high quality',
+          lyrics: lyrics || '[verse]\nA beautiful song\n\n[chorus]\nFeel the music',
+          duration: secs,
+        }
+      })
     });
 
     const data = await r.json();
-
     if (!r.ok) {
       const msg = data?.detail || data?.error || JSON.stringify(data);
       return res.status(r.status).json({ error: msg });
