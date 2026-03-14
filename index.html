@@ -545,7 +545,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:var(--fon
 
           <!-- Create button -->
           <button class="create-btn" id="createBtn" onclick="startGen()">Create Song</button>
-          <div class="create-hint">⚡ <b>0:15</b> preview ~20s &nbsp;·&nbsp; 1:00 song ~35s &nbsp;·&nbsp; longer songs 1–3 min</div>
+          <div class="create-hint">⚡ ACE-Step generates in <b>~20–60s</b> &nbsp;·&nbsp; <b>0:15</b> preview fastest &nbsp;·&nbsp; up to 4:00 full songs</div>
         </div>
       </div><!-- /create view -->
 
@@ -594,17 +594,17 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:var(--fon
 <!-- Modal -->
 <div class="modal-bg" id="apiModal">
   <div class="modal">
-    <div class="modal-title">🔑 Connect Replicate</div>
-    <div class="modal-sub">Enter your Replicate API key to generate real songs. Or try demo mode to explore the UI.</div>
-    <div class="modal-lbl">Replicate API Key</div>
-    <input class="modal-in" id="apiKeyIn" type="password" placeholder="r8_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+    <div class="modal-title">🔑 Connect SoundForge</div>
+    <div class="modal-sub">Enter your <strong>udioapi.pro</strong> key to generate Suno-quality songs with real vocals. Free tier available — no credit card needed.</div>
+    <div class="modal-lbl">udioapi.pro API Key</div>
+    <input class="modal-in" id="apiKeyIn" type="password" placeholder="Get free key at udioapi.pro/dashboard" autocomplete="off">
     <div class="modal-lbl">Proxy URL</div>
     <input class="modal-in" id="proxyIn" type="text" placeholder="https://soundforge-proxy.vercel.app" autocomplete="off">
     <div class="modal-btns">
       <button class="modal-save" onclick="saveKey()">Save &amp; Continue</button>
       <button class="modal-demo" onclick="enterDemo()">Try Demo</button>
     </div>
-    <div class="modal-note">Get a free key at <a href="https://replicate.com/account/api-tokens" target="_blank">replicate.com</a>. Deploy the proxy to <a href="https://vercel.com" target="_blank">Vercel</a>.</div>
+    <div class="modal-note">Get a free key at <a href="https://udioapi.pro/dashboard" target="_blank">udioapi.pro/dashboard</a> — free tier gives 10 songs/day.<br>Deploy your proxy to <a href="https://vercel.com" target="_blank">Vercel</a> for CORS bypass.</div>
   </div>
 </div>
 
@@ -619,7 +619,7 @@ let REP_KEY = '', PROXY_URL = '', IS_DEMO = false;
 try {
   const k = sessionStorage.getItem('sf_rk');
   const p = sessionStorage.getItem('sf_proxy');
-  if (k && k.startsWith('r8_')) REP_KEY = k;
+  if (k && k.length > 8) REP_KEY = k;
   if (p) PROXY_URL = p;
 } catch(e) {}
 
@@ -692,8 +692,7 @@ function closeModal() {
 function saveKey() {
   const k = (document.getElementById('apiKeyIn').value || '').trim();
   const p = (document.getElementById('proxyIn').value || '').trim().replace(/\/$/, '');
-  if (!k) { toast('Paste your Replicate API key first', '⚠️'); return; }
-  if (!k.startsWith('r8_')) { toast('Key must start with r8_', '⚠️'); return; }
+  if (!k) { toast('Paste your udioapi.pro API key first', '⚠️'); return; }
   REP_KEY = k;
   IS_DEMO = false;
   if (p) {
@@ -1266,159 +1265,130 @@ const LANG_TAGS={
   'ar':'arabic','hi':'hindi','de':'german','it':'italian','ru':'russian'
 };
 function buildMusicPrompt(genre, mood, voice, timbre, lang, bpm, promptDesc) {
-  // Modern style references per genre — this is what drives vocal quality
-  const styleRef = {
-    'Hip-Hop':       'in the style of modern hip-hop, Drake and Kendrick Lamar influence, 2024 sound',
-    'Trap':          'modern trap production, Metro Boomin style beats, dark atmospheric trap 2024',
-    'Pop':           'modern pop production, polished 2024 pop, Taylor Swift and Olivia Rodrigo influenced',
-    'R&B / Soul':    'contemporary R&B, SZA and The Weeknd influenced, modern neo-soul 2024',
-    'Electronic':    'modern electronic music, Calvin Harris and Illenium production style',
-    'House':         'modern house music, Fisher and Chris Lake influenced, driving club sound',
-    'Lo-fi':         'lo-fi hip hop, chilled beats, Lofi Girl aesthetic, warm analog sound',
-    'Ambient':       'cinematic ambient, Brian Eno influenced, atmospheric and immersive soundscape',
-    'Rock':          'modern rock, Imagine Dragons and Coldplay influenced, anthemic production',
-    'Indie Rock':    'indie rock, Arctic Monkeys and The Strokes influenced, raw authentic sound',
-    'Alternative Rock':'alternative rock, Twenty One Pilots influenced, emotional alternative sound',
-    'Metal':         'modern metal, Bring Me The Horizon influenced, heavy aggressive production',
-    'Jazz':          'contemporary jazz, smooth and sophisticated, modern jazz composition',
-    'Blues':         'authentic blues, soulful and raw, classic blues guitar tradition',
-    'Country':       'modern country, Morgan Wallen and Luke Combs influenced, Nashville sound 2024',
-    'Reggae':        'authentic reggae, Bob Marley tradition, warm Caribbean roots sound',
-    'Latin':         'modern Latin music, Bad Bunny and J Balvin influenced, urban Latin 2024',
-    'Reggaeton':     'modern reggaeton, Bad Bunny influenced, hard-hitting urban Latin beat',
-    'Salsa':         'authentic salsa, vibrant brass and percussion, tropical Latin energy',
-    'Merengue':      'authentic merengue, fast tropical rhythm, Caribbean dance energy',
-    'Bachata':       'modern bachata, Romeo Santos influenced, romantic Latin guitar',
-    'Cumbia':        'authentic cumbia, tropical rhythm, Latin American dance music',
-    'Afrobeats':     'modern Afrobeats, Burna Boy and Wizkid influenced, groovy African rhythm 2024',
-    'Classical':     'modern classical, Hans Zimmer and Ludovico Einaudi influenced, emotive orchestral',
-    'Cinematic / Soundtrack': 'epic film score, Hans Zimmer influenced, cinematic orchestral production',
-    'K-Pop':         'modern K-Pop, BTS and BLACKPINK influenced, polished high-energy K-Pop 2024',
-    'Drill':         'UK and Chicago drill, dark atmospheric drill beat, hard-hitting 808s',
-    'Funk':          'modern funk, Bruno Mars and Anderson Paak influenced, groovy tight production',
-    'Gospel':        'contemporary gospel, Kirk Franklin influenced, uplifting choir production',
-    'Folk':          'modern folk, Phoebe Bridgers influenced, intimate acoustic storytelling',
-    'Punk':          'punk rock energy, raw and aggressive, three-chord punk production',
-    'Dancehall':     'modern dancehall, Vybz Kartel influenced, hard-hitting Caribbean rhythm',
-    'Phonk':         'dark phonk, drifting phonk aesthetic, Memphis underground 2024',
-    'Drum and Bass': 'liquid drum and bass, fast breakbeats, energetic DnB production',
-    'Techno':        'dark techno, industrial techno, driving repetitive hypnotic beat',
-    'Trance':        'uplifting trance, Armin van Buuren influenced, euphoric melodic trance',
-    'Future Bass':   'future bass, Flume influenced, emotional drops and bright synths',
-    'Vaporwave':     'aesthetic vaporwave, dreamy slowed reverb, nostalgic 80s textures',
-    'Hyperpop':      'hyperpop, 100 Gecs influenced, glitchy distorted maximalist pop',
-    'Bossa Nova':    'authentic bossa nova, João Gilberto tradition, intimate Brazilian jazz',
-    'Samba':         'vibrant samba, Brazilian carnival energy, lively percussion',
-    'Flamenco':      'authentic flamenco, passionate Spanish guitar, raw emotional flamenco',
-    'Bollywood / Bhangra': 'modern Bollywood, AR Rahman influenced, vibrant Indian film music',
-    'Anime OST':     'anime soundtrack, emotional anime music, J-Pop and orchestral blend',
-    'Video Game Music': 'epic video game soundtrack, emotional game OST, dynamic game music',
-    'Experimental':  'experimental avant-garde, boundary-pushing experimental music',
-    'Tango':         'authentic Argentine tango, passionate bandoneón, sensual tango rhythm',
-    'Ska':           'ska music, upbeat offbeat rhythm, brass-heavy ska production',
-    'Swing':         'classic swing, big band jazz, energetic swing dance music',
-    'Synth-Pop':     'modern synth-pop, The 1975 influenced, retro-modern synthesizer pop',
-    'Grunge':        'grunge rock, Nirvana influenced, raw distorted guitar, Seattle sound',
-    'Emo':           'modern emo, emotional raw vocals, emo-pop production',
-  };
+  // Suno-style: comma-separated style tags, NOT sentences
+  const voiceTag = {
+    female: 'female vocals',
+    male:   'male vocals',
+    duet:   'duet vocals, male and female',
+    choir:  'choir, harmonized vocals, layered harmonies',
+    none:   'instrumental, no vocals'
+  }[voice] || 'vocals';
 
-  const instrMap = {
-    'Hip-Hop':       '808 bass, trap hi-hats, sampled drums, punchy kick',
-    'Trap':          '808 sub bass, rolling hi-hats, trap snare, dark synth melody',
-    'Pop':           'polished synth, driving pop drums, layered hooks, catchy melody',
-    'R&B / Soul':    'warm bass guitar, electric piano, smooth R&B groove, lush chords',
-    'Electronic':    'synth leads, electronic drums, bass drop, filtered breakdown',
-    'House':         'four-on-the-floor kick drum, house bassline, synth chords, clap',
-    'Lo-fi':         'vinyl crackle, mellow piano, dusty drums, warm bass guitar',
-    'Ambient':       'ambient pads, reverb textures, soft drones, spacious reverb',
-    'Rock':          'electric guitar riffs, live drum kit, bass guitar, power chords',
-    'Indie Rock':    'jangly indie guitar, live drums, clean bass, reverb vocals',
-    'Alternative Rock': 'distorted guitar, dynamic drums, emotional build, anthemic chorus',
-    'Metal':         'heavy downtuned guitar, double kick pedal, crushing bass, breakdowns',
-    'Jazz':          'upright bass, brushed snare, jazz piano, trumpet, saxophone',
-    'Blues':         'blues electric guitar, Hammond organ, harmonica, shuffle groove',
-    'Country':       'acoustic guitar, pedal steel guitar, fiddle, country drum groove',
-    'Reggae':        'reggae rhythm guitar, deep bass, organ skank, reggae drums',
-    'Latin':         'brass section, congas, timbales, piano montuno, bass',
-    'Reggaeton':     'dembow pattern, 808 bass, reggaeton perreo beat, synth stabs',
-    'Bachata':       'nylon string bachata guitar, bongos, bass, guira scraper',
-    'K-Pop':         'punchy synth, K-pop drums, bright lead synth, modern production',
-    'Classical':     'full orchestra, strings, woodwinds, brass, grand piano',
-    'Cinematic / Soundtrack': 'cinematic strings, brass fanfare, percussion, full orchestra',
-    'Drill':         'sliding 808s, eerie melody, rapid hi-hats, drill beat',
-    'Funk':          'slap bass, wah guitar, tight funk drums, brass horns',
-    'Afrobeats':     'afro percussion, talking drum, guitar licks, bass groove',
-    'Dancehall':     'riddim bass, digital drums, synth stabs, Caribbean groove',
-    'Phonk':         'cowbell, chopped samples, 808, distorted bass, Memphis beat',
-  };
+  const timbreTag = {
+    bright:   'bright clear voice',
+    warm:     'warm rich voice',
+    airy:     'breathy airy vocals',
+    powerful: 'powerful vocals, belting',
+    smooth:   'smooth silky voice',
+    raspy:    'raspy gritty voice',
+    soulful:  'soulful emotive voice',
+    falsetto: 'falsetto high voice'
+  }[timbre] || '';
 
-  const voiceMap = {
-    female:       'female vocalist, clear feminine voice, expressive female singer',
-    male:         'male vocalist, strong masculine voice, expressive male singer',
-    duet:         'male and female duet, harmonizing vocals, call and response',
-    choir:        'full choir, layered harmonies, ensemble vocals, backing choir',
-    none:         'instrumental only, no vocals, no singing, pure music'
-  };
+  const moodTag = {
+    Happy:       'uplifting, feel-good, joyful',
+    Euphoric:    'euphoric, anthemic, ecstatic',
+    Chill:       'chill, relaxed, laid-back',
+    Dreamy:      'dreamy, atmospheric, ethereal',
+    Nostalgic:   'nostalgic, bittersweet, emotional',
+    Melancholic: 'melancholic, sad, emotional',
+    Heartbroken: 'heartbroken, tearful, raw',
+    Dark:        'dark, brooding, ominous',
+    Energetic:   'energetic, driving, powerful',
+    Aggressive:  'aggressive, intense, hard-hitting',
+    Romantic:    'romantic, tender, passionate',
+    Mysterious:  'mysterious, haunting, atmospheric',
+    Cinematic:   'cinematic, epic, dramatic',
+    Groovy:      'groovy, funky, infectious',
+    Epic:        'epic, triumphant, soaring',
+    Soulful:     'soulful, emotive, deep',
+    Uplifting:   'uplifting, inspiring, hopeful',
+    Spiritual:   'spiritual, transcendent, meditative'
+  }[mood] || mood.toLowerCase();
 
-  const timbreMap = {
-    bright:   'bright crisp vocals, clear upper register',
-    warm:     'warm rich vocals, full-bodied tone, resonant',
-    airy:     'breathy airy vocals, soft intimate delivery, whisper-like',
-    powerful: 'powerful projecting vocals, belting, full voice',
-    smooth:   'silky smooth vocals, controlled polished delivery',
-    raspy:    'raspy gritty vocals, husky raw texture, rough edge',
-    soulful:  'deeply soulful vocals, emotive runs, gospel-inflected',
-    falsetto: 'soaring falsetto, high head voice, ethereal upper register'
-  };
+  const langTag = {
+    es: 'Spanish lyrics, sung in Spanish',
+    pt: 'Portuguese lyrics, sung in Portuguese',
+    fr: 'French lyrics, sung in French',
+    zh: 'Mandarin lyrics, sung in Chinese',
+    ja: 'Japanese lyrics, sung in Japanese',
+    ko: 'Korean lyrics, sung in Korean',
+    ar: 'Arabic lyrics, sung in Arabic',
+    hi: 'Hindi lyrics, sung in Hindi',
+    de: 'German lyrics, sung in German',
+    it: 'Italian lyrics, sung in Italian',
+    ru: 'Russian lyrics, sung in Russian'
+  }[lang] || '';
 
-  const moodMap = {
-    Happy:       'joyful uplifting feel-good energy',
-    Euphoric:    'euphoric ecstatic peak energy anthemic',
-    Chill:       'relaxed laid-back cool mellow vibe',
-    Dreamy:      'dreamy hazy ethereal floating atmospheric',
-    Nostalgic:   'nostalgic bittersweet warm emotional longing',
-    Melancholic: 'melancholic sad emotional vulnerable introspective',
-    Heartbroken: 'heartbroken raw painful tearful honest',
-    Dark:        'dark brooding ominous tense shadowy',
-    Energetic:   'high energy driving powerful intense momentum',
-    Aggressive:  'aggressive fierce in-your-face intense confrontational',
-    Romantic:    'romantic passionate tender intimate sensual',
-    Mysterious:  'mysterious haunting enigmatic atmospheric suspenseful',
-    Cinematic:   'cinematic dramatic sweeping epic emotional',
-    Groovy:      'groovy funky infectious rhythmic irresistible',
-    Epic:        'epic triumphant soaring powerful larger-than-life',
-    Soulful:     'soulful deeply emotive heartfelt expressive',
-    Uplifting:   'uplifting inspiring hopeful motivational',
-    Spiritual:   'spiritual transcendent sacred meditative peaceful'
-  };
-
-  const langMap = {
-    es: 'sung entirely in Spanish, Spanish lyrics',
-    pt: 'sung entirely in Portuguese, Portuguese lyrics',
-    fr: 'sung entirely in French, French lyrics',
-    zh: 'sung entirely in Mandarin Chinese, Chinese lyrics',
-    ja: 'sung entirely in Japanese, Japanese lyrics',
-    ko: 'sung entirely in Korean, Korean lyrics',
-    ar: 'sung entirely in Arabic, Arabic lyrics',
-    hi: 'sung entirely in Hindi, Hindi lyrics',
-    de: 'sung entirely in German, German lyrics',
-    it: 'sung entirely in Italian, Italian lyrics',
-    ru: 'sung entirely in Russian, Russian lyrics'
-  };
+  // Genre-specific production tags
+  const prodTag = {
+    'Hip-Hop':       'hip hop, 808 bass, trap drums, sampled beats',
+    'Trap':          'trap, 808 bass, hi-hats, dark melody',
+    'Pop':           'pop, catchy hook, polished production, radio-ready',
+    'R&B / Soul':    'r&b, soul, smooth groove, electric piano',
+    'Electronic':    'electronic, synth, bass drop, dance',
+    'House':         'house, four-on-the-floor, club music',
+    'Lo-fi':         'lo-fi, vinyl, chill beats, dusty samples',
+    'Ambient':       'ambient, atmospheric, pads, spacious',
+    'Rock':          'rock, electric guitar, live drums, bass guitar',
+    'Indie Rock':    'indie rock, jangly guitar, alternative',
+    'Alternative Rock': 'alternative rock, emotional, dynamic',
+    'Metal':         'metal, heavy guitar, double kick, distortion',
+    'Jazz':          'jazz, piano, upright bass, brushed drums',
+    'Blues':         'blues, guitar licks, soulful, harmonica',
+    'Country':       'country, acoustic guitar, steel guitar, Nashville',
+    'Reggae':        'reggae, bass, skank rhythm, Caribbean',
+    'Latin':         'latin, brass, percussion, tropical',
+    'Reggaeton':     'reggaeton, dembow, urban latin, 808',
+    'Salsa':         'salsa, brass, congas, timbales, piano',
+    'Merengue':      'merengue, accordion, tropical, upbeat',
+    'Bachata':       'bachata, romantic, guitar, bongos',
+    'Cumbia':        'cumbia, accordion, latin percussion',
+    'Afrobeats':     'afrobeats, afro percussion, groovy, vibrant',
+    'Classical':     'classical, orchestral, strings, piano',
+    'Cinematic / Soundtrack': 'cinematic, orchestral, epic, film score',
+    'K-Pop':         'k-pop, polished, synth, energetic',
+    'Drill':         'drill, sliding 808s, dark, hard-hitting',
+    'Funk':          'funk, slap bass, wah guitar, groovy',
+    'Gospel':        'gospel, choir, uplifting, church organ',
+    'Folk':          'folk, acoustic guitar, intimate, storytelling',
+    'Punk':          'punk, raw energy, distorted guitar, fast',
+    'Dancehall':     'dancehall, riddim, Caribbean, bass',
+    'Phonk':         'phonk, cowbell, dark 808, memphis',
+    'Drum and Bass': 'drum and bass, breakbeats, bass, fast',
+    'Techno':        'techno, industrial, kick drum, hypnotic',
+    'Trance':        'trance, euphoric, arpeggiated synth, build',
+    'Future Bass':   'future bass, emotional drop, synth, bright',
+    'Vaporwave':     'vaporwave, nostalgic, slowed, dreamy synth',
+    'Hyperpop':      'hyperpop, glitchy, maximalist, distorted',
+    'Bossa Nova':    'bossa nova, acoustic guitar, Brazilian, jazz',
+    'Samba':         'samba, percussion, Brazilian, vibrant',
+    'Flamenco':      'flamenco, Spanish guitar, passionate, raw',
+    'Bollywood / Bhangra': 'bollywood, Indian, dhol, strings, vibrant',
+    'Anime OST':     'anime, J-pop, orchestral, emotional',
+    'Video Game Music': 'video game, dynamic, orchestral, chiptune',
+    'Experimental':  'experimental, avant-garde, unconventional',
+    'Tango':         'tango, bandoneón, passionate, Argentine',
+    'Ska':           'ska, brass, offbeat, energetic',
+    'Swing':         'swing, big band, jazz, upbeat',
+    'Synth-Pop':     'synth-pop, synthesizer, electronic pop, catchy',
+    'Grunge':        'grunge, distorted guitar, raw, Seattle sound',
+    'Emo':           'emo, emotional, raw vocals, guitar'
+  }[genre] || genre.toLowerCase();
 
   const parts = [
-    styleRef[genre] || (genre + ' music'),
-    instrMap[genre] || 'professional music production',
-    moodMap[mood] || mood,
-    voiceMap[voice] || voiceMap.female,
-    timbreMap[timbre] || '',
-    langMap[lang] || '',
-    bpm + ' BPM',
-    promptDesc || '',
-    'professional studio quality recording, mastered for streaming, 2024 production standards'
+    prodTag,
+    moodTag,
+    voiceTag,
+    timbreTag,
+    langTag,
+    bpm + ' bpm',
+    promptDesc || ''
   ];
   return parts.filter(Boolean).join(', ');
 }
+
+
 
 
 
@@ -1519,61 +1489,83 @@ function buildMeta(p,g,m,b){
   return{title,tagline:tg[Math.random()*tg.length|0],tags:[g,m,b+' BPM'],lyrics:makeLyricsFallback(g,m,window._curSecs||60)};
 }
 
-async function callReplicate(prompt,secs,lyrics){
-  if(!PROXY_URL){throw new Error('No proxy URL set — open API Key settings and enter your Vercel proxy URL');}
-  const genUrl=PROXY_URL+'/api/generate';
-  const pollUrl=PROXY_URL+'/api/poll';
-  const estSecs=secs<=10?20:secs<=15?22:secs<=30?28:secs<=60?45:secs<=90?75:secs<=120?105:secs<=180?150:200;
-  setProg('Sending to AI model\u2026',48);
-  const _pe=document.getElementById('pEst');if(_pe)_pe.textContent='Est. wait: ~'+estSecs+'s';
+async function callReplicate(promptTags, secs, lyrics) {
+  if (!PROXY_URL) throw new Error('No proxy URL — enter it in API Key settings');
+
+  const genUrl  = PROXY_URL + '/api/generate';
+  const pollUrl = PROXY_URL + '/api/poll';
+  const estSecs = secs <= 30 ? 30 : secs <= 60 ? 45 : secs <= 90 ? 60 : secs <= 120 ? 75 : 100;
+
+  setProg('Sending to Suno AI…', 48);
+  const pe = document.getElementById('pEst');
+  if (pe) pe.textContent = 'Est. wait: ~' + estSecs + 's';
+
+  // Build title from first few words of description
+  const descEl = document.getElementById('promptInput');
+  const title   = (descEl && descEl.value.trim().split(' ').slice(0, 5).join(' ')) || 'SoundForge Song';
 
   let r;
-  try{
-    r=await fetch(genUrl,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({repKey:REP_KEY,prompt,duration:secs,lyrics:lyrics||''})});
-  }catch(e){throw new Error('Cannot reach proxy at '+PROXY_URL+'. Check URL is correct.');}
-
-  if(!r.ok){
-    const e=await r.json().catch(()=>({}));
-    if(r.status===401)throw new Error('Invalid API key \u2014 get one at replicate.com/account/api-tokens');
-    if(r.status===402)throw new Error('Billing required \u2014 add credit at replicate.com/account/billing');
-    throw new Error('Error '+r.status+': '+(e.detail||e.error||JSON.stringify(e)));
+  try {
+    r = await fetch(genUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        apiKey: REP_KEY,
+        prompt: promptTags,
+        title,
+        tags: promptTags,
+        lyrics: lyrics || '',
+        instrumental: curVoice === 'none'
+      })
+    });
+  } catch(e) {
+    throw new Error('Cannot reach proxy at ' + PROXY_URL + '. Is it deployed on Vercel?');
   }
 
-  const pred=await r.json();
-  if(pred.status==='succeeded'&&pred.url)return pred.url;
-  if(pred.status==='succeeded'){const u=Array.isArray(pred.output)?pred.output[0]:pred.output;if(u)return u;}
-  if(pred.status==='failed')throw new Error('Generation failed: '+(pred.error||'unknown'));
-  if(!pred.id)throw new Error('No prediction ID \u2014 try again');
+  if (!r.ok) {
+    const e = await r.json().catch(() => ({}));
+    if (r.status === 401) throw new Error('Invalid API key — get one at udioapi.pro/dashboard');
+    if (r.status === 402) throw new Error('Out of credits — top up at udioapi.pro');
+    throw new Error('Error ' + r.status + ': ' + (e.error || JSON.stringify(e)));
+  }
 
-  // Smart polling with backoff
-  let tries=0,pollInterval=2000,elapsed=0;
-  const t0=Date.now();
-  while(tries<200){
-    if(cancelFlag)throw new Error('cancelled');
-    await new Promise(res=>setTimeout(res,pollInterval));
-    elapsed=(Date.now()-t0)/1000;
-    if(elapsed>30&&pollInterval===2000)pollInterval=3000;
-    if(elapsed>90&&pollInterval===3000)pollInterval=4000;
+  const pred = await r.json();
+  if (!pred.workId) throw new Error('No workId returned — try again');
+
+  // Poll for result
+  let tries = 0, elapsed = 0;
+  const t0 = Date.now();
+  while (tries < 120) {
+    if (cancelFlag) throw new Error('cancelled');
+    await sleep(tries < 5 ? 3000 : tries < 20 ? 4000 : 5000);
+    elapsed = (Date.now() - t0) / 1000;
     tries++;
-    const pct=Math.min(50+(elapsed/estSecs)*42,92);
-    const rem=Math.max(0,Math.round(estSecs-elapsed));
-    const _pb=document.getElementById('pBar');if(_pb)_pb.style.width=pct+'%';
-    setProg(rem>5?'Generating\u2026 ~'+rem+'s remaining':elapsed<estSecs?'Almost done\u2026':'Finalizing track\u2026',pct);
+
+    const pct = Math.min(50 + (elapsed / estSecs) * 42, 92);
+    const rem = Math.max(0, Math.round(estSecs - elapsed));
+    document.getElementById('pBar').style.width = pct + '%';
+    const msg = elapsed < 15 ? 'Suno AI loading…' :
+                rem > 5      ? 'Generating… ~' + rem + 's left' :
+                               'Finalizing…';
+    setProg(msg, pct);
+
     let poll;
-    try{
-      const pr=await fetch(pollUrl,{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({repKey:REP_KEY,id:pred.id})});
-      poll=await pr.json();
-    }catch(e){continue;}
-    if(poll.status==='succeeded'){
-      if(poll.url)return poll.url;
-      throw new Error('Generation succeeded but no audio URL returned — try again');
-    }
-    if(poll.status==='failed')throw new Error('Generation failed: '+(poll.error||'unknown'));
+    try {
+      const pr = await fetch(pollUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apiKey: REP_KEY, workId: pred.workId })
+      });
+      poll = await pr.json();
+    } catch(e) { continue; }
+
+    if (poll.status === 'succeeded' && poll.url) return poll.url;
+    if (poll.status === 'succeeded') throw new Error('Generation done but no audio URL — try again');
+    if (poll.status === 'failed')    throw new Error('Generation failed: ' + (poll.error || 'unknown'));
   }
-  throw new Error('Timed out after '+Math.round(elapsed)+'s \u2014 try a shorter duration');
+  throw new Error('Timed out after ' + Math.round(elapsed) + 's — try a shorter duration');
 }
+
 </script>
 </body>
 </html>
